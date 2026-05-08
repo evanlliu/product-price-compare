@@ -2,10 +2,10 @@
   "version": "v1.0.8",
   "lang": "zh",
   "sync": {
-    "workerUrl": "",
-    "appPassword": "",
-    "lastLoadedAt": "",
-    "lastSavedAt": ""
+    "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
+    "appPassword": "1123",
+    "lastLoadedAt": "2026-05-08T13:07:08.230Z",
+    "lastSavedAt": "2026-05-08T13:07:28.094Z"
   },
   "activeGroupId": "group_face_wash",
   "stores": [
