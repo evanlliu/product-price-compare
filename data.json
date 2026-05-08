@@ -1,17 +1,104 @@
 {
-  "version": "v1.0.8",
+  "version": "v1.0.10",
   "lang": "zh",
+  "settings": {
+    "lang": "zh",
+    "language": "zh",
+    "activeGroupId": "group_face_wash"
+  },
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-08T13:07:30.946Z",
-    "lastSavedAt": "2026-05-08T13:07:32.725Z"
+    "lastLoadedAt": "2026-05-08T13:15:14.632Z",
+    "lastSavedAt": "2026-05-08T13:15:23.386Z"
   },
-  "activeGroupId": "group_face_wash",
+  "units": [
+    {
+      "code": "g",
+      "base": "g",
+      "factor": 1,
+      "label": {
+        "zh": "克",
+        "en": "g"
+      }
+    },
+    {
+      "code": "kg",
+      "base": "g",
+      "factor": 1000,
+      "label": {
+        "zh": "千克",
+        "en": "kg"
+      }
+    },
+    {
+      "code": "ml",
+      "base": "ml",
+      "factor": 1,
+      "label": {
+        "zh": "毫升",
+        "en": "ml"
+      }
+    },
+    {
+      "code": "l",
+      "base": "ml",
+      "factor": 1000,
+      "label": {
+        "zh": "升",
+        "en": "L"
+      }
+    },
+    {
+      "code": "pcs",
+      "base": "pcs",
+      "factor": 1,
+      "label": {
+        "zh": "个",
+        "en": "pcs"
+      }
+    },
+    {
+      "code": "bottle",
+      "base": "bottle",
+      "factor": 1,
+      "label": {
+        "zh": "瓶",
+        "en": "bottle"
+      }
+    },
+    {
+      "code": "pack",
+      "base": "pack",
+      "factor": 1,
+      "label": {
+        "zh": "包",
+        "en": "pack"
+      }
+    },
+    {
+      "code": "sheet",
+      "base": "sheet",
+      "factor": 1,
+      "label": {
+        "zh": "片 / 抽",
+        "en": "sheet"
+      }
+    },
+    {
+      "code": "roll",
+      "base": "roll",
+      "factor": 1,
+      "label": {
+        "zh": "卷",
+        "en": "roll"
+      }
+    }
+  ],
   "stores": [
     {
       "id": "store_a",
-      "name": "店铺A"
+      "name": "抖音"
     },
     {
       "id": "store_b",
@@ -45,5 +132,101 @@
         }
       ]
     }
-  ]
+  ],
+  "activeGroupId": "group_face_wash",
+  "configs": {
+    "stores": [
+      {
+        "id": "store_a",
+        "name": "抖音"
+      },
+      {
+        "id": "store_b",
+        "name": "店铺B"
+      }
+    ],
+    "units": [
+      {
+        "code": "g",
+        "base": "g",
+        "factor": 1,
+        "label": {
+          "zh": "克",
+          "en": "g"
+        }
+      },
+      {
+        "code": "kg",
+        "base": "g",
+        "factor": 1000,
+        "label": {
+          "zh": "千克",
+          "en": "kg"
+        }
+      },
+      {
+        "code": "ml",
+        "base": "ml",
+        "factor": 1,
+        "label": {
+          "zh": "毫升",
+          "en": "ml"
+        }
+      },
+      {
+        "code": "l",
+        "base": "ml",
+        "factor": 1000,
+        "label": {
+          "zh": "升",
+          "en": "L"
+        }
+      },
+      {
+        "code": "pcs",
+        "base": "pcs",
+        "factor": 1,
+        "label": {
+          "zh": "个",
+          "en": "pcs"
+        }
+      },
+      {
+        "code": "bottle",
+        "base": "bottle",
+        "factor": 1,
+        "label": {
+          "zh": "瓶",
+          "en": "bottle"
+        }
+      },
+      {
+        "code": "pack",
+        "base": "pack",
+        "factor": 1,
+        "label": {
+          "zh": "包",
+          "en": "pack"
+        }
+      },
+      {
+        "code": "sheet",
+        "base": "sheet",
+        "factor": 1,
+        "label": {
+          "zh": "片 / 抽",
+          "en": "sheet"
+        }
+      },
+      {
+        "code": "roll",
+        "base": "roll",
+        "factor": 1,
+        "label": {
+          "zh": "卷",
+          "en": "roll"
+        }
+      }
+    ]
+  }
 }
