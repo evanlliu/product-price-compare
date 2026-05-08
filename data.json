@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-08T13:15:14.632Z",
-    "lastSavedAt": "2026-05-08T13:15:37.348Z"
+    "lastSavedAt": "2026-05-08T13:15:39.132Z"
   },
   "units": [
     {
@@ -102,7 +102,11 @@
     },
     {
       "id": "store_b",
-      "name": "t'b"
+      "name": "淘宝"
+    },
+    {
+      "id": "store_1778246138226_757f331a4c69f",
+      "name": "新商家"
     }
   ],
   "groups": [
@@ -142,7 +146,11 @@
       },
       {
         "id": "store_b",
-        "name": "t'b"
+        "name": "淘宝"
+      },
+      {
+        "id": "store_1778246138226_757f331a4c69f",
+        "name": "新商家"
       }
     ],
     "units": [
