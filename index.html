@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>商品比价器 Price Compare</title>
+  <title>商品比价器 Price Compare v1.0.8</title>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <style>
     :root {
@@ -192,6 +192,76 @@
       gap: 8px;
     }
 
+    .records-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .records-head .section-title {
+      margin-bottom: 0;
+    }
+
+    .records-card {
+      overflow: hidden;
+    }
+
+    .record-top-line {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .best-strip {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin: 8px 0 0;
+      padding: 8px 10px;
+      border: 1px solid #bbf7d0;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(220, 252, 231, 0.95), rgba(240, 253, 244, 0.72));
+      color: #14532d;
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .best-strip.show {
+      display: flex;
+    }
+
+    .best-strip .best-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: #fff;
+      box-shadow: 0 6px 14px rgba(22, 163, 74, 0.12);
+      flex: 0 0 auto;
+    }
+
+    .best-strip .best-main {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .best-strip .best-sub {
+      color: #166534;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 2px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     .summary-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -227,11 +297,33 @@
       line-height: 1.4;
     }
 
-    .group-row {
+    .product-switch-card .card-inner {
+      padding: 8px 12px;
+    }
+
+    .product-switch-row {
       display: grid;
-      grid-template-columns: minmax(180px, 1fr) auto auto auto;
-      gap: 8px;
+      grid-template-columns: auto minmax(220px, 360px);
+      gap: 10px;
       align-items: center;
+    }
+
+    .product-switch-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .product-switch-row select {
+      min-height: 34px;
+      height: 34px;
+      border-radius: 10px;
+      padding: 5px 10px;
+      font-size: 15px;
     }
 
     .form-grid {
@@ -261,6 +353,64 @@
       margin-top: 8px;
     }
 
+    .sync-mini {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 18px;
+    }
+
+    .sync-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #94a3b8;
+      flex: 0 0 auto;
+    }
+
+    .sync-mini.ok .sync-dot { background: var(--good); }
+    .sync-mini.busy .sync-dot { background: var(--warn); }
+    .sync-mini.error .sync-dot { background: var(--bad); }
+
+    .sync-form {
+      display: grid;
+      gap: 10px;
+    }
+
+    .sync-form label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin: 0 0 5px 2px;
+      font-weight: 800;
+    }
+
+    .sync-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .sync-actions button {
+      flex: 0 0 auto;
+    }
+
+    .sync-warning {
+      padding: 10px;
+      border-radius: 14px;
+      border: 1px solid #fde68a;
+      background: rgba(254, 243, 199, 0.72);
+      color: #92400e;
+      font-size: 12px;
+      line-height: 1.5;
+      margin-top: 10px;
+    }
+
     .table-wrap {
       overflow-x: auto;
     }
@@ -269,16 +419,19 @@
       width: 100%;
       border-collapse: separate;
       border-spacing: 0;
-      min-width: 1080px;
+      min-width: 1000px;
+      table-layout: fixed;
     }
 
     th,
     td {
       text-align: left;
-      padding: 10px 10px;
+      padding: 7px 8px;
       border-bottom: 1px solid var(--line);
       vertical-align: middle;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     th {
@@ -292,11 +445,32 @@
     }
 
     tbody tr.best-row {
-      background: rgba(220, 252, 231, 0.52);
+      background: rgba(220, 252, 231, 0.66);
+      box-shadow: inset 4px 0 0 var(--good);
     }
 
     tbody tr:hover {
       background: rgba(219, 234, 254, 0.34);
+    }
+
+    tbody tr.best-row:hover {
+      background: rgba(220, 252, 231, 0.86);
+    }
+
+    .col-result { width: 116px; }
+    .col-store { width: 152px; }
+    .col-money { width: 92px; }
+    .col-final { width: 98px; }
+    .col-qty { width: 88px; }
+    .col-size { width: 98px; }
+    .col-unit { width: 84px; }
+    .col-total { width: 110px; }
+    .col-unit-price { width: 132px; }
+    .col-actions { width: 118px; }
+
+    .unit-price-best {
+      color: #15803d;
+      font-weight: 900;
     }
 
     .num {
@@ -345,17 +519,17 @@
     }
 
     .small-btn {
-      padding: 7px 9px;
+      padding: 6px 8px;
       font-size: 12px;
       border-radius: 10px;
     }
 
     .cell-input,
     .cell-select {
-      min-height: 34px;
-      height: 34px;
-      border-radius: 10px;
-      padding: 5px 8px;
+      min-height: 30px;
+      height: 30px;
+      border-radius: 9px;
+      padding: 4px 7px;
       font-size: 14px;
       background: rgba(255, 255, 255, 0.82);
       border-color: #dbe3ef;
@@ -367,46 +541,48 @@
     }
 
     .cell-store {
-      width: 150px;
+      width: 100%;
     }
 
     .cell-number {
-      width: 88px;
+      width: 100%;
       text-align: right;
     }
 
     .cell-unit {
-      width: 86px;
+      width: 100%;
     }
 
     td.cell-editable {
-      padding: 6px 8px;
+      padding: 4px 6px;
     }
 
     .mobile-list {
       display: none;
-      padding: 10px;
-      gap: 10px;
+      padding: 8px;
+      gap: 8px;
     }
 
     .item-card {
-      background: rgba(255, 255, 255, 0.86);
+      background: rgba(255, 255, 255, 0.9);
       border: 1px solid var(--line);
       border-radius: 16px;
-      padding: 12px;
+      padding: 10px;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
     }
 
     .item-card.best-card {
       border-color: #86efac;
-      background: rgba(220, 252, 231, 0.58);
+      background: linear-gradient(135deg, rgba(220, 252, 231, 0.78), rgba(255, 255, 255, 0.95));
+      box-shadow: 0 10px 24px rgba(22, 163, 74, 0.12);
     }
 
     .item-head {
       display: flex;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       align-items: flex-start;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .item-title {
@@ -419,6 +595,67 @@
       color: var(--muted);
       font-size: 12px;
       margin-top: 3px;
+    }
+
+    .mobile-edit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+      margin: 7px 0 8px;
+    }
+
+    .mobile-edit-grid .field-store-mobile {
+      grid-column: 1 / -1;
+    }
+
+    .mobile-edit-grid label {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      margin: 0 0 4px 2px;
+    }
+
+    .mobile-edit-grid input,
+    .mobile-edit-grid select {
+      min-height: 34px;
+      height: 34px;
+      border-radius: 10px;
+      font-size: 15px;
+      padding: 5px 8px;
+    }
+
+    .mobile-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .metric-pill {
+      min-width: 0;
+      padding: 7px 8px;
+      border-radius: 12px;
+      background: rgba(248, 250, 252, 0.92);
+      border: 1px solid #edf2f7;
+    }
+
+    .metric-pill.best-metric {
+      background: rgba(220, 252, 231, 0.74);
+      border-color: #bbf7d0;
+    }
+
+    .metric-label {
+      font-size: 10px;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .metric-value {
+      font-size: 13px;
+      font-weight: 900;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .kv-grid {
@@ -461,6 +698,154 @@
       display: none;
     }
 
+
+
+    .title-version {
+      display: inline-block;
+      margin-left: 6px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 800;
+      letter-spacing: 0;
+      vertical-align: baseline;
+    }
+
+    .more-wrap {
+      position: relative;
+      display: inline-flex;
+    }
+
+    .more-menu {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      width: 210px;
+      display: none;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      z-index: 20;
+    }
+
+    .more-menu.open {
+      display: grid;
+    }
+
+    .more-menu button {
+      width: 100%;
+      justify-content: flex-start;
+      text-align: left;
+    }
+
+    .floating-lang {
+      position: fixed;
+      right: max(16px, env(safe-area-inset-right));
+      bottom: max(18px, env(safe-area-inset-bottom));
+      z-index: 40;
+      min-width: 64px;
+      height: 44px;
+      padding: 0 14px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.16);
+      backdrop-filter: blur(16px);
+      font-weight: 800;
+    }
+
+    .floating-lang:active {
+      transform: scale(0.96);
+    }
+
+    .config-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: rgba(15, 23, 42, 0.42);
+      padding: 22px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .config-overlay.show {
+      display: flex;
+    }
+
+    .config-page {
+      width: min(780px, 100%);
+      max-height: min(720px, calc(100vh - 44px));
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .config-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.82);
+    }
+
+    .config-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .config-body {
+      padding: 14px;
+      overflow: auto;
+    }
+
+    .config-toolbar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .config-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .config-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 8px;
+      align-items: center;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(248, 250, 252, 0.78);
+    }
+
+    .config-row.store-row {
+      grid-template-columns: 1fr auto;
+    }
+
+    .config-panel {
+      display: none;
+    }
+
+    .config-panel.active {
+      display: block;
+    }
+
     @media (max-width: 900px) {
       .app {
         padding: 10px;
@@ -488,12 +873,8 @@
         grid-template-columns: 1fr 1fr;
       }
 
-      .group-row {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .group-row select {
-        grid-column: 1 / -1;
+      .product-switch-row {
+        grid-template-columns: auto minmax(0, 1fr);
       }
 
       .form-grid {
@@ -512,6 +893,23 @@
         flex: 1;
       }
 
+      .records-head {
+        align-items: center;
+      }
+
+      .record-top-line {
+        grid-template-columns: 1fr auto;
+      }
+
+      .best-strip .best-main,
+      .best-strip .best-sub {
+        white-space: normal;
+      }
+
+      #btnAddRow {
+        padding: 8px 12px;
+      }
+
       .table-wrap {
         display: none;
       }
@@ -523,25 +921,91 @@
 
     @media (max-width: 520px) {
       .topbar {
-        flex-direction: column;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+
+      .brand {
+        flex: 1 1 auto;
+        min-width: 0;
+        gap: 8px;
+      }
+
+      .logo {
+        width: 34px;
+        height: 34px;
+        border-radius: 12px;
+      }
+
+      h1 {
+        font-size: 17px;
+        white-space: nowrap;
+      }
+
+      .title-version {
+        font-size: 12px;
+        margin-left: 5px;
       }
 
       .top-actions {
-        width: 100%;
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        flex: 0 0 auto;
+        display: flex;
+        width: auto;
+        gap: 0;
       }
 
-      .top-actions button {
-        width: 100%;
+      .top-actions button,
+      .more-wrap,
+      .more-wrap > button {
+        width: auto;
+      }
+
+      .more-wrap > button {
+        min-height: 34px;
+        padding: 7px 11px;
+      }
+
+      .more-menu {
+        right: 0;
+        width: min(220px, 92vw);
+      }
+
+      .floating-lang {
+        right: max(12px, env(safe-area-inset-right));
+        bottom: max(12px, env(safe-area-inset-bottom));
+        min-width: 58px;
+        height: 40px;
+        padding: 0 12px;
+        font-size: 13px;
+      }
+
+      .sync-actions button {
+        flex: 1 1 100%;
       }
 
       .summary-grid {
         grid-template-columns: 1fr;
       }
 
-      .group-row {
-        grid-template-columns: 1fr;
+      .product-switch-card .card-inner {
+        padding: 7px 10px;
+      }
+
+      .product-switch-row {
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 8px;
+      }
+
+      .product-switch-label {
+        font-size: 12px;
+      }
+
+      .product-switch-row select {
+        min-height: 32px;
+        height: 32px;
+        font-size: 14px;
       }
 
       .form-grid {
@@ -552,6 +1016,10 @@
       .card-inner {
         padding: 12px;
       }
+
+      .mobile-metrics {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
     }
   </style>
 </head>
@@ -561,150 +1029,164 @@
       <div class="brand">
         <div class="logo">¥</div>
         <div>
-          <h1 data-i18n="appTitle">商品比价器</h1>
-          <div class="version">v1.0.1 · HTML + jQuery · GitHub Pages</div>
+          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.8</span></h1>
         </div>
       </div>
       <div class="top-actions">
-        <button type="button" id="btnLang" class="btn-ghost">🌐 EN</button>
-        <button type="button" id="btnExport" class="btn-ghost" data-i18n="export">导出</button>
-        <button type="button" id="btnImport" class="btn-ghost" data-i18n="import">导入</button>
-        <input id="importFile" class="file-input" type="file" accept="application/json,.json" />
+        <div class="more-wrap">
+          <button type="button" id="btnMore" class="btn-ghost" data-i18n="more">更多</button>
+          <div class="more-menu" id="moreMenu">
+            <button type="button" id="btnOpenProductConfig" data-i18n="productGroupConfig">商品分组配置</button>
+            <button type="button" id="btnOpenStoreConfig" data-i18n="storeConfig">商家 / 渠道配置</button>
+            <button type="button" id="btnOpenSyncConfig" data-i18n="cloudSyncConfig">云端同步配置</button>
+          </div>
+        </div>
       </div>
     </header>
 
     <section class="grid">
-      <div class="card">
+      <div class="card product-switch-card">
         <div class="card-inner">
-          <h2 class="section-title">🏆 <span data-i18n="summary">比价结果</span></h2>
-          <div class="summary-grid">
-            <div class="summary-tile">
-              <div class="summary-label" data-i18n="currentProduct">当前商品</div>
-              <div class="summary-value" id="summaryProduct">-</div>
-            </div>
-            <div class="summary-tile">
-              <div class="summary-label" data-i18n="recommendedStore">推荐商家</div>
-              <div class="summary-value" id="summaryStore">-</div>
-            </div>
-            <div class="summary-tile">
-              <div class="summary-label" data-i18n="lowestUnitPrice">最低单价</div>
-              <div class="summary-value num" id="summaryPrice">-</div>
-            </div>
-            <div class="summary-tile">
-              <div class="summary-label" data-i18n="itemCount">记录数量</div>
-              <div class="summary-value num" id="summaryCount">0</div>
-            </div>
-          </div>
-          <div class="summary-note" id="summaryNote"></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-inner">
-          <h2 class="section-title">📦 <span data-i18n="productGroup">商品分组</span></h2>
-          <div class="group-row">
+          <div class="product-switch-row">
+            <label for="groupSelect" class="product-switch-label">📦 <span data-i18n="currentProductGroup">当前商品</span></label>
             <select id="groupSelect"></select>
-            <button type="button" id="btnAddGroup" data-i18n="addGroup">新增商品</button>
-            <button type="button" id="btnRenameGroup" data-i18n="renameGroup">重命名</button>
-            <button type="button" id="btnDeleteGroup" class="btn-danger" data-i18n="deleteGroup">删除</button>
           </div>
-          <div class="hint-line" data-i18n="groupHint">同一个商品分组内才会进行比价，例如“洗面奶”下面录入不同商家的价格。</div>
+          <div class="sync-mini" id="syncStatusMini"><span class="sync-dot"></span><span id="syncStatusText" data-i18n="syncStatusLocal">本地模式</span></div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-inner">
-          <h2 class="section-title">➕ <span id="formTitle" data-i18n="addItem">新增价格记录</span></h2>
-          <form id="itemForm" autocomplete="off">
-            <div class="form-grid">
-              <div class="field field-store">
-                <label for="store" data-i18n="store">商家 / 渠道</label>
-                <input id="store" type="text" data-placeholder-key="storePlaceholder" placeholder="例如：淘宝 / 京东 / Migros" required />
-              </div>
-              <div class="field">
-                <label for="price" data-i18n="price">金额</label>
-                <input id="price" type="number" min="0" step="0.01" inputmode="decimal" placeholder="88" required />
-              </div>
-              <div class="field">
-                <label for="cashback" data-i18n="cashback">返现 / 优惠</label>
-                <input id="cashback" type="number" min="0" step="0.01" inputmode="decimal" placeholder="22.45" />
-              </div>
-              <div class="field">
-                <label for="quantity" data-i18n="quantity">购买数量</label>
-                <input id="quantity" type="number" min="0" step="1" inputmode="numeric" value="1" required />
-              </div>
-              <div class="field">
-                <label for="size" data-i18n="size">单件规格</label>
-                <input id="size" type="number" min="0" step="0.01" inputmode="decimal" placeholder="360" required />
-              </div>
-              <div class="field">
-                <label for="unit" data-i18n="unit">单位</label>
-                <select id="unit"></select>
-              </div>
-              <div class="form-actions">
-                <button type="submit" class="btn-primary" id="btnSave" data-i18n="save">保存</button>
-                <button type="button" id="btnCancel" data-i18n="clear">清空</button>
-              </div>
-            </div>
-          </form>
-          <div class="hint-line" data-i18n="formulaHint">公式：实际金额 = 金额 - 返现；总规格 = 购买数量 × 单件规格；每单位价格 = 实际金额 ÷ 总规格。</div>
-        </div>
-      </div>
 
-      <div class="card">
+      <div class="card records-card">
         <div class="card-inner" style="padding-bottom: 0;">
-          <h2 class="section-title">📊 <span data-i18n="records">价格记录</span></h2>
-          <div class="hint-line" data-i18n="inlineEditHint">PC端可以直接在表格行内修改，离开输入框后自动保存并重新计算。</div>
+          <div class="record-top-line">
+            <h2 class="section-title">📊 <span data-i18n="records">价格记录</span></h2>
+            <button type="button" id="btnAddRow" class="btn-primary" data-i18n="addRow">新增</button>
+          </div>
+          <div class="best-strip" id="bestStrip"></div>
         </div>
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th data-i18n="product">商品</th>
-                <th data-i18n="store">商家 / 渠道</th>
-                <th data-i18n="price">金额</th>
-                <th data-i18n="cashback">返现 / 优惠</th>
-                <th data-i18n="finalCost">实际金额</th>
-                <th data-i18n="quantity">购买数量</th>
-                <th data-i18n="size">单件规格</th>
-                <th data-i18n="unit">单位</th>
-                <th data-i18n="totalSize">总规格</th>
-                <th data-i18n="unitPrice">每单位价格</th>
-                <th data-i18n="result">比较结果</th>
-                <th data-i18n="actions">操作</th>
+                <th class="col-result" data-i18n="result">比较结果</th>
+                <th class="col-store" data-i18n="store">商家 / 渠道</th>
+                <th class="col-money" data-i18n="price">金额</th>
+                <th class="col-money" data-i18n="cashback">返现 / 优惠</th>
+                <th class="col-final" data-i18n="finalCost">实际金额</th>
+                <th class="col-qty" data-i18n="quantity">购买数量</th>
+                <th class="col-size" data-i18n="size">单件规格</th>
+                <th class="col-unit" data-i18n="unit">单位</th>
+                <th class="col-total" data-i18n="totalSize">总规格</th>
+                <th class="col-unit-price" data-i18n="unitPrice">每单位价格</th>
+                <th class="col-actions" data-i18n="actions">操作</th>
               </tr>
             </thead>
             <tbody id="tableBody"></tbody>
           </table>
         </div>
         <div class="mobile-list" id="mobileList"></div>
-        <div class="empty" id="emptyState" style="display: none;" data-i18n="emptyState">暂无记录，请先新增价格记录。</div>
+        <div class="empty" id="emptyState" style="display: none;" data-i18n="emptyState">暂无记录，请点击新增添加一行。</div>
       </div>
     </section>
+    <button type="button" id="btnLang" class="floating-lang" aria-label="Language">🌐 EN</button>
   </main>
 
+  <div class="config-overlay" id="configOverlay" aria-hidden="true">
+    <section class="config-page card" role="dialog" aria-modal="true" aria-labelledby="configTitle">
+      <div class="config-header">
+        <h2 class="config-title" id="configTitle">配置</h2>
+        <button type="button" id="btnCloseConfig" class="btn-ghost" data-i18n="close">关闭</button>
+      </div>
+      <div class="config-body">
+        <div class="config-panel" id="productConfigPanel">
+          <div class="config-toolbar">
+            <div class="hint-line" data-i18n="productConfigHint">在这里维护商品分组，主页面只负责选择当前商品。</div>
+            <button type="button" id="btnConfigAddGroup" class="btn-primary" data-i18n="addGroup">新增商品</button>
+          </div>
+          <div class="config-list" id="productConfigList"></div>
+        </div>
+
+        <div class="config-panel" id="storeConfigPanel">
+          <div class="config-toolbar">
+            <div class="hint-line" data-i18n="storeConfigHint">在这里维护商家 / 渠道，价格记录中只能从下拉列表选择。</div>
+            <button type="button" id="btnConfigAddStore" class="btn-primary" data-i18n="addStore">新增商家</button>
+          </div>
+          <div class="config-list" id="storeConfigList"></div>
+        </div>
+
+        <div class="config-panel" id="syncConfigPanel">
+          <div class="sync-form">
+            <div>
+              <label for="syncWorkerUrl" data-i18n="workerUrl">Cloudflare Worker 地址</label>
+              <input id="syncWorkerUrl" type="url" placeholder="https://your-worker.workers.dev" autocomplete="off" />
+            </div>
+            <div>
+              <label for="syncPassword" data-i18n="accessPassword">访问密码</label>
+              <input id="syncPassword" type="password" placeholder="APP_PASSWORD" autocomplete="current-password" />
+            </div>
+          </div>
+          <div class="sync-actions">
+            <button type="button" id="btnSaveSyncConfig" class="btn-primary" data-i18n="saveSyncConfig">保存配置并同步</button>
+            <button type="button" id="btnLoadCloud" class="btn-ghost" data-i18n="loadCloudData">重新加载云端</button>
+            <button type="button" id="btnSaveCloud" class="btn-good" data-i18n="saveCloudNow">立即保存云端</button>
+          </div>
+          <div class="hint-line" data-i18n="syncConfigHint">Worker 地址和访问密码会保存到 data.json，方便其他设备打开页面后自动读取并同步。</div>
+          <div class="sync-warning" data-i18n="syncSecurityNote">注意：如果 GitHub 仓库或 GitHub Pages 是公开的，data.json 里的 Worker 地址和访问密码也可能被看到。当前版本按你的需求保存，后续可以改成只本机保存密码。</div>
+          <div class="hint-line" id="syncConfigStatus"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
   <script>
-    const APP_VERSION = "v1.0.1";
+    const APP_VERSION = "v1.0.8";
     const STORAGE_KEY = "productPriceCompare.v1";
 
     const i18n = {
       zh: {
         appTitle: "商品比价器",
-        export: "导出",
-        import: "导入",
+        more: "更多",
+        close: "关闭",
+        productGroupConfig: "商品分组配置",
+        storeConfig: "商家 / 渠道配置",
+        cloudSyncConfig: "云端同步配置",
+        workerUrl: "Cloudflare Worker 地址",
+        accessPassword: "访问密码",
+        saveSyncConfig: "保存配置并同步",
+        loadCloudData: "重新加载云端",
+        saveCloudNow: "立即保存云端",
+        syncConfigHint: "Worker 地址和访问密码会保存到 data.json，方便其他设备打开页面后自动读取并同步。每次打开或刷新页面都会重新加载 data.json。",
+        syncSecurityNote: "注意：如果 GitHub 仓库或 GitHub Pages 是公开的，data.json 里的 Worker 地址和访问密码也可能被看到。当前版本按你的需求保存，后续可以改成只本机保存密码。",
+        syncStatusLocal: "本地模式",
+        syncStatusLoading: "正在加载 data.json...",
+        syncStatusLoaded: "已加载云端 data.json：{time}",
+        syncStatusSaving: "正在保存到 GitHub data.json...",
+        syncStatusSaved: "已保存到 GitHub data.json：{time}",
+        syncStatusFailed: "云端同步失败：{message}",
+        syncConfigSaved: "同步配置已保存。",
+        syncNotConfigured: "请先填写 Cloudflare Worker 地址和访问密码。",
         summary: "比价结果",
         currentProduct: "当前商品",
         recommendedStore: "推荐商家",
         lowestUnitPrice: "最低单价",
         itemCount: "记录数量",
         productGroup: "商品分组",
+        currentProductGroup: "当前商品",
         addGroup: "新增商品",
+        addStore: "新增商家",
         renameGroup: "重命名",
         deleteGroup: "删除",
+        setCurrent: "设为当前",
+        current: "当前",
         groupHint: "同一个商品分组内才会进行比价，例如“洗面奶”下面录入不同商家的价格。",
+        productConfigHint: "在这里维护商品分组，主页面只负责选择当前商品。",
+        storeConfigHint: "在这里维护商家 / 渠道，价格记录中只能从下拉列表选择。",
         addItem: "新增价格记录",
+        addRow: "新增",
         editItem: "编辑价格记录",
         store: "商家 / 渠道",
+        storeName: "商家名称",
+        selectStore: "请选择商家",
         storePlaceholder: "例如：淘宝 / 京东 / Migros",
         product: "商品",
         price: "金额",
@@ -717,14 +1199,17 @@
         unitPrice: "每单位价格",
         result: "比较结果",
         actions: "操作",
+        bestStripPrefix: "当前最便宜",
+        cheaperThanHighest: "比最贵便宜 {percent}%",
+        bestTie: "并列最便宜 {count} 条",
         save: "保存",
         update: "更新",
         clear: "清空",
         edit: "编辑",
         delete: "删除",
+        copy: "复制",
         records: "价格记录",
-        emptyState: "暂无记录，请先新增价格记录。",
-        inlineEditHint: "PC端可以直接在表格行内修改，离开输入框后自动保存并重新计算。",
+        emptyState: "暂无记录，请点击新增添加一行。",
         formulaHint: "公式：实际金额 = 金额 - 返现；总规格 = 购买数量 × 单件规格；每单位价格 = 实际金额 ÷ 总规格。",
         bestDeal: "最便宜",
         higherThanBest: "贵 {percent}%",
@@ -736,8 +1221,14 @@
         multiBest: "有多个单位类型，推荐按单位类型分别查看表格中的“最便宜”。",
         confirmDeleteItem: "确认删除这条记录吗？",
         confirmDeleteGroup: "确认删除当前商品分组及其所有记录吗？",
+        confirmDeleteStore: "确认删除这个商家 / 渠道吗？",
+        cannotDeleteLastGroup: "至少保留一个商品分组。",
+        cannotDeleteLastStore: "至少保留一个商家 / 渠道。",
+        storeInUse: "该商家 / 渠道已经被价格记录使用，请先修改相关记录后再删除。",
         groupNamePrompt: "请输入商品名称，例如：洗面奶",
         renameGroupPrompt: "请输入新的商品名称",
+        newGroupDefault: "新商品",
+        newStoreDefault: "新商家",
         importSuccess: "导入成功",
         importFail: "导入失败，请检查 JSON 文件格式。",
         resetSample: "示例数据",
@@ -755,21 +1246,48 @@
       },
       en: {
         appTitle: "Price Compare",
-        export: "Export",
-        import: "Import",
+        more: "More",
+        close: "Close",
+        productGroupConfig: "Product Group Settings",
+        storeConfig: "Store / Platform Settings",
+        cloudSyncConfig: "Cloud Sync Settings",
+        workerUrl: "Cloudflare Worker URL",
+        accessPassword: "Access Password",
+        saveSyncConfig: "Save Settings & Sync",
+        loadCloudData: "Reload Cloud Data",
+        saveCloudNow: "Save to Cloud Now",
+        syncConfigHint: "The Worker URL and access password will be saved to data.json, so other devices can read them and sync automatically. The app reloads data.json every time it opens or refreshes.",
+        syncSecurityNote: "Note: if your GitHub repo or GitHub Pages is public, the Worker URL and access password in data.json may be visible. This version saves them as requested; later we can keep the password local only.",
+        syncStatusLocal: "Local mode",
+        syncStatusLoading: "Loading data.json...",
+        syncStatusLoaded: "Loaded cloud data.json: {time}",
+        syncStatusSaving: "Saving to GitHub data.json...",
+        syncStatusSaved: "Saved to GitHub data.json: {time}",
+        syncStatusFailed: "Cloud sync failed: {message}",
+        syncConfigSaved: "Sync settings saved.",
+        syncNotConfigured: "Please enter the Cloudflare Worker URL and access password first.",
         summary: "Comparison Result",
         currentProduct: "Current Product",
         recommendedStore: "Recommended Store",
         lowestUnitPrice: "Lowest Unit Price",
         itemCount: "Records",
         productGroup: "Product Group",
+        currentProductGroup: "Current Product",
         addGroup: "Add Product",
+        addStore: "Add Store",
         renameGroup: "Rename",
         deleteGroup: "Delete",
+        setCurrent: "Set Current",
+        current: "Current",
         groupHint: "Items are compared only inside the same product group, such as different stores for Face Wash.",
+        productConfigHint: "Manage product groups here. The main page only selects the current product.",
+        storeConfigHint: "Manage stores / platforms here. Price records can only choose from the dropdown list.",
         addItem: "Add Price Record",
+        addRow: "Add",
         editItem: "Edit Price Record",
         store: "Store / Platform",
+        storeName: "Store Name",
+        selectStore: "Select Store",
         storePlaceholder: "e.g. Amazon / Walmart / Migros",
         product: "Product",
         price: "Price",
@@ -782,14 +1300,17 @@
         unitPrice: "Unit Price",
         result: "Result",
         actions: "Actions",
+        bestStripPrefix: "Current Best Deal",
+        cheaperThanHighest: "{percent}% cheaper than the highest",
+        bestTie: "{count} tied best deals",
         save: "Save",
         update: "Update",
         clear: "Clear",
         edit: "Edit",
         delete: "Delete",
+        copy: "Copy",
         records: "Price Records",
-        emptyState: "No records yet. Add a price record first.",
-        inlineEditHint: "On PC, you can edit directly in the table row. Changes are saved and recalculated after you leave the field.",
+        emptyState: "No records yet. Click Add to insert a new row.",
         formulaHint: "Formula: Final Cost = Price - Cashback; Total Size = Quantity × Item Size; Unit Price = Final Cost ÷ Total Size.",
         bestDeal: "Best Deal",
         higherThanBest: "{percent}% higher",
@@ -801,8 +1322,14 @@
         multiBest: "There are multiple unit types. Check the Best Deal result separately by unit type.",
         confirmDeleteItem: "Delete this record?",
         confirmDeleteGroup: "Delete this product group and all its records?",
+        confirmDeleteStore: "Delete this store / platform?",
+        cannotDeleteLastGroup: "Keep at least one product group.",
+        cannotDeleteLastStore: "Keep at least one store / platform.",
+        storeInUse: "This store / platform is used by price records. Please change those records before deleting it.",
         groupNamePrompt: "Enter product name, e.g. Face Wash",
         renameGroupPrompt: "Enter the new product name",
+        newGroupDefault: "New Product",
+        newStoreDefault: "New Store",
         importSuccess: "Imported successfully",
         importFail: "Import failed. Please check the JSON file format.",
         resetSample: "Sample Data",
@@ -833,7 +1360,24 @@
     ];
 
     let state = loadState();
-    let editingItemId = null;
+    let pendingFocusItemId = null;
+    let cloudSaveTimer = null;
+    let isApplyingRemote = false;
+    let syncStatus = { type: "local", textKey: "syncStatusLocal", params: {} };
+
+    function normalizeSync(sync) {
+      const s = sync && typeof sync === "object" ? sync : {};
+      return {
+        workerUrl: String(s.workerUrl || "").trim(),
+        appPassword: String(s.appPassword || ""),
+        lastLoadedAt: String(s.lastLoadedAt || ""),
+        lastSavedAt: String(s.lastSavedAt || "")
+      };
+    }
+
+    function cloudConfigured() {
+      return !!(state.sync && state.sync.workerUrl && state.sync.appPassword);
+    }
 
     function t(key, params = {}) {
       let text = i18n[state.lang][key] || i18n.zh[key] || key;
@@ -849,17 +1393,29 @@
 
     function defaultState() {
       const groupId = uid("group");
+      const storeAId = uid("store");
+      const storeBId = uid("store");
       return {
         version: APP_VERSION,
         lang: "zh",
+        sync: {
+          workerUrl: "",
+          appPassword: "",
+          lastLoadedAt: "",
+          lastSavedAt: ""
+        },
         activeGroupId: groupId,
+        stores: [
+          { id: storeAId, name: "店铺A" },
+          { id: storeBId, name: "店铺B" }
+        ],
         groups: [
           {
             id: groupId,
             name: "洗面奶",
             items: [
-              { id: uid("item"), store: "店铺A", price: 88, cashback: 22.45, quantity: 1, size: 360, unit: "g" },
-              { id: uid("item"), store: "店铺B", price: 82, cashback: 1.47, quantity: 1, size: 400, unit: "g" }
+              { id: uid("item"), storeId: storeAId, price: 88, cashback: 22.45, quantity: 1, size: 360, unit: "g" },
+              { id: uid("item"), storeId: storeBId, price: 82, cashback: 1.47, quantity: 1, size: 400, unit: "g" }
             ]
           }
         ]
@@ -879,30 +1435,79 @@
     }
 
     function normalizeState(input) {
-      const normalized = {
-        version: APP_VERSION,
-        lang: input.lang === "en" ? "en" : "zh",
-        activeGroupId: input.activeGroupId,
-        groups: (input.groups || []).map(group => ({
-          id: group.id || uid("group"),
-          name: group.name || "Product",
-          items: (group.items || []).map(item => ({
+      const stores = [];
+
+      function addStore(name, id) {
+        const cleanName = String(name || "").trim();
+        if (!cleanName) return "";
+        const existingById = id ? stores.find(store => store.id === id) : null;
+        if (existingById) {
+          existingById.name = cleanName;
+          return existingById.id;
+        }
+        const existingByName = stores.find(store => store.name === cleanName);
+        if (existingByName) return existingByName.id;
+        const storeId = id || uid("store");
+        stores.push({ id: storeId, name: cleanName });
+        return storeId;
+      }
+
+      (input.stores || []).forEach(store => {
+        if (typeof store === "string") {
+          addStore(store);
+        } else {
+          addStore(store && store.name, store && store.id);
+        }
+      });
+
+      const normalizedGroups = (input.groups || []).map(group => ({
+        id: group.id || uid("group"),
+        name: group.name || "Product",
+        items: (group.items || []).map(item => {
+          let storeId = item.storeId && stores.some(store => store.id === item.storeId) ? item.storeId : "";
+          if (!storeId && item.store) storeId = addStore(item.store);
+          return {
             id: item.id || uid("item"),
-            store: item.store || "",
+            storeId,
             price: numberOrZero(item.price),
             cashback: numberOrZero(item.cashback),
             quantity: item.quantity === undefined ? 1 : numberOrZero(item.quantity),
             size: numberOrZero(item.size),
-            unit: units.some(u => u.code === item.unit) ? item.unit : "g"
-          }))
-        }))
+            unit: units.some(u => u.code === item.unit) ? item.unit : "g",
+            createdAt: item.createdAt || Date.now()
+          };
+        })
+      }));
+
+      const normalized = {
+        version: APP_VERSION,
+        lang: input.lang === "en" ? "en" : "zh",
+        sync: normalizeSync(input.sync),
+        activeGroupId: input.activeGroupId,
+        stores,
+        groups: normalizedGroups
       };
 
       if (!normalized.groups.length) {
         const fallback = defaultState();
         normalized.groups = fallback.groups;
         normalized.activeGroupId = fallback.activeGroupId;
+        normalized.stores = fallback.stores;
       }
+
+      if (!normalized.stores.length) {
+        const fallbackStoreName = normalized.lang === "en" ? "Store A" : "店铺A";
+        normalized.stores.push({ id: uid("store"), name: fallbackStoreName });
+      }
+
+      const defaultStoreId = normalized.stores[0] ? normalized.stores[0].id : "";
+      normalized.groups.forEach(group => {
+        group.items.forEach(item => {
+          if (!normalized.stores.some(store => store.id === item.storeId)) {
+            item.storeId = defaultStoreId;
+          }
+        });
+      });
 
       if (!normalized.groups.some(g => g.id === normalized.activeGroupId)) {
         normalized.activeGroupId = normalized.groups[0].id;
@@ -911,9 +1516,20 @@
       return normalized;
     }
 
-    function saveState() {
+    function saveState(options = {}) {
       state.version = APP_VERSION;
+      state.sync = normalizeSync(state.sync);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      if (!options.localOnly && !isApplyingRemote && cloudConfigured()) {
+        scheduleCloudSave();
+      }
+    }
+
+    function scheduleCloudSave() {
+      clearTimeout(cloudSaveTimer);
+      cloudSaveTimer = setTimeout(() => {
+        saveToCloud(false);
+      }, 900);
     }
 
     function currentGroup() {
@@ -946,6 +1562,18 @@
 
     function baseUnitLabel(base) {
       return i18n[state.lang].unitLabel[base] || base;
+    }
+
+    function storeName(storeId) {
+      const store = (state.stores || []).find(s => s.id === storeId);
+      return store ? store.name : "";
+    }
+
+    function storeOptionsHtml(selectedStoreId) {
+      return (state.stores || []).map((store, index) => {
+        const selected = store.id === selectedStoreId || (!selectedStoreId && index === 0) ? " selected" : "";
+        return `<option value="${escapeAttr(store.id)}"${selected}>${escapeHtml(store.name)}</option>`;
+      }).join("");
     }
 
     function calcItem(item) {
@@ -1010,11 +1638,17 @@
 
     function renderAll() {
       renderI18n();
-      renderUnits();
       renderGroups();
       renderSummary();
       renderRecords();
-      updateFormLanguage();
+      renderSyncStatus();
+      if ($("#configOverlay").hasClass("show")) {
+        const isProduct = $("#productConfigPanel").hasClass("active");
+        const isStore = $("#storeConfigPanel").hasClass("active");
+        $("#configTitle").text(isProduct ? t("productGroupConfig") : isStore ? t("storeConfig") : t("cloudSyncConfig"));
+        renderConfig();
+      }
+      focusPendingRow();
     }
 
     function renderI18n() {
@@ -1028,6 +1662,142 @@
         $(this).attr("placeholder", t(key));
       });
       $("#btnLang").text(state.lang === "zh" ? "🌐 EN" : "🌐 中文");
+    }
+
+
+    function setSyncStatus(type, key, params = {}) {
+      syncStatus = { type, textKey: key, params };
+      renderSyncStatus();
+    }
+
+    function renderSyncStatus() {
+      const text = t(syncStatus.textKey || "syncStatusLocal", syncStatus.params || {});
+      const cls = syncStatus.type === "ok" ? "ok" : syncStatus.type === "busy" ? "busy" : syncStatus.type === "error" ? "error" : "";
+      $("#syncStatusMini").removeClass("ok busy error").addClass(cls);
+      $("#syncStatusText").text(text);
+      $("#syncConfigStatus").text(text);
+      if ($("#syncConfigPanel").hasClass("active")) {
+        $("#syncWorkerUrl").val(state.sync && state.sync.workerUrl ? state.sync.workerUrl : "");
+        $("#syncPassword").val(state.sync && state.sync.appPassword ? state.sync.appPassword : "");
+      }
+    }
+
+    function nowText() {
+      return new Date().toLocaleString(state.lang === "zh" ? "zh-CN" : "en-US", { hour12: false });
+    }
+
+    function mergeRemoteState(remoteInput) {
+      const localSync = normalizeSync(state.sync);
+      const remote = normalizeState(remoteInput);
+      remote.sync = normalizeSync({ ...localSync, ...remote.sync });
+      if (!remote.sync.workerUrl && localSync.workerUrl) remote.sync.workerUrl = localSync.workerUrl;
+      if (!remote.sync.appPassword && localSync.appPassword) remote.sync.appPassword = localSync.appPassword;
+      state = remote;
+    }
+
+    async function fetchDirectDataJson() {
+      try {
+        const response = await fetch(`data.json?ts=${Date.now()}`, { cache: "no-store" });
+        if (!response.ok) return null;
+        return await response.json();
+      } catch (error) {
+        return null;
+      }
+    }
+
+    async function cloudRequest(method, payload) {
+      const sync = normalizeSync(state.sync);
+      const url = sync.workerUrl.replace(/\/+$/, "");
+      const options = {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          "X-App-Password": sync.appPassword
+        }
+      };
+      if (payload !== undefined) options.body = JSON.stringify(payload);
+      const response = await fetch(url, options);
+      let body = null;
+      try {
+        body = await response.json();
+      } catch (error) {
+        body = null;
+      }
+      if (!response.ok || (body && body.ok === false)) {
+        const message = body && body.error ? body.error : `HTTP ${response.status}`;
+        throw new Error(message);
+      }
+      return body;
+    }
+
+    async function loadFromCloud(showAlert = false) {
+      if (!cloudConfigured()) {
+        setSyncStatus("local", "syncNotConfigured");
+        if (showAlert) alert(t("syncNotConfigured"));
+        return false;
+      }
+      try {
+        setSyncStatus("busy", "syncStatusLoading");
+        const result = await cloudRequest("GET");
+        const remoteData = result && result.data ? result.data : result;
+        isApplyingRemote = true;
+        mergeRemoteState(remoteData);
+        state.sync.lastLoadedAt = new Date().toISOString();
+        saveState({ localOnly: true });
+        isApplyingRemote = false;
+        renderAll();
+        setSyncStatus("ok", "syncStatusLoaded", { time: nowText() });
+        return true;
+      } catch (error) {
+        isApplyingRemote = false;
+        setSyncStatus("error", "syncStatusFailed", { message: error.message });
+        if (showAlert) alert(t("syncStatusFailed", { message: error.message }));
+        return false;
+      }
+    }
+
+    async function saveToCloud(showAlert = false) {
+      clearTimeout(cloudSaveTimer);
+      if (!cloudConfigured()) {
+        setSyncStatus("local", "syncNotConfigured");
+        if (showAlert) alert(t("syncNotConfigured"));
+        return false;
+      }
+      try {
+        setSyncStatus("busy", "syncStatusSaving");
+        const savedAt = new Date().toISOString();
+        const payload = JSON.parse(JSON.stringify({ ...state, version: APP_VERSION, sync: { ...normalizeSync(state.sync), lastSavedAt: savedAt } }));
+        await cloudRequest("PUT", payload);
+        state.sync.lastSavedAt = savedAt;
+        saveState({ localOnly: true });
+        renderSyncStatus();
+        setSyncStatus("ok", "syncStatusSaved", { time: nowText() });
+        return true;
+      } catch (error) {
+        setSyncStatus("error", "syncStatusFailed", { message: error.message });
+        if (showAlert) alert(t("syncStatusFailed", { message: error.message }));
+        return false;
+      }
+    }
+
+    async function bootstrapCloudData() {
+      setSyncStatus("busy", "syncStatusLoading");
+      const directData = await fetchDirectDataJson();
+      if (directData && directData.groups) {
+        isApplyingRemote = true;
+        mergeRemoteState(directData);
+        state.sync.lastLoadedAt = new Date().toISOString();
+        saveState({ localOnly: true });
+        isApplyingRemote = false;
+        renderAll();
+        setSyncStatus("ok", "syncStatusLoaded", { time: nowText() });
+      } else if (!cloudConfigured()) {
+        setSyncStatus("local", "syncStatusLocal");
+      }
+
+      if (cloudConfigured()) {
+        await loadFromCloud(false);
+      }
     }
 
     function renderUnits() {
@@ -1060,7 +1830,7 @@
       if (baseKeys.length === 1) {
         const base = baseKeys[0];
         const best = analysis.bestByBase[base];
-        const bestNames = best.bestRows.map(row => row.item.store).filter(Boolean).join(" / ") || "-";
+        const bestNames = best.bestRows.map(row => storeName(row.item.storeId)).filter(Boolean).join(" / ") || "-";
         $("#summaryStore").text(bestNames);
         $("#summaryPrice").text(`${smartNumber(best.minPrice, 6)} / ${baseUnitLabel(base)}`);
         $("#summaryNote").text(best.total > 1 ? "" : t("noValidBest"));
@@ -1074,13 +1844,54 @@
       $("#summaryNote").text(t("mixedUnits"));
     }
 
+
+    function renderBestStrip(analysis) {
+      const baseKeys = Object.keys(analysis.bestByBase);
+      if (!baseKeys.length) {
+        $("#bestStrip").removeClass("show").empty();
+        return;
+      }
+
+      const base = baseKeys[0];
+      const best = analysis.bestByBase[base];
+      const unit = baseUnitLabel(base);
+      const bestNames = best.bestRows.map(row => storeName(row.item.storeId)).filter(Boolean).join(" / ") || "-";
+      const sameBaseRows = analysis.byBase[base] || [];
+      const maxPrice = sameBaseRows.length ? Math.max(...sameBaseRows.map(row => row.calc.unitPrice)) : best.minPrice;
+      const cheaperPercent = maxPrice > best.minPrice && maxPrice > 0 ? ((maxPrice - best.minPrice) / maxPrice) * 100 : 0;
+      const subParts = [];
+
+      if (best.bestRows.length > 1) {
+        subParts.push(t("bestTie", { count: best.bestRows.length }));
+      }
+
+      if (cheaperPercent > 0) {
+        subParts.push(t("cheaperThanHighest", { percent: smartNumber(cheaperPercent, 2) }));
+      }
+
+      if (baseKeys.length > 1) {
+        subParts.push(t("mixedUnits"));
+      }
+
+      const html = `
+        <span class="best-icon">🏆</span>
+        <span style="min-width:0;">
+          <div class="best-main">${escapeHtml(t("bestStripPrefix"))}：${escapeHtml(bestNames)} · ${escapeHtml(smartNumber(best.minPrice, 6))} / ${escapeHtml(unit)}</div>
+          ${subParts.length ? `<div class="best-sub">${escapeHtml(subParts.join(" · "))}</div>` : ""}
+        </span>`;
+      $("#bestStrip").addClass("show").html(html);
+    }
+
     function renderRecords() {
       const group = currentGroup();
       const analysis = analysisForGroup(group);
+      renderBestStrip(analysis);
       const sortedRows = analysis.rows.slice().sort((a, b) => {
         if (a.calc.valid && b.calc.valid && a.calc.base === b.calc.base) return a.calc.unitPrice - b.calc.unitPrice;
         if (a.calc.valid !== b.calc.valid) return a.calc.valid ? -1 : 1;
-        return String(a.item.store).localeCompare(String(b.item.store));
+        const storeCompare = String(storeName(a.item.storeId)).localeCompare(String(storeName(b.item.storeId)));
+        if (storeCompare !== 0) return storeCompare;
+        return (a.item.createdAt || 0) - (b.item.createdAt || 0);
       });
 
       const tableRows = sortedRows.map(row => tableRowHtml(group, row, analysis.bestByBase)).join("");
@@ -1107,9 +1918,9 @@
 
       return `
         <tr class="${isBest ? "best-row" : ""}">
-          <td>${escapeHtml(group.name)}</td>
+          <td>${chipHtml(result)}</td>
           <td class="cell-editable">
-            <input class="cell-input cell-store js-inline-edit" data-id="${item.id}" data-field="store" type="text" value="${escapeAttr(item.store || "")}" />
+            <select class="cell-select cell-store js-inline-edit" data-id="${item.id}" data-field="storeId">${storeOptionsHtml(item.storeId)}</select>
           </td>
           <td class="cell-editable">
             <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="price" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.price)}" />
@@ -1128,10 +1939,10 @@
             <select class="cell-select cell-unit js-inline-edit" data-id="${item.id}" data-field="unit">${unitOptionsHtml(item.unit)}</select>
           </td>
           <td class="num">${c.valid ? `${smartNumber(c.totalBaseSize, 4)} ${baseDisplay}` : "-"}</td>
-          <td class="num">${c.valid ? `${smartNumber(c.unitPrice, 6)} / ${baseDisplay}` : "-"}</td>
-          <td>${chipHtml(result)}</td>
+          <td class="num ${isBest ? "unit-price-best" : ""}">${c.valid ? `${smartNumber(c.unitPrice, 6)} / ${baseDisplay}` : "-"}</td>
           <td>
             <div class="row-actions">
+              <button type="button" class="small-btn btn-ghost btn-copy" data-id="${item.id}">${t("copy")}</button>
               <button type="button" class="small-btn btn-danger btn-delete" data-id="${item.id}">${t("delete")}</button>
             </div>
           </td>
@@ -1143,26 +1954,59 @@
       const c = row.calc;
       const result = resultForRow(row, bestByBase);
       const isBest = result.type === "good" && result.text === t("bestDeal");
-      const unitDisplay = unitLabel(item.unit);
       const baseDisplay = baseUnitLabel(c.base);
 
       return `
         <article class="item-card ${isBest ? "best-card" : ""}">
           <div class="item-head">
             <div>
-              <div class="item-title">${escapeHtml(group.name)} · ${escapeHtml(item.store || "-")}</div>
-              <div class="item-subtitle">${smartNumber(item.quantity, 2)} × ${smartNumber(item.size, 2)} ${unitDisplay}</div>
+              <div class="item-title">${escapeHtml(storeName(item.storeId) || "-")}</div>
+              <div class="item-subtitle">${escapeHtml(group.name)}</div>
             </div>
             ${chipHtml(result)}
           </div>
-          <div class="kv-grid">
-            <div class="kv"><div class="kv-label">${t("price")}</div><div class="kv-value num">${money(item.price)}</div></div>
-            <div class="kv"><div class="kv-label">${t("cashback")}</div><div class="kv-value num">${money(item.cashback)}</div></div>
-            <div class="kv"><div class="kv-label">${t("finalCost")}</div><div class="kv-value num">${c.valid ? money(c.finalCost) : "-"}</div></div>
-            <div class="kv"><div class="kv-label">${t("unitPrice")}</div><div class="kv-value num">${c.valid ? `${smartNumber(c.unitPrice, 6)} / ${baseDisplay}` : "-"}</div></div>
+          <div class="mobile-metrics">
+            <div class="metric-pill ${isBest ? "best-metric" : ""}">
+              <div class="metric-label">${t("unitPrice")}</div>
+              <div class="metric-value">${c.valid ? `${smartNumber(c.unitPrice, 6)} / ${baseDisplay}` : "-"}</div>
+            </div>
+            <div class="metric-pill">
+              <div class="metric-label">${t("finalCost")}</div>
+              <div class="metric-value">${c.valid ? money(c.finalCost) : "-"}</div>
+            </div>
+            <div class="metric-pill">
+              <div class="metric-label">${t("totalSize")}</div>
+              <div class="metric-value">${c.valid ? `${smartNumber(c.totalBaseSize, 4)} ${baseDisplay}` : "-"}</div>
+            </div>
+          </div>
+          <div class="mobile-edit-grid">
+            <div class="field-store-mobile">
+              <label>${t("store")}</label>
+              <select class="js-inline-edit" data-id="${item.id}" data-field="storeId">${storeOptionsHtml(item.storeId)}</select>
+            </div>
+            <div>
+              <label>${t("price")}</label>
+              <input class="js-inline-edit" data-id="${item.id}" data-field="price" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.price)}" />
+            </div>
+            <div>
+              <label>${t("cashback")}</label>
+              <input class="js-inline-edit" data-id="${item.id}" data-field="cashback" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.cashback)}" />
+            </div>
+            <div>
+              <label>${t("quantity")}</label>
+              <input class="js-inline-edit" data-id="${item.id}" data-field="quantity" type="number" min="0" step="1" inputmode="numeric" value="${escapeAttr(item.quantity)}" />
+            </div>
+            <div>
+              <label>${t("size")}</label>
+              <input class="js-inline-edit" data-id="${item.id}" data-field="size" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.size)}" />
+            </div>
+            <div>
+              <label>${t("unit")}</label>
+              <select class="js-inline-edit" data-id="${item.id}" data-field="unit">${unitOptionsHtml(item.unit)}</select>
+            </div>
           </div>
           <div class="row-actions">
-            <button type="button" class="small-btn btn-edit" data-id="${item.id}">${t("edit")}</button>
+            <button type="button" class="small-btn btn-ghost btn-copy" data-id="${item.id}">${t("copy")}</button>
             <button type="button" class="small-btn btn-danger btn-delete" data-id="${item.id}">${t("delete")}</button>
           </div>
         </article>`;
@@ -1173,43 +2017,55 @@
       return `<span class="chip ${cls}">${escapeHtml(result.text)}</span>`;
     }
 
-    function updateFormLanguage() {
-      $("#formTitle").text(editingItemId ? t("editItem") : t("addItem"));
-      $("#btnSave").text(editingItemId ? t("update") : t("save"));
-    }
-
-    function readForm() {
+    function createBlankItem() {
       return {
-        id: editingItemId || uid("item"),
-        store: $("#store").val().trim(),
-        price: numberOrZero($("#price").val()),
-        cashback: numberOrZero($("#cashback").val()),
-        quantity: numberOrZero($("#quantity").val() || 1),
-        size: numberOrZero($("#size").val()),
-        unit: $("#unit").val() || "g"
+        id: uid("item"),
+        storeId: state.stores[0] ? state.stores[0].id : "",
+        price: 0,
+        cashback: 0,
+        quantity: 1,
+        size: 0,
+        unit: "g",
+        createdAt: Date.now()
       };
     }
 
-    function resetForm() {
-      editingItemId = null;
-      $("#itemForm")[0].reset();
-      $("#quantity").val(1);
-      $("#unit").val("g");
-      updateFormLanguage();
+    function addRow() {
+      const group = currentGroup();
+      const item = createBlankItem();
+      group.items.push(item);
+      pendingFocusItemId = item.id;
+      saveState();
+      renderAll();
     }
 
-    function fillForm(item, shouldScroll = true) {
-      editingItemId = item.id;
-      $("#store").val(item.store);
-      $("#price").val(item.price);
-      $("#cashback").val(item.cashback);
-      $("#quantity").val(item.quantity);
-      $("#size").val(item.size);
-      $("#unit").val(item.unit);
-      updateFormLanguage();
-      if (shouldScroll) {
-        document.getElementById("itemForm").scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+    function copyRow(id) {
+      const group = currentGroup();
+      const sourceIndex = group.items.findIndex(x => x.id === id);
+      if (sourceIndex < 0) return;
+      const source = group.items[sourceIndex];
+      const copied = {
+        ...source,
+        id: uid("item"),
+        createdAt: Date.now()
+      };
+      group.items.splice(sourceIndex + 1, 0, copied);
+      pendingFocusItemId = copied.id;
+      saveState();
+      renderAll();
+    }
+
+    function focusPendingRow() {
+      if (!pendingFocusItemId) return;
+      const id = pendingFocusItemId;
+      pendingFocusItemId = null;
+      setTimeout(() => {
+        const input = $(`.js-inline-edit[data-id="${id}"][data-field="storeId"]`).filter(":visible").get(0);
+        if (input) {
+          input.focus();
+          if (typeof input.select === "function") input.select();
+        }
+      }, 50);
     }
 
     function escapeHtml(value) {
@@ -1230,8 +2086,8 @@
       const item = group.items.find(x => x.id === id);
       if (!item) return;
 
-      if (field === "store") {
-        item.store = String(value || "").trim();
+      if (field === "storeId") {
+        item.storeId = state.stores.some(store => store.id === value) ? value : (state.stores[0] ? state.stores[0].id : "");
       }
 
       if (["price", "cashback", "quantity", "size"].includes(field)) {
@@ -1240,10 +2096,6 @@
 
       if (field === "unit") {
         item.unit = units.some(u => u.code === value) ? value : "g";
-      }
-
-      if (editingItemId === id) {
-        fillForm(item, false);
       }
 
       saveState();
@@ -1258,23 +2110,108 @@
       }, 80);
     }
 
-    function exportJson() {
-      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      const date = new Date().toISOString().slice(0, 10);
-      a.href = url;
-      a.download = `price-compare-${date}.json`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
+
+
+    function uniqueName(baseName, list, getter) {
+      const base = String(baseName || "New").trim() || "New";
+      const names = new Set(list.map(item => getter(item)));
+      if (!names.has(base)) return base;
+      let index = 2;
+      while (names.has(`${base} ${index}`)) index += 1;
+      return `${base} ${index}`;
     }
 
-    $(document).on("input change", ".js-inline-edit", function () {
+    function closeMoreMenu() {
+      $("#moreMenu").removeClass("open");
+    }
+
+    function openConfig(type) {
+      closeMoreMenu();
+      const isProduct = type === "product";
+      const isStore = type === "store";
+      const isSync = type === "sync";
+      const title = isProduct ? t("productGroupConfig") : isStore ? t("storeConfig") : t("cloudSyncConfig");
+      $("#configTitle").text(title);
+      $("#productConfigPanel").toggleClass("active", isProduct);
+      $("#storeConfigPanel").toggleClass("active", isStore);
+      $("#syncConfigPanel").toggleClass("active", isSync);
+      $("#configOverlay").addClass("show").attr("aria-hidden", "false");
+      renderConfig();
+      renderSyncStatus();
+    }
+
+    function closeConfig() {
+      $("#configOverlay").removeClass("show").attr("aria-hidden", "true");
+    }
+
+    function renderConfig() {
+      renderProductConfig();
+      renderStoreConfig();
+    }
+
+    function renderProductConfig() {
+      const html = state.groups.map(group => {
+        const isCurrent = group.id === state.activeGroupId;
+        return `
+          <div class="config-row">
+            <input class="js-config-group-name" data-id="${escapeAttr(group.id)}" type="text" value="${escapeAttr(group.name)}" />
+            <button type="button" class="small-btn ${isCurrent ? "btn-good" : "btn-ghost"} btn-config-current-group" data-id="${escapeAttr(group.id)}">${isCurrent ? t("current") : t("setCurrent")}</button>
+            <button type="button" class="small-btn btn-danger btn-config-delete-group" data-id="${escapeAttr(group.id)}">${t("delete")}</button>
+          </div>`;
+      }).join("");
+      $("#productConfigList").html(html);
+    }
+
+    function renderStoreConfig() {
+      const html = state.stores.map(store => `
+        <div class="config-row store-row">
+          <input class="js-config-store-name" data-id="${escapeAttr(store.id)}" type="text" value="${escapeAttr(store.name)}" placeholder="${escapeAttr(t("storeName"))}" />
+          <button type="button" class="small-btn btn-danger btn-config-delete-store" data-id="${escapeAttr(store.id)}">${t("delete")}</button>
+        </div>`).join("");
+      $("#storeConfigList").html(html);
+    }
+
+    function addGroupFromConfig() {
+      const name = uniqueName(t("newGroupDefault"), state.groups, group => group.name);
+      const group = { id: uid("group"), name, items: [] };
+      state.groups.push(group);
+      state.activeGroupId = group.id;
+      saveState();
+      renderAll();
+      renderConfig();
+      setTimeout(() => {
+        const input = $(`.js-config-group-name[data-id="${group.id}"]`).get(0);
+        if (input) {
+          input.focus();
+          input.select();
+        }
+      }, 50);
+    }
+
+    function addStoreFromConfig() {
+      const name = uniqueName(t("newStoreDefault"), state.stores, store => store.name);
+      const store = { id: uid("store"), name };
+      state.stores.push(store);
+      saveState();
+      renderAll();
+      renderConfig();
+      setTimeout(() => {
+        const input = $(`.js-config-store-name[data-id="${store.id}"]`).get(0);
+        if (input) {
+          input.focus();
+          input.select();
+        }
+      }, 50);
+    }
+
+
+    $(document).on("input change", ".js-inline-edit", function (e) {
       const id = $(this).data("id");
       const field = $(this).data("field");
       updateInlineField(id, field, $(this).val());
+      if (e.type === "change" && ["unit", "storeId"].includes(field)) {
+        renderAll();
+      }
     });
 
     $(document).on("blur", ".js-inline-edit", function () {
@@ -1288,29 +2225,116 @@
       }
     });
 
-    $(document).on("submit", "#itemForm", function (e) {
-      e.preventDefault();
-      const group = currentGroup();
-      const item = readForm();
-      const index = group.items.findIndex(x => x.id === item.id);
-      if (index >= 0) {
-        group.items[index] = item;
-      } else {
-        group.items.push(item);
-      }
+
+
+    $("#btnMore").on("click", function (e) {
+      e.stopPropagation();
+      $("#moreMenu").toggleClass("open");
+    });
+
+    $(document).on("click", function (e) {
+      if (!$(e.target).closest(".more-wrap").length) closeMoreMenu();
+    });
+
+    $("#btnOpenProductConfig").on("click", function () {
+      openConfig("product");
+    });
+
+    $("#btnOpenStoreConfig").on("click", function () {
+      openConfig("store");
+    });
+
+    $("#btnOpenSyncConfig").on("click", function () {
+      openConfig("sync");
+    });
+
+    $("#btnCloseConfig").on("click", closeConfig);
+
+    $("#configOverlay").on("click", function (e) {
+      if (e.target === this) closeConfig();
+    });
+
+    $("#btnConfigAddGroup").on("click", addGroupFromConfig);
+    $("#btnConfigAddStore").on("click", addStoreFromConfig);
+
+    $(document).on("input", ".js-config-group-name", function () {
+      const id = $(this).data("id");
+      const group = state.groups.find(g => g.id === id);
+      if (!group) return;
+      group.name = String($(this).val() || "").trim() || t("newGroupDefault");
       saveState();
-      resetForm();
+      renderGroups();
+      renderSummary();
+      renderRecords();
+    });
+
+    $(document).on("input", ".js-config-store-name", function () {
+      const id = $(this).data("id");
+      const store = state.stores.find(s => s.id === id);
+      if (!store) return;
+      store.name = String($(this).val() || "").trim() || t("newStoreDefault");
+      saveState();
+      renderSummary();
+      renderRecords();
+    });
+
+    $(document).on("click", ".btn-config-current-group", function () {
+      const id = $(this).data("id");
+      if (!state.groups.some(group => group.id === id)) return;
+      state.activeGroupId = id;
+      saveState();
       renderAll();
     });
 
-    $(document).on("click", "#btnCancel", function () {
-      resetForm();
+    $(document).on("click", ".btn-config-delete-group", function () {
+      const id = $(this).data("id");
+      if (state.groups.length <= 1) return alert(t("cannotDeleteLastGroup"));
+      if (!confirm(t("confirmDeleteGroup"))) return;
+      state.groups = state.groups.filter(group => group.id !== id);
+      if (!state.groups.some(group => group.id === state.activeGroupId)) {
+        state.activeGroupId = state.groups[0].id;
+      }
+      saveState();
+      renderAll();
     });
 
-    $(document).on("click", ".btn-edit", function () {
+    $(document).on("click", ".btn-config-delete-store", function () {
       const id = $(this).data("id");
-      const item = currentGroup().items.find(x => x.id === id);
-      if (item) fillForm(item);
+      if (state.stores.length <= 1) return alert(t("cannotDeleteLastStore"));
+      const used = state.groups.some(group => group.items.some(item => item.storeId === id));
+      if (used) return alert(t("storeInUse"));
+      if (!confirm(t("confirmDeleteStore"))) return;
+      state.stores = state.stores.filter(store => store.id !== id);
+      saveState();
+      renderAll();
+    });
+
+    $("#btnSaveSyncConfig").on("click", async function () {
+      state.sync = normalizeSync({
+        ...state.sync,
+        workerUrl: $("#syncWorkerUrl").val(),
+        appPassword: $("#syncPassword").val()
+      });
+      saveState({ localOnly: true });
+      setSyncStatus("ok", "syncConfigSaved");
+      await saveToCloud(true);
+      renderAll();
+    });
+
+    $("#btnLoadCloud").on("click", function () {
+      loadFromCloud(true);
+    });
+
+    $("#btnSaveCloud").on("click", function () {
+      saveToCloud(true);
+    });
+
+    $(document).on("click", "#btnAddRow", function () {
+      addRow();
+    });
+
+    $(document).on("click", ".btn-copy", function () {
+      copyRow($(this).data("id"));
     });
 
     $(document).on("click", ".btn-delete", function () {
@@ -1318,14 +2342,12 @@
       if (!confirm(t("confirmDeleteItem"))) return;
       const group = currentGroup();
       group.items = group.items.filter(x => x.id !== id);
-      if (editingItemId === id) resetForm();
       saveState();
       renderAll();
     });
 
     $("#groupSelect").on("change", function () {
       state.activeGroupId = $(this).val();
-      resetForm();
       saveState();
       renderAll();
     });
@@ -1336,7 +2358,6 @@
       const group = { id: uid("group"), name: name.trim(), items: [] };
       state.groups.push(group);
       state.activeGroupId = group.id;
-      resetForm();
       saveState();
       renderAll();
     });
@@ -1356,7 +2377,6 @@
       const id = state.activeGroupId;
       state.groups = state.groups.filter(group => group.id !== id);
       state.activeGroupId = state.groups[0].id;
-      resetForm();
       saveState();
       renderAll();
     });
@@ -1367,34 +2387,9 @@
       renderAll();
     });
 
-    $("#btnExport").on("click", exportJson);
-
-    $("#btnImport").on("click", function () {
-      $("#importFile").trigger("click");
-    });
-
-    $("#importFile").on("change", function (e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function () {
-        try {
-          const imported = JSON.parse(reader.result);
-          state = normalizeState(imported);
-          saveState();
-          resetForm();
-          renderAll();
-          alert(t("importSuccess"));
-        } catch (err) {
-          alert(t("importFail"));
-        } finally {
-          $("#importFile").val("");
-        }
-      };
-      reader.readAsText(file);
-    });
 
     renderAll();
+    bootstrapCloudData();
   </script>
 </body>
 </html>

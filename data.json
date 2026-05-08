@@ -1,0 +1,49 @@
+{
+  "version": "v1.0.8",
+  "lang": "zh",
+  "sync": {
+    "workerUrl": "",
+    "appPassword": "",
+    "lastLoadedAt": "",
+    "lastSavedAt": ""
+  },
+  "activeGroupId": "group_face_wash",
+  "stores": [
+    {
+      "id": "store_a",
+      "name": "店铺A"
+    },
+    {
+      "id": "store_b",
+      "name": "店铺B"
+    }
+  ],
+  "groups": [
+    {
+      "id": "group_face_wash",
+      "name": "洗面奶",
+      "items": [
+        {
+          "id": "item_001",
+          "storeId": "store_a",
+          "price": 88,
+          "cashback": 22.45,
+          "quantity": 1,
+          "size": 360,
+          "unit": "g",
+          "createdAt": 1715150000000
+        },
+        {
+          "id": "item_002",
+          "storeId": "store_b",
+          "price": 82,
+          "cashback": 1.47,
+          "quantity": 1,
+          "size": 400,
+          "unit": "g",
+          "createdAt": 1715150001000
+        }
+      ]
+    }
+  ]
+}
