@@ -1,4 +1,4 @@
-# 商品比价器 Price Compare v1.0.12
+# 商品比价器 Price Compare v1.0.13
 
 一个用于比较同类商品真实单价的小工具。项目使用 **HTML + jQuery** 实现，可部署到 **GitHub Pages**，并通过 **Cloudflare Worker** 把数据同步保存到 GitHub 仓库中的 `data.json`。
 
@@ -16,6 +16,7 @@
 - 支持中文 / English 多语言切换。
 - 支持 Cloudflare Worker + GitHub `data.json` 云端同步。
 - 支持右下角图标悬浮按钮：云端同步 ☁️ 和多语言切换 🌐。
+- 支持 iOS Safari 添加到主屏幕：独立运行、应用图标、状态栏和安全区域适配。
 - 所有配置都写入 `data.json`：语言、当前商品、商品分组、商家 / 渠道、单位配置、Cloudflare Worker 地址和访问密码。
 
 ## 文件说明
@@ -25,6 +26,8 @@
 | `index.html` | 前端主页面，包含 HTML、CSS、jQuery 逻辑 | GitHub |
 | `data.json` | 云端同步数据文件，保存全部数据和配置：商品分组、商家、单位、语言、当前商品、同步配置、价格记录 | GitHub |
 | `worker.js` | Cloudflare Worker 代码，用于读写 GitHub 的 `data.json` | Cloudflare Worker |
+| `manifest.webmanifest` | PWA 配置文件，用于添加到主屏幕 / 独立运行 | GitHub |
+| `icons/` | 应用图标，包含 iOS 主屏幕图标和浏览器图标 | GitHub |
 | `README.md` | 项目说明文档 | GitHub |
 
 ## 部署结构建议
@@ -35,6 +38,12 @@ GitHub 仓库根目录建议放置：
 product-price-compare/
 ├── index.html
 ├── data.json
+├── manifest.webmanifest
+├── icons/
+│   ├── apple-touch-icon.png
+│   ├── favicon-32.png
+│   ├── icon-192.png
+│   └── icon-512.png
 └── README.md
 ```
 
@@ -46,10 +55,32 @@ worker.js
 
 ## GitHub Pages 部署
 
-1. 把 `index.html`、`data.json`、`README.md` 上传到 GitHub 仓库。
+1. 把 `index.html`、`data.json`、`manifest.webmanifest`、`icons/`、`README.md` 上传到 GitHub 仓库。
 2. 打开 GitHub 仓库：`Settings` → `Pages`。
 3. Source 选择当前分支，例如 `main`。
 4. 保存后，使用 GitHub Pages 地址访问页面。
+
+## iOS Safari 添加到主屏幕
+
+当前版本已经加入 iOS Safari Web App 适配：
+
+- `apple-mobile-web-app-capable`：添加到主屏幕后可独立运行。
+- `apple-mobile-web-app-title`：主屏幕应用名称。
+- `apple-touch-icon`：iPhone / iPad 主屏幕图标。
+- `manifest.webmanifest`：兼容更多浏览器的 PWA 配置。
+- `safe-area-inset`：适配刘海屏 / 灵动岛 / 底部 Home Indicator。
+- iOS 输入框字体强制不低于 16px，减少点击输入时页面被自动放大的问题。
+
+使用方式：
+
+```text
+iPhone Safari 打开 GitHub Pages 地址
+→ 点击分享按钮
+→ 添加到主屏幕
+→ 打开主屏幕上的“商品比价器”图标
+```
+
+注意：首次添加到主屏幕后，如果你后续更新了图标或 manifest，iOS 可能会缓存旧图标。必要时可以删除主屏幕旧图标后重新添加一次。
 
 ## Cloudflare Worker 变量配置
 
@@ -193,7 +224,7 @@ g vs ml
 - 访问密码只保存在当前设备的 `localStorage`。
 - 或者将仓库设置为私有仓库，不公开 GitHub Pages 数据文件。
 
-当前 v1.0.12 仍保持“地址和密码都保存到 `data.json`”的逻辑。
+当前 v1.0.13 仍保持“地址和密码都保存到 `data.json`”的逻辑。
 
 ## 常见问题
 
@@ -232,6 +263,15 @@ g vs ml
 4. 如果没有自动加载，进入 `更多 → 云端同步配置`，点击 `重新加载云端`。
 
 ## 版本记录
+
+### v1.0.13
+
+- 新增 iOS Safari 添加到主屏幕适配。
+- 新增 `manifest.webmanifest`。
+- 新增 `icons/` 应用图标文件。
+- 新增 Apple Web App meta 标签，支持主屏幕独立运行。
+- 增加 iOS 安全区域适配，避免刘海屏 / 灵动岛 / 底部 Home Indicator 遮挡。
+- iOS Safari 输入框字体调整为不低于 16px，减少点击输入时自动放大的问题。
 
 ### v1.0.12
 
@@ -272,12 +312,15 @@ g vs ml
 
 ```text
 index.html
-data.json
+manifest.webmanifest
+icons/
 README.md
 ```
+
+说明：`data.json` 不建议覆盖线上真实数据，除非你是首次部署或确认要重置数据。
 
 ### Cloudflare Worker 需要更新
 
 ```text
-worker.js
+不需要更新
 ```
