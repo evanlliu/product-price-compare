@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-08T13:15:14.632Z",
-    "lastSavedAt": "2026-05-08T13:16:15.405Z"
+    "lastLoadedAt": "2026-05-08T13:18:07.032Z",
+    "lastSavedAt": "2026-05-08T13:18:23.000Z"
   },
   "units": [
     {
@@ -98,7 +98,7 @@
   "stores": [
     {
       "id": "store_a",
-      "name": "抖音"
+      "name": "抖音/Douyin"
     },
     {
       "id": "store_b",
@@ -151,7 +151,7 @@
     "stores": [
       {
         "id": "store_a",
-        "name": "抖音"
+        "name": "抖音/Douyin"
       },
       {
         "id": "store_b",
