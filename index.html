@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>商品比价器 Price Compare</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: rgba(255, 255, 255, 0.92);
+      --card-strong: #ffffff;
+      --text: #172033;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --primary: #2563eb;
+      --primary-soft: #dbeafe;
+      --good: #16a34a;
+      --good-soft: #dcfce7;
+      --warn: #f59e0b;
+      --warn-soft: #fef3c7;
+      --bad: #dc2626;
+      --bad-soft: #fee2e2;
+      --shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.12), transparent 32%),
+        radial-gradient(circle at top right, rgba(22, 163, 74, 0.10), transparent 28%),
+        var(--bg);
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    input,
+    select {
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 8px 10px;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      font-size: 16px;
+      width: 100%;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+      background: var(--card-strong);
+      color: var(--text);
+      border: 1px solid var(--line);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+      touch-action: manipulation;
+      white-space: nowrap;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.18);
+    }
+
+    .btn-good {
+      background: var(--good);
+      color: #fff;
+      border-color: var(--good);
+    }
+
+    .btn-danger {
+      background: #fff;
+      color: var(--bad);
+      border-color: #fecaca;
+    }
+
+    .btn-ghost {
+      background: rgba(255, 255, 255, 0.65);
+    }
+
+    .app {
+      width: min(1220px, 100%);
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--primary), #22c55e);
+      color: #fff;
+      font-weight: 800;
+      box-shadow: var(--shadow);
+      flex: 0 0 auto;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .version {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      overflow: hidden;
+    }
+
+    .card-inner {
+      padding: 14px;
+    }
+
+    .section-title {
+      margin: 0 0 10px;
+      font-size: 15px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .summary-tile {
+      background: rgba(255, 255, 255, 0.75);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
+      min-height: 78px;
+    }
+
+    .summary-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .summary-value {
+      font-size: 17px;
+      font-weight: 800;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .summary-note {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 7px;
+      line-height: 1.4;
+    }
+
+    .group-row {
+      display: grid;
+      grid-template-columns: minmax(180px, 1fr) auto auto auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1.2fr repeat(5, minmax(100px, 1fr)) auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .field label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin: 0 0 5px 2px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .hint-line {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+      margin-top: 8px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 1080px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 10px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    th {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      background: rgba(249, 250, 251, 0.9);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tbody tr.best-row {
+      background: rgba(220, 252, 231, 0.52);
+    }
+
+    tbody tr:hover {
+      background: rgba(219, 234, 254, 0.34);
+    }
+
+    .num {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 26px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid transparent;
+    }
+
+    .chip-good {
+      color: #166534;
+      background: var(--good-soft);
+      border-color: #bbf7d0;
+    }
+
+    .chip-warn {
+      color: #92400e;
+      background: var(--warn-soft);
+      border-color: #fde68a;
+    }
+
+    .chip-bad {
+      color: #991b1b;
+      background: var(--bad-soft);
+      border-color: #fecaca;
+    }
+
+    .chip-muted {
+      color: #475569;
+      background: #f1f5f9;
+      border-color: #e2e8f0;
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .small-btn {
+      padding: 7px 9px;
+      font-size: 12px;
+      border-radius: 10px;
+    }
+
+    .cell-input,
+    .cell-select {
+      min-height: 34px;
+      height: 34px;
+      border-radius: 10px;
+      padding: 5px 8px;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.82);
+      border-color: #dbe3ef;
+    }
+
+    .cell-input:focus,
+    .cell-select:focus {
+      background: #fff;
+    }
+
+    .cell-store {
+      width: 150px;
+    }
+
+    .cell-number {
+      width: 88px;
+      text-align: right;
+    }
+
+    .cell-unit {
+      width: 86px;
+    }
+
+    td.cell-editable {
+      padding: 6px 8px;
+    }
+
+    .mobile-list {
+      display: none;
+      padding: 10px;
+      gap: 10px;
+    }
+
+    .item-card {
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
+    }
+
+    .item-card.best-card {
+      border-color: #86efac;
+      background: rgba(220, 252, 231, 0.58);
+    }
+
+    .item-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .item-title {
+      font-weight: 900;
+      line-height: 1.25;
+      word-break: break-word;
+    }
+
+    .item-subtitle {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .kv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 8px 0 10px;
+    }
+
+    .kv {
+      background: rgba(248, 250, 252, 0.85);
+      border: 1px solid #edf2f7;
+      border-radius: 12px;
+      padding: 8px;
+      min-width: 0;
+    }
+
+    .kv-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .kv-value {
+      font-size: 14px;
+      font-weight: 800;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 24px;
+      font-size: 14px;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    @media (max-width: 900px) {
+      .app {
+        padding: 10px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+      }
+
+      h1 {
+        font-size: 18px;
+      }
+
+      .logo {
+        width: 38px;
+        height: 38px;
+        border-radius: 14px;
+      }
+
+      .top-actions button {
+        padding: 8px 10px;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .group-row {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .group-row select {
+        grid-column: 1 / -1;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .field-store {
+        grid-column: 1 / -1;
+      }
+
+      .form-actions {
+        grid-column: 1 / -1;
+      }
+
+      .form-actions button {
+        flex: 1;
+      }
+
+      .table-wrap {
+        display: none;
+      }
+
+      .mobile-list {
+        display: grid;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .topbar {
+        flex-direction: column;
+      }
+
+      .top-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      .top-actions button {
+        width: 100%;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .group-row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .card-inner {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">¥</div>
+        <div>
+          <h1 data-i18n="appTitle">商品比价器</h1>
+          <div class="version">v1.0.1 · HTML + jQuery · GitHub Pages</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button type="button" id="btnLang" class="btn-ghost">🌐 EN</button>
+        <button type="button" id="btnExport" class="btn-ghost" data-i18n="export">导出</button>
+        <button type="button" id="btnImport" class="btn-ghost" data-i18n="import">导入</button>
+        <input id="importFile" class="file-input" type="file" accept="application/json,.json" />
+      </div>
+    </header>
+
+    <section class="grid">
+      <div class="card">
+        <div class="card-inner">
+          <h2 class="section-title">🏆 <span data-i18n="summary">比价结果</span></h2>
+          <div class="summary-grid">
+            <div class="summary-tile">
+              <div class="summary-label" data-i18n="currentProduct">当前商品</div>
+              <div class="summary-value" id="summaryProduct">-</div>
+            </div>
+            <div class="summary-tile">
+              <div class="summary-label" data-i18n="recommendedStore">推荐商家</div>
+              <div class="summary-value" id="summaryStore">-</div>
+            </div>
+            <div class="summary-tile">
+              <div class="summary-label" data-i18n="lowestUnitPrice">最低单价</div>
+              <div class="summary-value num" id="summaryPrice">-</div>
+            </div>
+            <div class="summary-tile">
+              <div class="summary-label" data-i18n="itemCount">记录数量</div>
+              <div class="summary-value num" id="summaryCount">0</div>
+            </div>
+          </div>
+          <div class="summary-note" id="summaryNote"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-inner">
+          <h2 class="section-title">📦 <span data-i18n="productGroup">商品分组</span></h2>
+          <div class="group-row">
+            <select id="groupSelect"></select>
+            <button type="button" id="btnAddGroup" data-i18n="addGroup">新增商品</button>
+            <button type="button" id="btnRenameGroup" data-i18n="renameGroup">重命名</button>
+            <button type="button" id="btnDeleteGroup" class="btn-danger" data-i18n="deleteGroup">删除</button>
+          </div>
+          <div class="hint-line" data-i18n="groupHint">同一个商品分组内才会进行比价，例如“洗面奶”下面录入不同商家的价格。</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-inner">
+          <h2 class="section-title">➕ <span id="formTitle" data-i18n="addItem">新增价格记录</span></h2>
+          <form id="itemForm" autocomplete="off">
+            <div class="form-grid">
+              <div class="field field-store">
+                <label for="store" data-i18n="store">商家 / 渠道</label>
+                <input id="store" type="text" data-placeholder-key="storePlaceholder" placeholder="例如：淘宝 / 京东 / Migros" required />
+              </div>
+              <div class="field">
+                <label for="price" data-i18n="price">金额</label>
+                <input id="price" type="number" min="0" step="0.01" inputmode="decimal" placeholder="88" required />
+              </div>
+              <div class="field">
+                <label for="cashback" data-i18n="cashback">返现 / 优惠</label>
+                <input id="cashback" type="number" min="0" step="0.01" inputmode="decimal" placeholder="22.45" />
+              </div>
+              <div class="field">
+                <label for="quantity" data-i18n="quantity">购买数量</label>
+                <input id="quantity" type="number" min="0" step="1" inputmode="numeric" value="1" required />
+              </div>
+              <div class="field">
+                <label for="size" data-i18n="size">单件规格</label>
+                <input id="size" type="number" min="0" step="0.01" inputmode="decimal" placeholder="360" required />
+              </div>
+              <div class="field">
+                <label for="unit" data-i18n="unit">单位</label>
+                <select id="unit"></select>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn-primary" id="btnSave" data-i18n="save">保存</button>
+                <button type="button" id="btnCancel" data-i18n="clear">清空</button>
+              </div>
+            </div>
+          </form>
+          <div class="hint-line" data-i18n="formulaHint">公式：实际金额 = 金额 - 返现；总规格 = 购买数量 × 单件规格；每单位价格 = 实际金额 ÷ 总规格。</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-inner" style="padding-bottom: 0;">
+          <h2 class="section-title">📊 <span data-i18n="records">价格记录</span></h2>
+          <div class="hint-line" data-i18n="inlineEditHint">PC端可以直接在表格行内修改，离开输入框后自动保存并重新计算。</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-i18n="product">商品</th>
+                <th data-i18n="store">商家 / 渠道</th>
+                <th data-i18n="price">金额</th>
+                <th data-i18n="cashback">返现 / 优惠</th>
+                <th data-i18n="finalCost">实际金额</th>
+                <th data-i18n="quantity">购买数量</th>
+                <th data-i18n="size">单件规格</th>
+                <th data-i18n="unit">单位</th>
+                <th data-i18n="totalSize">总规格</th>
+                <th data-i18n="unitPrice">每单位价格</th>
+                <th data-i18n="result">比较结果</th>
+                <th data-i18n="actions">操作</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+        <div class="mobile-list" id="mobileList"></div>
+        <div class="empty" id="emptyState" style="display: none;" data-i18n="emptyState">暂无记录，请先新增价格记录。</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const APP_VERSION = "v1.0.1";
+    const STORAGE_KEY = "productPriceCompare.v1";
+
+    const i18n = {
+      zh: {
+        appTitle: "商品比价器",
+        export: "导出",
+        import: "导入",
+        summary: "比价结果",
+        currentProduct: "当前商品",
+        recommendedStore: "推荐商家",
+        lowestUnitPrice: "最低单价",
+        itemCount: "记录数量",
+        productGroup: "商品分组",
+        addGroup: "新增商品",
+        renameGroup: "重命名",
+        deleteGroup: "删除",
+        groupHint: "同一个商品分组内才会进行比价，例如“洗面奶”下面录入不同商家的价格。",
+        addItem: "新增价格记录",
+        editItem: "编辑价格记录",
+        store: "商家 / 渠道",
+        storePlaceholder: "例如：淘宝 / 京东 / Migros",
+        product: "商品",
+        price: "金额",
+        cashback: "返现 / 优惠",
+        finalCost: "实际金额",
+        quantity: "购买数量",
+        size: "单件规格",
+        unit: "单位",
+        totalSize: "总规格",
+        unitPrice: "每单位价格",
+        result: "比较结果",
+        actions: "操作",
+        save: "保存",
+        update: "更新",
+        clear: "清空",
+        edit: "编辑",
+        delete: "删除",
+        records: "价格记录",
+        emptyState: "暂无记录，请先新增价格记录。",
+        inlineEditHint: "PC端可以直接在表格行内修改，离开输入框后自动保存并重新计算。",
+        formulaHint: "公式：实际金额 = 金额 - 返现；总规格 = 购买数量 × 单件规格；每单位价格 = 实际金额 ÷ 总规格。",
+        bestDeal: "最便宜",
+        higherThanBest: "贵 {percent}%",
+        onlyItem: "唯一记录",
+        invalid: "数据不完整",
+        notComparable: "单位不可比较",
+        mixedUnits: "当前商品存在不同类型单位，系统会分别比较同类型单位，例如 g 与 kg 可比较，ml 与 L 可比较，但 g 与 ml 不会互相比较。",
+        noValidBest: "请至少录入一条完整记录后查看推荐。",
+        multiBest: "有多个单位类型，推荐按单位类型分别查看表格中的“最便宜”。",
+        confirmDeleteItem: "确认删除这条记录吗？",
+        confirmDeleteGroup: "确认删除当前商品分组及其所有记录吗？",
+        groupNamePrompt: "请输入商品名称，例如：洗面奶",
+        renameGroupPrompt: "请输入新的商品名称",
+        importSuccess: "导入成功",
+        importFail: "导入失败，请检查 JSON 文件格式。",
+        resetSample: "示例数据",
+        unitLabel: {
+          g: "克",
+          kg: "千克",
+          ml: "毫升",
+          l: "升",
+          pcs: "个",
+          bottle: "瓶",
+          pack: "包",
+          sheet: "片 / 抽",
+          roll: "卷"
+        }
+      },
+      en: {
+        appTitle: "Price Compare",
+        export: "Export",
+        import: "Import",
+        summary: "Comparison Result",
+        currentProduct: "Current Product",
+        recommendedStore: "Recommended Store",
+        lowestUnitPrice: "Lowest Unit Price",
+        itemCount: "Records",
+        productGroup: "Product Group",
+        addGroup: "Add Product",
+        renameGroup: "Rename",
+        deleteGroup: "Delete",
+        groupHint: "Items are compared only inside the same product group, such as different stores for Face Wash.",
+        addItem: "Add Price Record",
+        editItem: "Edit Price Record",
+        store: "Store / Platform",
+        storePlaceholder: "e.g. Amazon / Walmart / Migros",
+        product: "Product",
+        price: "Price",
+        cashback: "Cashback / Discount",
+        finalCost: "Final Cost",
+        quantity: "Quantity",
+        size: "Item Size",
+        unit: "Unit",
+        totalSize: "Total Size",
+        unitPrice: "Unit Price",
+        result: "Result",
+        actions: "Actions",
+        save: "Save",
+        update: "Update",
+        clear: "Clear",
+        edit: "Edit",
+        delete: "Delete",
+        records: "Price Records",
+        emptyState: "No records yet. Add a price record first.",
+        inlineEditHint: "On PC, you can edit directly in the table row. Changes are saved and recalculated after you leave the field.",
+        formulaHint: "Formula: Final Cost = Price - Cashback; Total Size = Quantity × Item Size; Unit Price = Final Cost ÷ Total Size.",
+        bestDeal: "Best Deal",
+        higherThanBest: "{percent}% higher",
+        onlyItem: "Only Item",
+        invalid: "Incomplete Data",
+        notComparable: "Not Comparable",
+        mixedUnits: "This product has different unit types. The app compares compatible units separately, such as g with kg and ml with L. It does not compare g with ml.",
+        noValidBest: "Add at least one complete record to see a recommendation.",
+        multiBest: "There are multiple unit types. Check the Best Deal result separately by unit type.",
+        confirmDeleteItem: "Delete this record?",
+        confirmDeleteGroup: "Delete this product group and all its records?",
+        groupNamePrompt: "Enter product name, e.g. Face Wash",
+        renameGroupPrompt: "Enter the new product name",
+        importSuccess: "Imported successfully",
+        importFail: "Import failed. Please check the JSON file format.",
+        resetSample: "Sample Data",
+        unitLabel: {
+          g: "g",
+          kg: "kg",
+          ml: "ml",
+          l: "L",
+          pcs: "pcs",
+          bottle: "bottle",
+          pack: "pack",
+          sheet: "sheet",
+          roll: "roll"
+        }
+      }
+    };
+
+    const units = [
+      { code: "g", base: "g", factor: 1 },
+      { code: "kg", base: "g", factor: 1000 },
+      { code: "ml", base: "ml", factor: 1 },
+      { code: "l", base: "ml", factor: 1000 },
+      { code: "pcs", base: "pcs", factor: 1 },
+      { code: "bottle", base: "bottle", factor: 1 },
+      { code: "pack", base: "pack", factor: 1 },
+      { code: "sheet", base: "sheet", factor: 1 },
+      { code: "roll", base: "roll", factor: 1 }
+    ];
+
+    let state = loadState();
+    let editingItemId = null;
+
+    function t(key, params = {}) {
+      let text = i18n[state.lang][key] || i18n.zh[key] || key;
+      Object.keys(params).forEach(k => {
+        text = text.replace(new RegExp("\\{" + k + "\\}", "g"), params[k]);
+      });
+      return text;
+    }
+
+    function uid(prefix) {
+      return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    }
+
+    function defaultState() {
+      const groupId = uid("group");
+      return {
+        version: APP_VERSION,
+        lang: "zh",
+        activeGroupId: groupId,
+        groups: [
+          {
+            id: groupId,
+            name: "洗面奶",
+            items: [
+              { id: uid("item"), store: "店铺A", price: 88, cashback: 22.45, quantity: 1, size: 360, unit: "g" },
+              { id: uid("item"), store: "店铺B", price: 82, cashback: 1.47, quantity: 1, size: 400, unit: "g" }
+            ]
+          }
+        ]
+      };
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return defaultState();
+        const parsed = JSON.parse(raw);
+        if (!parsed.groups || !Array.isArray(parsed.groups)) return defaultState();
+        return normalizeState(parsed);
+      } catch (e) {
+        return defaultState();
+      }
+    }
+
+    function normalizeState(input) {
+      const normalized = {
+        version: APP_VERSION,
+        lang: input.lang === "en" ? "en" : "zh",
+        activeGroupId: input.activeGroupId,
+        groups: (input.groups || []).map(group => ({
+          id: group.id || uid("group"),
+          name: group.name || "Product",
+          items: (group.items || []).map(item => ({
+            id: item.id || uid("item"),
+            store: item.store || "",
+            price: numberOrZero(item.price),
+            cashback: numberOrZero(item.cashback),
+            quantity: item.quantity === undefined ? 1 : numberOrZero(item.quantity),
+            size: numberOrZero(item.size),
+            unit: units.some(u => u.code === item.unit) ? item.unit : "g"
+          }))
+        }))
+      };
+
+      if (!normalized.groups.length) {
+        const fallback = defaultState();
+        normalized.groups = fallback.groups;
+        normalized.activeGroupId = fallback.activeGroupId;
+      }
+
+      if (!normalized.groups.some(g => g.id === normalized.activeGroupId)) {
+        normalized.activeGroupId = normalized.groups[0].id;
+      }
+
+      return normalized;
+    }
+
+    function saveState() {
+      state.version = APP_VERSION;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function currentGroup() {
+      return state.groups.find(g => g.id === state.activeGroupId) || state.groups[0];
+    }
+
+    function numberOrZero(value) {
+      const n = Number(value);
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    function money(value) {
+      const n = numberOrZero(value);
+      return n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function smartNumber(value, max = 6) {
+      const n = numberOrZero(value);
+      if (!Number.isFinite(n)) return "-";
+      return Number(n.toFixed(max)).toLocaleString(undefined, { maximumFractionDigits: max });
+    }
+
+    function unitInfo(code) {
+      return units.find(u => u.code === code) || units[0];
+    }
+
+    function unitLabel(code) {
+      return i18n[state.lang].unitLabel[code] || code;
+    }
+
+    function baseUnitLabel(base) {
+      return i18n[state.lang].unitLabel[base] || base;
+    }
+
+    function calcItem(item) {
+      const info = unitInfo(item.unit);
+      const price = numberOrZero(item.price);
+      const cashback = numberOrZero(item.cashback);
+      const quantity = numberOrZero(item.quantity);
+      const size = numberOrZero(item.size);
+      const finalCost = price - cashback;
+      const totalSizeOriginal = quantity * size;
+      const totalBaseSize = totalSizeOriginal * info.factor;
+      const valid = price >= 0 && cashback >= 0 && finalCost >= 0 && quantity > 0 && size > 0 && totalBaseSize > 0;
+      const unitPrice = valid ? finalCost / totalBaseSize : null;
+      return {
+        finalCost,
+        totalSizeOriginal,
+        totalBaseSize,
+        base: info.base,
+        unitPrice,
+        valid
+      };
+    }
+
+    function analysisForGroup(group) {
+      const rows = group.items.map(item => ({ item, calc: calcItem(item) }));
+      const byBase = {};
+      rows.forEach(row => {
+        if (!row.calc.valid) return;
+        if (!byBase[row.calc.base]) byBase[row.calc.base] = [];
+        byBase[row.calc.base].push(row);
+      });
+
+      const bestByBase = {};
+      Object.keys(byBase).forEach(base => {
+        const list = byBase[base];
+        const minPrice = Math.min(...list.map(row => row.calc.unitPrice));
+        const bestRows = list.filter(row => Math.abs(row.calc.unitPrice - minPrice) < 0.000000001);
+        bestByBase[base] = { minPrice, bestRows, total: list.length };
+      });
+
+      return { rows, byBase, bestByBase };
+    }
+
+    function resultForRow(row, bestByBase) {
+      if (!row.calc.valid) {
+        return { type: "muted", text: t("invalid") };
+      }
+      const best = bestByBase[row.calc.base];
+      if (!best) {
+        return { type: "muted", text: t("notComparable") };
+      }
+      if (best.total === 1) {
+        return { type: "good", text: t("onlyItem") };
+      }
+      const diff = row.calc.unitPrice - best.minPrice;
+      if (Math.abs(diff) < 0.000000001) {
+        return { type: "good", text: t("bestDeal") };
+      }
+      const percent = best.minPrice > 0 ? (diff / best.minPrice) * 100 : 0;
+      return { type: "warn", text: t("higherThanBest", { percent: smartNumber(percent, 2) }) };
+    }
+
+    function renderAll() {
+      renderI18n();
+      renderUnits();
+      renderGroups();
+      renderSummary();
+      renderRecords();
+      updateFormLanguage();
+    }
+
+    function renderI18n() {
+      document.documentElement.lang = state.lang === "zh" ? "zh-CN" : "en";
+      $(`[data-i18n]`).each(function () {
+        const key = $(this).data("i18n");
+        $(this).text(t(key));
+      });
+      $(`[data-placeholder-key]`).each(function () {
+        const key = $(this).data("placeholderKey");
+        $(this).attr("placeholder", t(key));
+      });
+      $("#btnLang").text(state.lang === "zh" ? "🌐 EN" : "🌐 中文");
+    }
+
+    function renderUnits() {
+      const selected = $("#unit").val() || "g";
+      const html = units.map(u => `<option value="${u.code}">${unitLabel(u.code)}</option>`).join("");
+      $("#unit").html(html).val(units.some(u => u.code === selected) ? selected : "g");
+    }
+
+    function renderGroups() {
+      const html = state.groups.map(group => `<option value="${group.id}">${escapeHtml(group.name)}</option>`).join("");
+      $("#groupSelect").html(html).val(state.activeGroupId);
+    }
+
+    function renderSummary() {
+      const group = currentGroup();
+      const analysis = analysisForGroup(group);
+      const baseKeys = Object.keys(analysis.bestByBase);
+      const itemsCount = group.items.length;
+
+      $("#summaryProduct").text(group.name || "-");
+      $("#summaryCount").text(itemsCount);
+
+      if (!baseKeys.length) {
+        $("#summaryStore").text("-");
+        $("#summaryPrice").text("-");
+        $("#summaryNote").text(t("noValidBest"));
+        return;
+      }
+
+      if (baseKeys.length === 1) {
+        const base = baseKeys[0];
+        const best = analysis.bestByBase[base];
+        const bestNames = best.bestRows.map(row => row.item.store).filter(Boolean).join(" / ") || "-";
+        $("#summaryStore").text(bestNames);
+        $("#summaryPrice").text(`${smartNumber(best.minPrice, 6)} / ${baseUnitLabel(base)}`);
+        $("#summaryNote").text(best.total > 1 ? "" : t("noValidBest"));
+        return;
+      }
+
+      const firstBase = baseKeys[0];
+      const firstBest = analysis.bestByBase[firstBase];
+      $("#summaryStore").text(t("multiBest"));
+      $("#summaryPrice").text(`${smartNumber(firstBest.minPrice, 6)} / ${baseUnitLabel(firstBase)} ...`);
+      $("#summaryNote").text(t("mixedUnits"));
+    }
+
+    function renderRecords() {
+      const group = currentGroup();
+      const analysis = analysisForGroup(group);
+      const sortedRows = analysis.rows.slice().sort((a, b) => {
+        if (a.calc.valid && b.calc.valid && a.calc.base === b.calc.base) return a.calc.unitPrice - b.calc.unitPrice;
+        if (a.calc.valid !== b.calc.valid) return a.calc.valid ? -1 : 1;
+        return String(a.item.store).localeCompare(String(b.item.store));
+      });
+
+      const tableRows = sortedRows.map(row => tableRowHtml(group, row, analysis.bestByBase)).join("");
+      const cards = sortedRows.map(row => mobileCardHtml(group, row, analysis.bestByBase)).join("");
+
+      $("#tableBody").html(tableRows);
+      $("#mobileList").html(cards);
+      $("#emptyState").toggle(group.items.length === 0);
+    }
+
+    function unitOptionsHtml(selectedUnit) {
+      return units.map(u => {
+        const selected = u.code === selectedUnit ? " selected" : "";
+        return `<option value="${u.code}"${selected}>${unitLabel(u.code)}</option>`;
+      }).join("");
+    }
+
+    function tableRowHtml(group, row, bestByBase) {
+      const item = row.item;
+      const c = row.calc;
+      const result = resultForRow(row, bestByBase);
+      const isBest = result.type === "good" && result.text === t("bestDeal");
+      const baseDisplay = baseUnitLabel(c.base);
+
+      return `
+        <tr class="${isBest ? "best-row" : ""}">
+          <td>${escapeHtml(group.name)}</td>
+          <td class="cell-editable">
+            <input class="cell-input cell-store js-inline-edit" data-id="${item.id}" data-field="store" type="text" value="${escapeAttr(item.store || "")}" />
+          </td>
+          <td class="cell-editable">
+            <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="price" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.price)}" />
+          </td>
+          <td class="cell-editable">
+            <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="cashback" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.cashback)}" />
+          </td>
+          <td class="num">${c.valid ? money(c.finalCost) : "-"}</td>
+          <td class="cell-editable">
+            <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="quantity" type="number" min="0" step="1" inputmode="numeric" value="${escapeAttr(item.quantity)}" />
+          </td>
+          <td class="cell-editable">
+            <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="size" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.size)}" />
+          </td>
+          <td class="cell-editable">
+            <select class="cell-select cell-unit js-inline-edit" data-id="${item.id}" data-field="unit">${unitOptionsHtml(item.unit)}</select>
+          </td>
+          <td class="num">${c.valid ? `${smartNumber(c.totalBaseSize, 4)} ${baseDisplay}` : "-"}</td>
+          <td class="num">${c.valid ? `${smartNumber(c.unitPrice, 6)} / ${baseDisplay}` : "-"}</td>
+          <td>${chipHtml(result)}</td>
+          <td>
+            <div class="row-actions">
+              <button type="button" class="small-btn btn-danger btn-delete" data-id="${item.id}">${t("delete")}</button>
+            </div>
+          </td>
+        </tr>`;
+    }
+
+    function mobileCardHtml(group, row, bestByBase) {
+      const item = row.item;
+      const c = row.calc;
+      const result = resultForRow(row, bestByBase);
+      const isBest = result.type === "good" && result.text === t("bestDeal");
+      const unitDisplay = unitLabel(item.unit);
+      const baseDisplay = baseUnitLabel(c.base);
+
+      return `
+        <article class="item-card ${isBest ? "best-card" : ""}">
+          <div class="item-head">
+            <div>
+              <div class="item-title">${escapeHtml(group.name)} · ${escapeHtml(item.store || "-")}</div>
+              <div class="item-subtitle">${smartNumber(item.quantity, 2)} × ${smartNumber(item.size, 2)} ${unitDisplay}</div>
+            </div>
+            ${chipHtml(result)}
+          </div>
+          <div class="kv-grid">
+            <div class="kv"><div class="kv-label">${t("price")}</div><div class="kv-value num">${money(item.price)}</div></div>
+            <div class="kv"><div class="kv-label">${t("cashback")}</div><div class="kv-value num">${money(item.cashback)}</div></div>
+            <div class="kv"><div class="kv-label">${t("finalCost")}</div><div class="kv-value num">${c.valid ? money(c.finalCost) : "-"}</div></div>
+            <div class="kv"><div class="kv-label">${t("unitPrice")}</div><div class="kv-value num">${c.valid ? `${smartNumber(c.unitPrice, 6)} / ${baseDisplay}` : "-"}</div></div>
+          </div>
+          <div class="row-actions">
+            <button type="button" class="small-btn btn-edit" data-id="${item.id}">${t("edit")}</button>
+            <button type="button" class="small-btn btn-danger btn-delete" data-id="${item.id}">${t("delete")}</button>
+          </div>
+        </article>`;
+    }
+
+    function chipHtml(result) {
+      const cls = result.type === "good" ? "chip-good" : result.type === "warn" ? "chip-warn" : result.type === "bad" ? "chip-bad" : "chip-muted";
+      return `<span class="chip ${cls}">${escapeHtml(result.text)}</span>`;
+    }
+
+    function updateFormLanguage() {
+      $("#formTitle").text(editingItemId ? t("editItem") : t("addItem"));
+      $("#btnSave").text(editingItemId ? t("update") : t("save"));
+    }
+
+    function readForm() {
+      return {
+        id: editingItemId || uid("item"),
+        store: $("#store").val().trim(),
+        price: numberOrZero($("#price").val()),
+        cashback: numberOrZero($("#cashback").val()),
+        quantity: numberOrZero($("#quantity").val() || 1),
+        size: numberOrZero($("#size").val()),
+        unit: $("#unit").val() || "g"
+      };
+    }
+
+    function resetForm() {
+      editingItemId = null;
+      $("#itemForm")[0].reset();
+      $("#quantity").val(1);
+      $("#unit").val("g");
+      updateFormLanguage();
+    }
+
+    function fillForm(item, shouldScroll = true) {
+      editingItemId = item.id;
+      $("#store").val(item.store);
+      $("#price").val(item.price);
+      $("#cashback").val(item.cashback);
+      $("#quantity").val(item.quantity);
+      $("#size").val(item.size);
+      $("#unit").val(item.unit);
+      updateFormLanguage();
+      if (shouldScroll) {
+        document.getElementById("itemForm").scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value);
+    }
+
+    function updateInlineField(id, field, value) {
+      const group = currentGroup();
+      const item = group.items.find(x => x.id === id);
+      if (!item) return;
+
+      if (field === "store") {
+        item.store = String(value || "").trim();
+      }
+
+      if (["price", "cashback", "quantity", "size"].includes(field)) {
+        item[field] = numberOrZero(value);
+      }
+
+      if (field === "unit") {
+        item.unit = units.some(u => u.code === value) ? value : "g";
+      }
+
+      if (editingItemId === id) {
+        fillForm(item, false);
+      }
+
+      saveState();
+      renderSummary();
+    }
+
+    function rerenderAfterInlineBlur() {
+      setTimeout(() => {
+        if (!document.activeElement || !$(document.activeElement).hasClass("js-inline-edit")) {
+          renderAll();
+        }
+      }, 80);
+    }
+
+    function exportJson() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const date = new Date().toISOString().slice(0, 10);
+      a.href = url;
+      a.download = `price-compare-${date}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    $(document).on("input change", ".js-inline-edit", function () {
+      const id = $(this).data("id");
+      const field = $(this).data("field");
+      updateInlineField(id, field, $(this).val());
+    });
+
+    $(document).on("blur", ".js-inline-edit", function () {
+      rerenderAfterInlineBlur();
+    });
+
+    $(document).on("keydown", ".js-inline-edit", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        this.blur();
+      }
+    });
+
+    $(document).on("submit", "#itemForm", function (e) {
+      e.preventDefault();
+      const group = currentGroup();
+      const item = readForm();
+      const index = group.items.findIndex(x => x.id === item.id);
+      if (index >= 0) {
+        group.items[index] = item;
+      } else {
+        group.items.push(item);
+      }
+      saveState();
+      resetForm();
+      renderAll();
+    });
+
+    $(document).on("click", "#btnCancel", function () {
+      resetForm();
+    });
+
+    $(document).on("click", ".btn-edit", function () {
+      const id = $(this).data("id");
+      const item = currentGroup().items.find(x => x.id === id);
+      if (item) fillForm(item);
+    });
+
+    $(document).on("click", ".btn-delete", function () {
+      const id = $(this).data("id");
+      if (!confirm(t("confirmDeleteItem"))) return;
+      const group = currentGroup();
+      group.items = group.items.filter(x => x.id !== id);
+      if (editingItemId === id) resetForm();
+      saveState();
+      renderAll();
+    });
+
+    $("#groupSelect").on("change", function () {
+      state.activeGroupId = $(this).val();
+      resetForm();
+      saveState();
+      renderAll();
+    });
+
+    $("#btnAddGroup").on("click", function () {
+      const name = prompt(t("groupNamePrompt"));
+      if (!name || !name.trim()) return;
+      const group = { id: uid("group"), name: name.trim(), items: [] };
+      state.groups.push(group);
+      state.activeGroupId = group.id;
+      resetForm();
+      saveState();
+      renderAll();
+    });
+
+    $("#btnRenameGroup").on("click", function () {
+      const group = currentGroup();
+      const name = prompt(t("renameGroupPrompt"), group.name);
+      if (!name || !name.trim()) return;
+      group.name = name.trim();
+      saveState();
+      renderAll();
+    });
+
+    $("#btnDeleteGroup").on("click", function () {
+      if (state.groups.length <= 1) return alert(t("noValidBest"));
+      if (!confirm(t("confirmDeleteGroup"))) return;
+      const id = state.activeGroupId;
+      state.groups = state.groups.filter(group => group.id !== id);
+      state.activeGroupId = state.groups[0].id;
+      resetForm();
+      saveState();
+      renderAll();
+    });
+
+    $("#btnLang").on("click", function () {
+      state.lang = state.lang === "zh" ? "en" : "zh";
+      saveState();
+      renderAll();
+    });
+
+    $("#btnExport").on("click", exportJson);
+
+    $("#btnImport").on("click", function () {
+      $("#importFile").trigger("click");
+    });
+
+    $("#importFile").on("change", function (e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function () {
+        try {
+          const imported = JSON.parse(reader.result);
+          state = normalizeState(imported);
+          saveState();
+          resetForm();
+          renderAll();
+          alert(t("importSuccess"));
+        } catch (err) {
+          alert(t("importFail"));
+        } finally {
+          $("#importFile").val("");
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    renderAll();
+  </script>
+</body>
+</html>
