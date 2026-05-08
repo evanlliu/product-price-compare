@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-08T13:18:07.032Z",
-    "lastSavedAt": "2026-05-08T13:18:40.409Z"
+    "lastSavedAt": "2026-05-08T13:18:42.520Z"
   },
   "units": [
     {
@@ -110,7 +110,7 @@
     },
     {
       "id": "store_1778246141400_3f8d9088d1eef",
-      "name": "京东"
+      "name": "京东/JD"
     }
   ],
   "groups": [
@@ -163,7 +163,7 @@
       },
       {
         "id": "store_1778246141400_3f8d9088d1eef",
-        "name": "京东"
+        "name": "京东/JD"
       }
     ],
     "units": [
