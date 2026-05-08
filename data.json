@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-08T15:19:48.795Z",
-    "lastSavedAt": "2026-05-08T15:22:40.980Z"
+    "lastSavedAt": "2026-05-08T15:22:48.722Z"
   },
   "units": [
     {
@@ -147,7 +147,7 @@
         {
           "id": "item_1778253591752_312aff5e69c1b8",
           "storeId": "store_1778246138226_757f331a4c69f",
-          "price": 44.7,
+          "price": 100,
           "cashback": 0,
           "quantity": 2,
           "size": 34,
