@@ -1,4 +1,4 @@
-# 商品比价器 Price Compare v1.0.9
+# 商品比价器 Price Compare v1.0.10
 
 一个用于比较同类商品真实单价的小工具。项目使用 **HTML + jQuery** 实现，可部署到 **GitHub Pages**，并通过 **Cloudflare Worker** 把数据同步保存到 GitHub 仓库中的 `data.json`。
 
@@ -15,13 +15,14 @@
 - 支持 PC 表格布局和移动端卡片布局。
 - 支持中文 / English 多语言切换。
 - 支持 Cloudflare Worker + GitHub `data.json` 云端同步。
+- 所有配置都写入 `data.json`：语言、当前商品、商品分组、商家 / 渠道、单位配置、Cloudflare Worker 地址和访问密码。
 
 ## 文件说明
 
 | 文件 | 说明 | 更新位置 |
 |---|---|---|
 | `index.html` | 前端主页面，包含 HTML、CSS、jQuery 逻辑 | GitHub |
-| `data.json` | 云端同步数据文件，保存商品、商家、价格记录、同步配置 | GitHub |
+| `data.json` | 云端同步数据文件，保存全部数据和配置：商品分组、商家、单位、语言、当前商品、同步配置、价格记录 | GitHub |
 | `worker.js` | Cloudflare Worker 代码，用于读写 GitHub 的 `data.json` | Cloudflare Worker |
 | `README.md` | 项目说明文档 | GitHub |
 
@@ -98,6 +99,22 @@ https://your-worker-name.your-subdomain.workers.dev
 
 配置保存成功后，Worker 地址和访问密码会写入 `data.json`。这样其他设备打开页面时，会先读取 GitHub Pages 上的 `data.json`，然后自动使用其中的同步配置重新加载云端数据。
 
+## data.json 保存内容
+
+`data.json` 会保存全部数据和配置，主要结构如下：
+
+| 字段 | 说明 |
+|---|---|
+| `version` | 当前程序版本 |
+| `lang` / `settings.lang` | 当前语言，`zh` 或 `en` |
+| `activeGroupId` / `settings.activeGroupId` | 当前选中的商品分组 |
+| `sync` | Cloudflare Worker 地址、访问密码、最后加载 / 保存时间 |
+| `stores` / `configs.stores` | 商家 / 渠道配置 |
+| `units` / `configs.units` | 单位配置、换算基准、中文 / 英文显示名称 |
+| `groups` | 商品分组和所有价格记录 |
+
+为了兼容旧版本，页面会同时兼容旧字段和新的 `settings`、`configs` 字段。保存到云端时，会自动把配置字段重新整理写入 `data.json`。
+
 ## 数据同步逻辑
 
 页面打开或刷新时：
@@ -106,7 +123,7 @@ https://your-worker-name.your-subdomain.workers.dev
 2. 如果 `data.json` 中存在 Worker 地址和访问密码，则继续调用 Cloudflare Worker。
 3. Worker 从 GitHub 仓库读取最新 `data.json`。
 4. 页面使用云端数据覆盖本地数据。
-5. 后续修改价格记录、商品分组、商家配置时，会自动保存到 GitHub 的 `data.json`。
+5. 后续修改价格记录、商品分组、商家配置、语言、同步配置等内容时，会自动保存到 GitHub 的 `data.json`。
 
 ## 价格计算规则
 
@@ -175,7 +192,7 @@ g vs ml
 - 访问密码只保存在当前设备的 `localStorage`。
 - 或者将仓库设置为私有仓库，不公开 GitHub Pages 数据文件。
 
-当前 v1.0.9 仍保持“地址和密码都保存到 `data.json`”的逻辑。
+当前 v1.0.10 仍保持“地址和密码都保存到 `data.json`”的逻辑。
 
 ## 常见问题
 
@@ -214,6 +231,13 @@ g vs ml
 4. 如果没有自动加载，进入 `更多 → 云端同步配置`，点击 `重新加载云端`。
 
 ## 版本记录
+
+### v1.0.10
+
+- 所有配置统一保存到 `data.json`。
+- 新增 `settings` 字段，保存语言和当前商品分组。
+- 新增 `configs` 字段，保存商家 / 渠道配置和单位配置。
+- 保留旧字段兼容逻辑，旧版 `data.json` 会自动迁移成新结构。
 
 ### v1.0.9
 

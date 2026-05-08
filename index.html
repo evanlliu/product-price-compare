@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>商品比价器 Price Compare v1.0.9</title>
+  <title>商品比价器 Price Compare v1.0.10</title>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <style>
     :root {
@@ -1029,7 +1029,7 @@
       <div class="brand">
         <div class="logo">¥</div>
         <div>
-          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.9</span></h1>
+          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.10</span></h1>
         </div>
       </div>
       <div class="top-actions">
@@ -1139,7 +1139,7 @@
   </div>
 
   <script>
-    const APP_VERSION = "v1.0.9";
+    const APP_VERSION = "v1.0.10";
     const STORAGE_KEY = "productPriceCompare.v1";
 
     const i18n = {
@@ -1347,17 +1347,49 @@
       }
     };
 
-    const units = [
-      { code: "g", base: "g", factor: 1 },
-      { code: "kg", base: "g", factor: 1000 },
-      { code: "ml", base: "ml", factor: 1 },
-      { code: "l", base: "ml", factor: 1000 },
-      { code: "pcs", base: "pcs", factor: 1 },
-      { code: "bottle", base: "bottle", factor: 1 },
-      { code: "pack", base: "pack", factor: 1 },
-      { code: "sheet", base: "sheet", factor: 1 },
-      { code: "roll", base: "roll", factor: 1 }
+    const defaultUnits = [
+      { code: "g", base: "g", factor: 1, label: { zh: "克", en: "g" } },
+      { code: "kg", base: "g", factor: 1000, label: { zh: "千克", en: "kg" } },
+      { code: "ml", base: "ml", factor: 1, label: { zh: "毫升", en: "ml" } },
+      { code: "l", base: "ml", factor: 1000, label: { zh: "升", en: "L" } },
+      { code: "pcs", base: "pcs", factor: 1, label: { zh: "个", en: "pcs" } },
+      { code: "bottle", base: "bottle", factor: 1, label: { zh: "瓶", en: "bottle" } },
+      { code: "pack", base: "pack", factor: 1, label: { zh: "包", en: "pack" } },
+      { code: "sheet", base: "sheet", factor: 1, label: { zh: "片 / 抽", en: "sheet" } },
+      { code: "roll", base: "roll", factor: 1, label: { zh: "卷", en: "roll" } }
     ];
+
+    function cloneUnit(unit) {
+      return {
+        code: String(unit.code || "").trim(),
+        base: String(unit.base || unit.code || "").trim(),
+        factor: numberOrZero(unit.factor) || 1,
+        label: {
+          zh: unit.label && unit.label.zh ? String(unit.label.zh) : String(unit.zh || unit.code || ""),
+          en: unit.label && unit.label.en ? String(unit.label.en) : String(unit.en || unit.code || "")
+        }
+      };
+    }
+
+    function defaultUnitOptions() {
+      return defaultUnits.map(cloneUnit);
+    }
+
+    function normalizeUnits(inputUnits) {
+      const source = Array.isArray(inputUnits) && inputUnits.length ? inputUnits : defaultUnits;
+      const result = [];
+      source.forEach(unit => {
+        const normalized = cloneUnit(unit || {});
+        if (!normalized.code) return;
+        if (result.some(existing => existing.code === normalized.code)) return;
+        result.push(normalized);
+      });
+      return result.length ? result : defaultUnitOptions();
+    }
+
+    function appUnits() {
+      return state && Array.isArray(state.units) && state.units.length ? state.units : defaultUnits;
+    }
 
     let state = loadState();
     let pendingFocusItemId = null;
@@ -1398,17 +1430,30 @@
       return {
         version: APP_VERSION,
         lang: "zh",
+        settings: {
+          lang: "zh",
+          language: "zh",
+          activeGroupId: groupId
+        },
         sync: {
           workerUrl: "",
           appPassword: "",
           lastLoadedAt: "",
           lastSavedAt: ""
         },
+        units: defaultUnitOptions(),
         activeGroupId: groupId,
         stores: [
           { id: storeAId, name: "店铺A" },
           { id: storeBId, name: "店铺B" }
         ],
+        configs: {
+          stores: [
+            { id: storeAId, name: "店铺A" },
+            { id: storeBId, name: "店铺B" }
+          ],
+          units: defaultUnitOptions()
+        },
         groups: [
           {
             id: groupId,
@@ -1435,6 +1480,9 @@
     }
 
     function normalizeState(input) {
+      const settingsInput = input && typeof input.settings === "object" ? input.settings : {};
+      const configsInput = input && typeof input.configs === "object" ? input.configs : {};
+      const unitList = normalizeUnits(configsInput.units || input.units);
       const stores = [];
 
       function addStore(name, id) {
@@ -1452,7 +1500,8 @@
         return storeId;
       }
 
-      (input.stores || []).forEach(store => {
+      const storeSource = Array.isArray(configsInput.stores) ? configsInput.stores : (input.stores || []);
+      storeSource.forEach(store => {
         if (typeof store === "string") {
           addStore(store);
         } else {
@@ -1473,19 +1522,26 @@
             cashback: numberOrZero(item.cashback),
             quantity: item.quantity === undefined ? 1 : numberOrZero(item.quantity),
             size: numberOrZero(item.size),
-            unit: units.some(u => u.code === item.unit) ? item.unit : "g",
+            unit: unitList.some(u => u.code === item.unit) ? item.unit : (unitList[0] ? unitList[0].code : "g"),
             createdAt: item.createdAt || Date.now()
           };
         })
       }));
 
+      const normalizedLang = (settingsInput.lang || settingsInput.language || input.lang) === "en" ? "en" : "zh";
       const normalized = {
         version: APP_VERSION,
-        lang: input.lang === "en" ? "en" : "zh",
+        lang: normalizedLang,
+        settings: {
+          lang: normalizedLang,
+          language: normalizedLang,
+          activeGroupId: settingsInput.activeGroupId || input.activeGroupId || ""
+        },
         sync: normalizeSync(input.sync),
-        activeGroupId: input.activeGroupId,
+        units: unitList,
         stores,
-        groups: normalizedGroups
+        groups: normalizedGroups,
+        activeGroupId: settingsInput.activeGroupId || input.activeGroupId
       };
 
       if (!normalized.groups.length) {
@@ -1493,6 +1549,7 @@
         normalized.groups = fallback.groups;
         normalized.activeGroupId = fallback.activeGroupId;
         normalized.stores = fallback.stores;
+        normalized.units = fallback.units;
       }
 
       if (!normalized.stores.length) {
@@ -1513,12 +1570,36 @@
         normalized.activeGroupId = normalized.groups[0].id;
       }
 
+      syncConfigFields(normalized);
       return normalized;
     }
 
+    function syncConfigFields(target = state) {
+      target.version = APP_VERSION;
+      target.lang = target.lang === "en" ? "en" : "zh";
+      target.activeGroupId = target.activeGroupId || (target.groups && target.groups[0] ? target.groups[0].id : "");
+      target.sync = normalizeSync(target.sync);
+      target.units = normalizeUnits(target.units);
+      target.stores = Array.isArray(target.stores) ? target.stores.map(store => ({
+        id: store.id || uid("store"),
+        name: String(store.name || "").trim() || (target.lang === "en" ? "Store" : "商家")
+      })) : [];
+      target.settings = {
+        ...(target.settings || {}),
+        lang: target.lang,
+        language: target.lang,
+        activeGroupId: target.activeGroupId
+      };
+      target.configs = {
+        ...(target.configs || {}),
+        stores: target.stores.map(store => ({ ...store })),
+        units: target.units.map(unit => cloneUnit(unit))
+      };
+      return target;
+    }
+
     function saveState(options = {}) {
-      state.version = APP_VERSION;
-      state.sync = normalizeSync(state.sync);
+      syncConfigFields(state);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       if (!options.localOnly && !isApplyingRemote && cloudConfigured()) {
         scheduleCloudSave();
@@ -1553,14 +1634,19 @@
     }
 
     function unitInfo(code) {
-      return units.find(u => u.code === code) || units[0];
+      const list = appUnits();
+      return list.find(u => u.code === code) || list[0] || defaultUnits[0];
     }
 
     function unitLabel(code) {
+      const unit = appUnits().find(u => u.code === code);
+      if (unit && unit.label && unit.label[state.lang]) return unit.label[state.lang];
       return i18n[state.lang].unitLabel[code] || code;
     }
 
     function baseUnitLabel(base) {
+      const unit = appUnits().find(u => u.code === base);
+      if (unit && unit.label && unit.label[state.lang]) return unit.label[state.lang];
       return i18n[state.lang].unitLabel[base] || base;
     }
 
@@ -1766,7 +1852,16 @@
       try {
         setSyncStatus("busy", "syncStatusSaving");
         const savedAt = new Date().toISOString();
-        const payload = JSON.parse(JSON.stringify({ ...state, version: APP_VERSION, sync: { ...normalizeSync(state.sync), lastSavedAt: savedAt } }));
+        syncConfigFields(state);
+        const payload = JSON.parse(JSON.stringify(state));
+        payload.version = APP_VERSION;
+        payload.sync = { ...normalizeSync(state.sync), lastSavedAt: savedAt };
+        payload.settings = { ...(payload.settings || {}), lang: payload.lang, language: payload.lang, activeGroupId: payload.activeGroupId };
+        payload.configs = {
+          ...(payload.configs || {}),
+          stores: (payload.stores || []).map(store => ({ ...store })),
+          units: normalizeUnits(payload.units || []).map(unit => cloneUnit(unit))
+        };
         await cloudRequest("PUT", payload);
         state.sync.lastSavedAt = savedAt;
         saveState({ localOnly: true });
@@ -1802,8 +1897,9 @@
 
     function renderUnits() {
       const selected = $("#unit").val() || "g";
-      const html = units.map(u => `<option value="${u.code}">${unitLabel(u.code)}</option>`).join("");
-      $("#unit").html(html).val(units.some(u => u.code === selected) ? selected : "g");
+      const list = appUnits();
+      const html = list.map(u => `<option value="${u.code}">${unitLabel(u.code)}</option>`).join("");
+      $("#unit").html(html).val(list.some(u => u.code === selected) ? selected : (list[0] ? list[0].code : "g"));
     }
 
     function renderGroups() {
@@ -1903,7 +1999,7 @@
     }
 
     function unitOptionsHtml(selectedUnit) {
-      return units.map(u => {
+      return appUnits().map(u => {
         const selected = u.code === selectedUnit ? " selected" : "";
         return `<option value="${u.code}"${selected}>${unitLabel(u.code)}</option>`;
       }).join("");
@@ -2095,7 +2191,8 @@
       }
 
       if (field === "unit") {
-        item.unit = units.some(u => u.code === value) ? value : "g";
+        const list = appUnits();
+        item.unit = list.some(u => u.code === value) ? value : (list[0] ? list[0].code : "g");
       }
 
       saveState();
