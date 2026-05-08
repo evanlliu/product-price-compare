@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-08T13:18:07.032Z",
-    "lastSavedAt": "2026-05-08T13:18:42.520Z"
+    "lastLoadedAt": "2026-05-08T13:19:01.375Z",
+    "lastSavedAt": "2026-05-08T13:19:46.669Z"
   },
   "units": [
     {
@@ -130,7 +130,7 @@
         },
         {
           "id": "item_002",
-          "storeId": "store_b",
+          "storeId": "store_a",
           "price": 82,
           "cashback": 1.47,
           "quantity": 1,
