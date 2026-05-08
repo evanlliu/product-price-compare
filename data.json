@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-08T13:15:14.632Z",
-    "lastSavedAt": "2026-05-08T13:16:09.579Z"
+    "lastSavedAt": "2026-05-08T13:16:11.832Z"
   },
   "units": [
     {
@@ -142,7 +142,7 @@
     },
     {
       "id": "group_1778246168663_d24215f198b6e",
-      "name": "新商品",
+      "name": "尿不湿",
       "items": []
     }
   ],
