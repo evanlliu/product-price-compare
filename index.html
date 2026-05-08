@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>商品比价器 Price Compare v1.0.10</title>
+  <title>商品比价器 Price Compare v1.0.12</title>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <style>
     :root {
@@ -742,27 +742,55 @@
       text-align: left;
     }
 
-    .floating-lang {
+    .floating-actions {
       position: fixed;
       right: max(16px, env(safe-area-inset-right));
       bottom: max(18px, env(safe-area-inset-bottom));
       z-index: 40;
-      min-width: 64px;
-      height: 44px;
-      padding: 0 14px;
-      border-radius: 999px;
       display: inline-flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 4px;
-      background: rgba(255, 255, 255, 0.9);
+      gap: 8px;
+      padding: 6px;
+      border: 1px solid rgba(226, 232, 240, 0.92);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
       box-shadow: 0 12px 30px rgba(15, 23, 42, 0.16);
       backdrop-filter: blur(16px);
-      font-weight: 800;
     }
 
-    .floating-lang:active {
-      transform: scale(0.96);
+    .floating-btn {
+      width: 42px;
+      height: 42px;
+      min-width: 42px;
+      padding: 0;
+      border-radius: 999px;
+      display: inline-grid;
+      place-items: center;
+      font-size: 18px;
+      line-height: 1;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+      border-color: rgba(226, 232, 240, 0.92);
+    }
+
+    .floating-btn:active {
+      transform: scale(0.94);
+    }
+
+    .floating-sync.ok {
+      background: var(--good-soft);
+      border-color: #bbf7d0;
+    }
+
+    .floating-sync.busy {
+      background: var(--warn-soft);
+      border-color: #fde68a;
+    }
+
+    .floating-sync.error {
+      background: var(--bad-soft);
+      border-color: #fecaca;
     }
 
     .config-overlay {
@@ -972,13 +1000,18 @@
         width: min(220px, 92vw);
       }
 
-      .floating-lang {
+      .floating-actions {
         right: max(12px, env(safe-area-inset-right));
         bottom: max(12px, env(safe-area-inset-bottom));
-        min-width: 58px;
-        height: 40px;
-        padding: 0 12px;
-        font-size: 13px;
+        gap: 6px;
+        padding: 5px;
+      }
+
+      .floating-btn {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+        font-size: 17px;
       }
 
       .sync-actions button {
@@ -1029,7 +1062,7 @@
       <div class="brand">
         <div class="logo">¥</div>
         <div>
-          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.10</span></h1>
+          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.12</span></h1>
         </div>
       </div>
       <div class="top-actions">
@@ -1088,7 +1121,10 @@
         <div class="empty" id="emptyState" style="display: none;" data-i18n="emptyState">暂无记录，请点击新增添加一行。</div>
       </div>
     </section>
-    <button type="button" id="btnLang" class="floating-lang" aria-label="Language">🌐 EN</button>
+    <div class="floating-actions" aria-label="Quick actions">
+      <button type="button" id="btnFloatingSync" class="floating-btn floating-sync" aria-label="Cloud Sync" title="Cloud Sync">☁️</button>
+      <button type="button" id="btnLang" class="floating-btn floating-lang" aria-label="Language" title="Language">🌐</button>
+    </div>
   </main>
 
   <div class="config-overlay" id="configOverlay" aria-hidden="true">
@@ -1139,7 +1175,7 @@
   </div>
 
   <script>
-    const APP_VERSION = "v1.0.10";
+    const APP_VERSION = "v1.0.12";
     const STORAGE_KEY = "productPriceCompare.v1";
 
     const i18n = {
@@ -1155,6 +1191,8 @@
         saveSyncConfig: "保存配置并同步",
         loadCloudData: "重新加载云端",
         saveCloudNow: "立即保存云端",
+        cloudSyncNow: "云端同步",
+        switchLanguage: "切换语言",
         syncConfigHint: "Worker 地址和访问密码会保存到 data.json，方便其他设备打开页面后自动读取并同步。每次打开或刷新页面都会重新加载 data.json。",
         syncSecurityNote: "注意：如果 GitHub 仓库或 GitHub Pages 是公开的，data.json 里的 Worker 地址和访问密码也可能被看到。当前版本按你的需求保存，后续可以改成只本机保存密码。",
         syncStatusLocal: "本地模式",
@@ -1256,6 +1294,8 @@
         saveSyncConfig: "Save Settings & Sync",
         loadCloudData: "Reload Cloud Data",
         saveCloudNow: "Save to Cloud Now",
+        cloudSyncNow: "Cloud Sync",
+        switchLanguage: "Switch Language",
         syncConfigHint: "The Worker URL and access password will be saved to data.json, so other devices can read them and sync automatically. The app reloads data.json every time it opens or refreshes.",
         syncSecurityNote: "Note: if your GitHub repo or GitHub Pages is public, the Worker URL and access password in data.json may be visible. This version saves them as requested; later we can keep the password local only.",
         syncStatusLocal: "Local mode",
@@ -1747,7 +1787,14 @@
         const key = $(this).data("placeholderKey");
         $(this).attr("placeholder", t(key));
       });
-      $("#btnLang").text(state.lang === "zh" ? "🌐 EN" : "🌐 中文");
+      $("#btnLang")
+        .text("🌐")
+        .attr("title", t("switchLanguage"))
+        .attr("aria-label", t("switchLanguage"));
+      $("#btnFloatingSync")
+        .text("☁️")
+        .attr("title", t("cloudSyncNow"))
+        .attr("aria-label", t("cloudSyncNow"));
     }
 
 
@@ -1760,6 +1807,7 @@
       const text = t(syncStatus.textKey || "syncStatusLocal", syncStatus.params || {});
       const cls = syncStatus.type === "ok" ? "ok" : syncStatus.type === "busy" ? "busy" : syncStatus.type === "error" ? "error" : "";
       $("#syncStatusMini").removeClass("ok busy error").addClass(cls);
+      $("#btnFloatingSync").removeClass("ok busy error").addClass(cls).attr("title", text).attr("aria-label", `${t("cloudSyncNow")}：${text}`);
       $("#syncStatusText").text(text);
       $("#syncConfigStatus").text(text);
       if ($("#syncConfigPanel").hasClass("active")) {
@@ -2476,6 +2524,10 @@
       state.activeGroupId = state.groups[0].id;
       saveState();
       renderAll();
+    });
+
+    $("#btnFloatingSync").on("click", async function () {
+      await saveToCloud(true);
     });
 
     $("#btnLang").on("click", function () {
