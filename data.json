@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T14:30:35.801Z",
-    "lastSavedAt": "2026-05-13T14:32:41.301Z"
+    "lastSavedAt": "2026-05-13T14:33:08.342Z"
   },
   "units": [
     {
@@ -152,7 +152,7 @@
           "name": "娇润泉",
           "label": {
             "zh": "娇润泉",
-            "en": "娇润泉"
+            "en": "JOYRUQO"
           }
         }
       ],
