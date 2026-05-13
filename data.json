@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T10:51:01.394Z",
-    "lastSavedAt": "2026-05-13T10:52:21.899Z"
+    "lastLoadedAt": "2026-05-13T10:52:38.424Z",
+    "lastSavedAt": "2026-05-13T10:53:04.677Z"
   },
   "units": [
     {
@@ -158,8 +158,8 @@
           "quantity": 1,
           "size": 84,
           "sizeCode": "L",
-          "priceDate": "2026-01-20",
-          "status": "current",
+          "priceDate": "2026-05-13",
+          "status": "purchased",
           "unit": "sheet",
           "createdAt": 1778253591752
         },
