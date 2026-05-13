@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>商品比价器 Price Compare v1.0.29</title>
+  <title>商品比价器 Price Compare v1.0.28</title>
   <meta name="theme-color" content="#2563eb" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1073,69 +1073,6 @@
       white-space: nowrap;
     }
 
-    .config-overlay.unit-config-open {
-      align-items: flex-start;
-      padding: 12px;
-      overflow: hidden;
-    }
-
-    .config-overlay.unit-config-open .config-page {
-      width: min(1160px, calc(100vw - 24px));
-      max-height: none;
-      overflow: visible;
-    }
-
-    .config-overlay.unit-config-open .config-header {
-      padding: 10px 14px;
-    }
-
-    .config-overlay.unit-config-open .config-body {
-      padding: 10px 14px 12px;
-      overflow: visible;
-    }
-
-    .config-overlay.unit-config-open .hint-line {
-      margin-top: 4px;
-      line-height: 1.35;
-    }
-
-    .config-overlay.unit-config-open .config-toolbar {
-      margin-bottom: 6px;
-    }
-
-    .config-overlay.unit-config-open .unit-config-list {
-      overflow: visible;
-    }
-
-    .config-overlay.unit-config-open .unit-config-table {
-      min-width: 0;
-      border-radius: 14px;
-    }
-
-    .config-overlay.unit-config-open .unit-config-grid {
-      grid-template-columns: minmax(68px, 0.7fr) minmax(88px, 1fr) minmax(88px, 1fr) minmax(72px, 0.8fr) minmax(82px, 0.85fr) 52px;
-      gap: 6px;
-      padding: 5px 8px;
-    }
-
-    .config-overlay.unit-config-open .unit-config-head {
-      padding-top: 5px;
-      padding-bottom: 5px;
-      font-size: 11px;
-    }
-
-    .config-overlay.unit-config-open .unit-config-row input {
-      min-height: 28px;
-      padding: 4px 6px;
-      border-radius: 8px;
-      font-size: 13px;
-    }
-
-    .config-overlay.unit-config-open .btn-config-delete-unit {
-      padding: 5px 7px;
-      font-size: 12px;
-    }
-
     .config-panel {
       display: none;
     }
@@ -1261,28 +1198,6 @@
 
       #btnAddRow {
         padding: 8px 12px;
-      }
-
-      .config-overlay.unit-config-open {
-        overflow: auto;
-      }
-
-      .config-overlay.unit-config-open .config-page {
-        width: min(780px, 100%);
-        max-height: min(720px, calc(100vh - 44px));
-        overflow: hidden;
-      }
-
-      .config-overlay.unit-config-open .config-body {
-        overflow: auto;
-      }
-
-      .config-overlay.unit-config-open .unit-config-list {
-        overflow-x: auto;
-      }
-
-      .config-overlay.unit-config-open .unit-config-table {
-        min-width: 760px;
       }
 
       .table-wrap {
@@ -1420,7 +1335,7 @@
       <div class="brand">
         <div class="logo">¥</div>
         <div>
-          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.29</span></h1>
+          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.28</span></h1>
         </div>
       </div>
       <div class="top-actions">
@@ -1588,7 +1503,7 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.29";
+    const APP_VERSION = "v1.0.28";
     const STORAGE_KEY = "productPriceCompare.v1";
     const LOCAL_SYNC_KEY = "productPriceCompare.localSync.v1";
 
@@ -1607,7 +1522,7 @@
         saveSyncConfig: "保存配置并同步",
         loadCloudData: "重新加载云端",
         saveCloudNow: "立即保存云端",
-        cloudSyncNow: "重新加载云端",
+        cloudSyncNow: "云端同步",
         switchLanguage: "切换语言",
         syncConfigHint: "Worker 地址和访问密码会保存到 data.json，同时也会保存一份到本机浏览器配置，方便本地 debug 时直接同步云端 data.json。每次打开或刷新页面都会重新加载 data.json。",
         syncSecurityNote: "注意：如果 GitHub 仓库或 GitHub Pages 是公开的，data.json 里的 Worker 地址和访问密码也可能被看到。当前版本按你的需求保存，后续可以改成只本机保存密码。",
@@ -1759,7 +1674,7 @@
         saveSyncConfig: "Save Settings & Sync",
         loadCloudData: "Reload Cloud Data",
         saveCloudNow: "Save to Cloud Now",
-        cloudSyncNow: "Reload Cloud",
+        cloudSyncNow: "Cloud Sync",
         switchLanguage: "Switch Language",
         syncConfigHint: "The Worker URL and access password will be saved to data.json and also to this browser for local debugging, so the app can sync cloud data.json when opened locally. The app reloads data.json every time it opens or refreshes.",
         syncSecurityNote: "Note: if your GitHub repo or GitHub Pages is public, the Worker URL and access password in data.json may be visible. This version saves them as requested; later we can keep the password local only.",
@@ -2699,38 +2614,6 @@
       }
     }
 
-    async function reloadDataJsonToDevice(showAlert = false) {
-      applyLocalSyncConfig();
-
-      if (cloudConfigured()) {
-        return await loadFromCloud(showAlert);
-      }
-
-      try {
-        setSyncStatus("busy", "syncStatusLoading");
-        const directData = await fetchDirectDataJson();
-        if (directData && directData.groups) {
-          isApplyingRemote = true;
-          mergeRemoteState(directData);
-          state.sync.lastLoadedAt = new Date().toISOString();
-          saveLocalSyncConfig(state.sync);
-          saveState({ localOnly: true });
-          isApplyingRemote = false;
-          renderAll();
-          setSyncStatus("ok", "syncStatusLoaded", { time: nowText() });
-          return true;
-        }
-        setSyncStatus("error", "syncDirectLoadFailed");
-        if (showAlert) alert(t("syncDirectLoadFailed"));
-        return false;
-      } catch (error) {
-        isApplyingRemote = false;
-        setSyncStatus("error", "syncStatusFailed", { message: error.message });
-        if (showAlert) alert(t("syncStatusFailed", { message: error.message }));
-        return false;
-      }
-    }
-
     async function bootstrapCloudData() {
       applyLocalSyncConfig();
       setSyncStatus("busy", "syncStatusLoading");
@@ -3287,16 +3170,13 @@
       $("#storeConfigPanel").toggleClass("active", isStore);
       $("#unitConfigPanel").toggleClass("active", isUnit);
       $("#syncConfigPanel").toggleClass("active", isSync);
-      $("#configOverlay")
-        .toggleClass("unit-config-open", isUnit)
-        .addClass("show")
-        .attr("aria-hidden", "false");
+      $("#configOverlay").addClass("show").attr("aria-hidden", "false");
       renderConfig();
       renderSyncStatus();
     }
 
     function closeConfig() {
-      $("#configOverlay").removeClass("show unit-config-open").attr("aria-hidden", "true");
+      $("#configOverlay").removeClass("show").attr("aria-hidden", "true");
     }
 
     function renderConfig() {
@@ -3714,7 +3594,7 @@
     });
 
     $("#btnFloatingSync").on("click", async function () {
-      await reloadDataJsonToDevice(true);
+      await saveToCloud(true);
     });
 
     $("#btnLang").on("click", function () {
