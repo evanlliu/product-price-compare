@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T10:46:54.117Z",
-    "lastSavedAt": "2026-05-13T10:49:35.715Z"
+    "lastSavedAt": "2026-05-13T10:49:37.277Z"
   },
   "units": [
     {
@@ -106,7 +106,7 @@
     },
     {
       "id": "store_1778246138226_757f331a4c69f",
-      "name": "拼多多/Pinduoduo"
+      "name": "拼多多/PDD"
     },
     {
       "id": "store_1778246141400_3f8d9088d1eef",
@@ -192,7 +192,7 @@
       },
       {
         "id": "store_1778246138226_757f331a4c69f",
-        "name": "拼多多/Pinduoduo"
+        "name": "拼多多/PDD"
       },
       {
         "id": "store_1778246141400_3f8d9088d1eef",
