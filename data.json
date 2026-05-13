@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T13:28:51.113Z",
-    "lastSavedAt": "2026-05-13T13:30:29.578Z"
+    "lastSavedAt": "2026-05-13T13:30:34.467Z"
   },
   "units": [
     {
@@ -279,7 +279,7 @@
           "size": 1,
           "sizeCode": "3段",
           "priceDate": "2025-12-22",
-          "status": "current",
+          "status": "purchased",
           "unit": "can",
           "createdAt": 1778678989035
         }
