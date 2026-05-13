@@ -1,5 +1,5 @@
 {
-  "version": "v1.0.38",
+  "version": "v1.0.37",
   "lang": "zh",
   "settings": {
     "lang": "zh",
@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T13:48:38.160Z",
-    "lastSavedAt": "2026-05-13T13:51:30.161Z"
+    "lastLoadedAt": "2026-05-13T13:53:11.778Z",
+    "lastSavedAt": "2026-05-13T13:53:49.677Z"
   },
   "units": [
     {
@@ -129,20 +129,13 @@
       "productNames": [
         {
           "id": "productName_1778670092288_40a6322d0e94d",
-          "name": "娇润泉",
-          "variants": [
-            {
-              "id": "variant_1778680118160_fc306cde137228",
-              "name": "默认规格"
-            }
-          ]
+          "name": "娇润泉"
         }
       ],
       "items": [
         {
           "id": "item_001",
           "productNameId": "productName_1778670092288_40a6322d0e94d",
-          "variantId": "variant_1778680118160_fc306cde137228",
           "storeId": "store_a",
           "price": 88,
           "cashback": 22.45,
@@ -162,28 +155,13 @@
       "productNames": [
         {
           "id": "productName_1778670092288_9292fbb9d15c5",
-          "name": "帮舒宝",
-          "variants": [
-            {
-              "id": "variant_1778680118160_5b763c93dbf97",
-              "name": "默认规格"
-            },
-            {
-              "id": "variant_1778680118160_e08ab103891a08",
-              "name": "L"
-            },
-            {
-              "id": "variant_1778680118160_1ce966d0396638",
-              "name": "XL"
-            }
-          ]
+          "name": "帮舒宝"
         }
       ],
       "items": [
         {
           "id": "item_1778253591752_312aff5e69c1b8",
           "productNameId": "productName_1778670092288_9292fbb9d15c5",
-          "variantId": "variant_1778680118160_e08ab103891a08",
           "storeId": "store_1778246138226_757f331a4c69f",
           "price": 91.9,
           "cashback": 0,
@@ -198,14 +176,13 @@
         {
           "id": "item_1778666801934_94ec269b20a248",
           "productNameId": "productName_1778670092288_9292fbb9d15c5",
-          "variantId": "variant_1778680118160_e08ab103891a08",
           "storeId": "store_1778246138226_757f331a4c69f",
           "price": 109,
           "cashback": 0,
           "quantity": 1,
           "size": 82,
           "sizeCode": "L",
-          "priceDate": "2026-04-29",
+          "priceDate": "2026-04-30",
           "status": "purchased",
           "unit": "sheet",
           "createdAt": 1778666801934
@@ -213,7 +190,6 @@
         {
           "id": "item_1778671456389_19e5cde1173468",
           "productNameId": "productName_1778670092288_9292fbb9d15c5",
-          "variantId": "variant_1778680118160_1ce966d0396638",
           "storeId": "store_1778246138226_757f331a4c69f",
           "price": 100,
           "cashback": 0,
@@ -228,7 +204,6 @@
         {
           "id": "item_1778680138534_2f1305ca3cad18",
           "productNameId": "productName_1778670092288_9292fbb9d15c5",
-          "variantId": "variant_1778680118160_1ce966d0396638",
           "storeId": "store_a",
           "price": 100,
           "cashback": 0,
@@ -248,24 +223,13 @@
       "productNames": [
         {
           "id": "productName_1778670149375_253002c7faaf28",
-          "name": "爱他美",
-          "variants": [
-            {
-              "id": "variant_1778680118160_b99ce4fa84c0e",
-              "name": "默认规格"
-            },
-            {
-              "id": "variant_1778680118160_c591ab56d34018",
-              "name": "3段"
-            }
-          ]
+          "name": "爱他美"
         }
       ],
       "items": [
         {
           "id": "item_1778677866292_9f610fde7e33b",
           "productNameId": "productName_1778670149375_253002c7faaf28",
-          "variantId": "variant_1778680118160_c591ab56d34018",
           "storeId": "store_1778246138226_757f331a4c69f",
           "price": 259.8,
           "cashback": 0,
@@ -280,7 +244,6 @@
         {
           "id": "item_1778678498704_bc7cdcf523046",
           "productNameId": "productName_1778670149375_253002c7faaf28",
-          "variantId": "variant_1778680118160_c591ab56d34018",
           "storeId": "store_1778246138226_757f331a4c69f",
           "price": 251,
           "cashback": 0,
@@ -295,7 +258,6 @@
         {
           "id": "item_1778678772088_6b72059ae40f1",
           "productNameId": "productName_1778670149375_253002c7faaf28",
-          "variantId": "variant_1778680118160_c591ab56d34018",
           "storeId": "store_1778246138226_757f331a4c69f",
           "price": 267.9,
           "cashback": 0,
@@ -310,7 +272,6 @@
         {
           "id": "item_1778678989034_b4b497415a19d",
           "productNameId": "productName_1778670149375_253002c7faaf28",
-          "variantId": "variant_1778680118160_c591ab56d34018",
           "storeId": "store_b",
           "price": 128,
           "cashback": 0,
