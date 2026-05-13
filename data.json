@@ -1,5 +1,5 @@
 {
-  "version": "v1.0.33",
+  "version": "v1.0.34",
   "lang": "zh",
   "settings": {
     "lang": "zh",
@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T13:25:44.359Z",
-    "lastSavedAt": "2026-05-13T13:26:31.660Z"
+    "lastLoadedAt": "2026-05-13T13:28:51.113Z",
+    "lastSavedAt": "2026-05-13T13:29:22.558Z"
   },
   "units": [
     {
@@ -265,7 +265,7 @@
           "size": 1,
           "sizeCode": "3段",
           "priceDate": "2026-04-29",
-          "status": "current",
+          "status": "purchased",
           "unit": "can",
           "createdAt": 1778678772089
         }
