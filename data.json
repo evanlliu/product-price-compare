@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T12:50:26.568Z",
-    "lastSavedAt": "2026-05-13T12:51:03.686Z"
+    "lastLoadedAt": "2026-05-13T12:51:29.925Z",
+    "lastSavedAt": "2026-05-13T12:51:38.956Z"
   },
   "units": [
     {
@@ -214,7 +214,7 @@
       "productNames": [
         {
           "id": "productName_1778670149375_253002c7faaf28",
-          "name": "新商品"
+          "name": "爱他美"
         }
       ],
       "items": []
