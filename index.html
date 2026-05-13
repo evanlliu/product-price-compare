@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>商品比价器 Price Compare v1.0.28</title>
+  <title>商品比价器 Price Compare v1.0.32</title>
   <meta name="theme-color" content="#2563eb" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1335,7 +1335,7 @@
       <div class="brand">
         <div class="logo">¥</div>
         <div>
-          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.28</span></h1>
+          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.32</span></h1>
         </div>
       </div>
       <div class="top-actions">
@@ -1503,7 +1503,7 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.28";
+    const APP_VERSION = "v1.0.32";
     const STORAGE_KEY = "productPriceCompare.v1";
     const LOCAL_SYNC_KEY = "productPriceCompare.localSync.v1";
 
@@ -1533,6 +1533,7 @@
         syncStatusSaved: "已保存到 GitHub data.json：{time}",
         syncStatusFailed: "云端同步失败：{message}",
         syncConfigSaved: "同步配置已保存。",
+        syncConfigRequired: "请填写 Cloudflare Worker 地址和访问密码，不能保存空配置。",
         syncNotConfigured: "请先填写 Cloudflare Worker 地址和访问密码。",
         summary: "比价结果",
         currentProduct: "当前商品",
@@ -1885,8 +1886,21 @@
       }
     }
 
+    function mergeNonEmptySync(base, ...overrides) {
+      const result = normalizeSync(base);
+      overrides.forEach(source => {
+        const sync = normalizeSync(source);
+        if (sync.workerUrl) result.workerUrl = sync.workerUrl;
+        if (sync.appPassword) result.appPassword = sync.appPassword;
+        if (sync.lastLoadedAt) result.lastLoadedAt = sync.lastLoadedAt;
+        if (sync.lastSavedAt) result.lastSavedAt = sync.lastSavedAt;
+      });
+      return result;
+    }
+
     function saveLocalSyncConfig(sync) {
-      const normalized = normalizeSync(sync);
+      const existing = readLocalSyncConfig();
+      const normalized = mergeNonEmptySync(existing, sync);
       if (normalized.workerUrl || normalized.appPassword) {
         localStorage.setItem(LOCAL_SYNC_KEY, JSON.stringify(normalized));
       }
@@ -1894,7 +1908,7 @@
 
     function applyLocalSyncConfig() {
       const localSync = readLocalSyncConfig();
-      state.sync = normalizeSync({ ...state.sync, ...localSync });
+      state.sync = mergeNonEmptySync(state.sync, localSync);
     }
 
     function isLocalDebugRuntime() {
@@ -2506,13 +2520,21 @@
       return new Date().toLocaleString(state.lang === "zh" ? "zh-CN" : "en-US", { hour12: false });
     }
 
-    function mergeRemoteState(remoteInput) {
-      const browserSync = readLocalSyncConfig();
-      const currentSync = normalizeSync({ ...state.sync, ...browserSync });
+    function mergeRemoteState(remoteInput, options = {}) {
+      const localSync = readLocalSyncConfig();
+      const currentSync = normalizeSync(state.sync);
       const remote = normalizeState(remoteInput);
-      remote.sync = normalizeSync({ ...remote.sync, ...currentSync });
-      if (!remote.sync.workerUrl && currentSync.workerUrl) remote.sync.workerUrl = currentSync.workerUrl;
-      if (!remote.sync.appPassword && currentSync.appPassword) remote.sync.appPassword = currentSync.appPassword;
+      const remoteSync = normalizeSync(remote.sync);
+
+      if (options.preferLocalSync) {
+        remote.sync = mergeNonEmptySync(remoteSync, currentSync, localSync);
+      } else {
+        remote.sync = mergeNonEmptySync(remoteSync);
+        if (!remote.sync.workerUrl || !remote.sync.appPassword) {
+          remote.sync = mergeNonEmptySync(remote.sync, currentSync, localSync);
+        }
+      }
+
       state = remote;
       saveLocalSyncConfig(state.sync);
     }
@@ -2563,7 +2585,7 @@
         const result = await cloudRequest("GET");
         const remoteData = result && result.data ? result.data : result;
         isApplyingRemote = true;
-        mergeRemoteState(remoteData);
+        mergeRemoteState(remoteData, { preferLocalSync: isLocalDebugRuntime() });
         state.sync.lastLoadedAt = new Date().toISOString();
         saveLocalSyncConfig(state.sync);
         saveState({ localOnly: true });
@@ -2618,7 +2640,9 @@
       applyLocalSyncConfig();
       setSyncStatus("busy", "syncStatusLoading");
 
-      if (isLocalDebugRuntime() && cloudConfigured()) {
+      const localRuntime = isLocalDebugRuntime();
+
+      if (localRuntime && cloudConfigured()) {
         const loaded = await loadFromCloud(false);
         if (loaded) return;
       }
@@ -2626,7 +2650,7 @@
       const directData = await fetchDirectDataJson();
       if (directData && directData.groups) {
         isApplyingRemote = true;
-        mergeRemoteState(directData);
+        mergeRemoteState(directData, { preferLocalSync: localRuntime });
         state.sync.lastLoadedAt = new Date().toISOString();
         saveLocalSyncConfig(state.sync);
         saveState({ localOnly: true });
@@ -3521,11 +3545,13 @@
     });
 
     $("#btnSaveSyncConfig").on("click", async function () {
-      state.sync = normalizeSync({
-        ...state.sync,
-        workerUrl: $("#syncWorkerUrl").val(),
-        appPassword: $("#syncPassword").val()
-      });
+      const workerUrl = String($("#syncWorkerUrl").val() || "").trim();
+      const appPassword = String($("#syncPassword").val() || "");
+      if (!workerUrl || !appPassword) {
+        alert(t("syncConfigRequired"));
+        return;
+      }
+      state.sync = mergeNonEmptySync(state.sync, { workerUrl, appPassword });
       saveLocalSyncConfig(state.sync);
       saveState({ localOnly: true });
       setSyncStatus("ok", "syncConfigSaved");
