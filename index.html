@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>商品比价器 Price Compare v1.0.22</title>
+  <title>商品比价器 Price Compare v1.0.28</title>
   <meta name="theme-color" content="#2563eb" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -142,7 +142,7 @@
     }
 
     .app {
-      width: min(1500px, 100%);
+      width: min(1800px, 100%);
       margin: 0 auto;
       padding: 18px;
     }
@@ -459,26 +459,29 @@
     }
 
     .table-wrap {
-      overflow-x: auto;
+      overflow-x: visible;
+      overflow-y: visible;
+      scrollbar-gutter: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     table {
       width: 100%;
+      min-width: 0;
       border-collapse: separate;
       border-spacing: 0;
-      min-width: 1480px;
-      table-layout: fixed;
+      table-layout: auto;
     }
 
     th,
     td {
       text-align: left;
-      padding: 6px 6px;
+      padding: 5px 4px;
       border-bottom: 1px solid var(--line);
       vertical-align: middle;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      overflow: visible;
+      text-overflow: clip;
     }
 
     th {
@@ -504,21 +507,21 @@
       background: rgba(220, 252, 231, 0.86);
     }
 
-    .col-result { width: 84px; }
-    .col-date { width: 106px; }
-    .col-status { width: 88px; }
-    .col-product-name { width: 128px; }
-    .col-store { width: 124px; }
-    .col-money { width: 78px; }
-    .col-final { width: 78px; }
-    .col-qty { width: 70px; }
-    .col-size { width: 80px; }
-    .col-size-code { width: 70px; }
-    .col-unit { width: 64px; }
-    .col-total { width: 84px; }
-    .col-unit-price { width: 112px; }
-    .col-history { width: 126px; }
-    .col-actions { width: 150px; }
+    .col-result { width: 78px; min-width: 70px; }
+    .col-date { width: 126px; min-width: 118px; }
+    .col-status { width: 96px; min-width: 88px; }
+    .col-product-name { width: 128px; min-width: 112px; }
+    .col-store { width: 132px; min-width: 116px; }
+    .col-money { width: 86px; min-width: 74px; }
+    .col-final { width: 82px; min-width: 72px; }
+    .col-qty { width: 82px; min-width: 70px; }
+    .col-size { width: 84px; min-width: 72px; }
+    .col-size-code { width: 72px; min-width: 62px; }
+    .col-unit { width: 58px; min-width: 50px; }
+    .col-total { width: 74px; min-width: 66px; }
+    .col-unit-price { width: 86px; min-width: 76px; }
+    .col-history { width: 100px; min-width: 86px; }
+    .col-actions { width: 0; min-width: 0; max-width: 0; padding: 0 !important; overflow: visible; }
 
     tbody tr.purchased-row {
       background: rgba(248, 250, 252, 0.62);
@@ -577,12 +580,13 @@
       display: flex;
       gap: 4px;
       justify-content: flex-end;
+      align-items: center;
     }
 
     .small-btn {
-      padding: 5px 7px;
+      padding: 4px 6px;
       font-size: 12px;
-      border-radius: 10px;
+      border-radius: 9px;
     }
 
     .btn-buy {
@@ -593,13 +597,18 @@
 
     .cell-input,
     .cell-select {
-      min-height: 30px;
-      height: 30px;
-      border-radius: 9px;
-      padding: 4px 6px;
-      font-size: 14px;
+      min-height: 28px;
+      height: 28px;
+      border-radius: 8px;
+      padding: 3px 5px;
+      font-size: 13px;
       background: rgba(255, 255, 255, 0.82);
       border-color: #dbe3ef;
+    }
+
+    .cell-input {
+      width: auto;
+      max-width: none;
     }
 
     .cell-input:focus,
@@ -607,21 +616,80 @@
       background: #fff;
     }
 
-    .cell-store {
-      width: 100%;
-    }
-
     .cell-number {
-      width: 100%;
+      width: auto;
+      min-width: 72px;
       text-align: right;
+      box-sizing: content-box;
     }
 
-    .cell-unit {
-      width: 100%;
-    }
+    .cell-date { width: 118px; min-width: 118px; }
+    .cell-status { width: 92px; min-width: 92px; }
+    .cell-product-name { width: 124px; min-width: 124px; }
+    .cell-store { width: 128px; min-width: 128px; }
+    .cell-size-code { width: 62px; min-width: 62px; }
+    .cell-unit { width: 52px; min-width: 52px; }
 
     td.cell-editable {
       padding: 4px 6px;
+    }
+
+    .actions-cell {
+      position: relative;
+      width: 0;
+      min-width: 0;
+      max-width: 0;
+      padding: 0 !important;
+      border-bottom: 1px solid var(--line);
+      overflow: visible;
+      background: transparent;
+    }
+
+    th.col-actions {
+      width: 0;
+      min-width: 0;
+      max-width: 0;
+      padding: 0 !important;
+      color: transparent;
+      overflow: visible;
+      background: rgba(249, 250, 251, 0.9);
+    }
+
+    tbody tr.best-row .actions-cell,
+    tbody tr.purchased-row .actions-cell {
+      background: transparent;
+      box-shadow: none;
+    }
+
+    @media (min-width: 901px) {
+      .actions-cell .row-actions {
+        position: absolute;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%) translateX(8px);
+        width: max-content;
+        opacity: 0;
+        pointer-events: none;
+        padding: 4px;
+        border: 1px solid rgba(226, 232, 240, 0.96);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.98);
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.14);
+        transition: opacity 0.14s ease, transform 0.14s ease;
+        z-index: 20;
+      }
+
+      tbody tr:hover .actions-cell .row-actions,
+      tbody tr:focus-within .actions-cell .row-actions {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(-50%) translateX(0);
+      }
+
+      .actions-cell::before {
+        content: "";
+        display: none;
+      }
     }
 
     .mobile-list {
@@ -913,6 +981,21 @@
       flex-wrap: wrap;
     }
 
+
+    .product-name-config-toolbar {
+      align-items: flex-end;
+    }
+
+    .product-name-config-toolbar .field {
+      margin-bottom: 0;
+    }
+
+    #btnConfigAddProductName {
+      min-height: 52px;
+      align-self: flex-end;
+      white-space: nowrap;
+    }
+
     .config-list {
       display: grid;
       gap: 8px;
@@ -929,35 +1012,65 @@
       background: rgba(248, 250, 252, 0.78);
     }
 
-    .config-row.store-row,
-    .config-row.product-name-row {
+    .config-row.store-row {
       grid-template-columns: 1fr auto;
     }
 
-    .config-row.unit-row {
-      grid-template-columns: minmax(70px, 0.7fr) minmax(80px, 1fr) minmax(80px, 1fr) minmax(70px, 0.7fr) minmax(80px, 0.8fr) auto;
-      align-items: end;
-    }
-
-    .unit-config-field label {
+    .unit-config-list {
       display: block;
-      font-size: 11px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .unit-config-table {
+      min-width: 760px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .unit-config-grid {
+      display: grid;
+      grid-template-columns: 120px minmax(140px, 1fr) minmax(140px, 1fr) 120px 120px 64px;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .unit-config-grid:last-child {
+      border-bottom: 0;
+    }
+
+    .unit-config-head {
+      background: rgba(248, 250, 252, 0.92);
       color: var(--muted);
-      margin: 0 0 4px 2px;
-      font-weight: 800;
+      font-size: 12px;
+      font-weight: 900;
+      padding-top: 7px;
+      padding-bottom: 7px;
     }
 
-    .unit-config-field input {
+    .unit-config-row {
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .unit-config-row:hover {
+      background: rgba(239, 246, 255, 0.56);
+    }
+
+    .unit-config-row input {
       width: 100%;
+      min-height: 34px;
+      border-radius: 10px;
+      padding: 6px 8px;
+      font-size: 14px;
     }
 
-    @media (max-width: 720px) {
-      .config-row.unit-row {
-        grid-template-columns: 1fr 1fr;
-      }
-      .config-row.unit-row .btn-danger {
-        grid-column: 1 / -1;
-      }
+    .unit-config-row .btn-config-delete-unit {
+      justify-self: end;
+      white-space: nowrap;
     }
 
     .config-panel {
@@ -969,13 +1082,53 @@
     }
 
 
+    .record-edit-page {
+      width: min(680px, 100%);
+    }
+
+    .record-edit-form {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .record-edit-form .field-full {
+      grid-column: 1 / -1;
+    }
+
+    .record-edit-form label {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .record-edit-form input,
+    .record-edit-form select {
+      width: 100%;
+      min-height: 40px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.88);
+      padding: 8px 10px;
+      font: inherit;
+      color: var(--text);
+    }
+
+    .record-edit-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+    }
+
+
     @media (min-width: 1200px) {
       .app {
-        width: min(1540px, calc(100vw - 48px));
-      }
-
-      .table-wrap {
-        overflow-x: hidden;
+        width: min(1800px, calc(100vw - 48px));
       }
 
       .records-card {
@@ -1134,6 +1287,10 @@
         flex: 1 1 100%;
       }
 
+      .record-edit-form {
+        grid-template-columns: 1fr;
+      }
+
       .summary-grid {
         grid-template-columns: 1fr;
       }
@@ -1178,7 +1335,7 @@
       <div class="brand">
         <div class="logo">¥</div>
         <div>
-          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.22</span></h1>
+          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.28</span></h1>
         </div>
       </div>
       <div class="top-actions">
@@ -1234,7 +1391,7 @@
                 <th class="col-total" data-i18n="totalSize">总规格</th>
                 <th class="col-unit-price" data-i18n="unitPrice">每单位价格</th>
                 <th class="col-history" data-i18n="historyCompare">历史对比</th>
-                <th class="col-actions" data-i18n="actions">操作</th>
+                <th class="col-actions" aria-hidden="true"></th>
               </tr>
             </thead>
             <tbody id="tableBody"></tbody>
@@ -1266,12 +1423,23 @@
         </div>
 
         <div class="config-panel" id="productNameConfigPanel">
-          <div class="config-toolbar">
-            <div class="hint-line" data-i18n="productNameConfigHint">维护当前商品分组下的商品名称，价格记录中从下拉列表选择。</div>
+          <div class="config-toolbar product-name-config-toolbar">
+            <div class="field" style="min-width: 220px; flex: 1 1 260px;">
+              <label for="productNameGroupSelect" data-i18n="bindProductGroup">绑定商品分组</label>
+              <select id="productNameGroupSelect"></select>
+            </div>
             <button type="button" id="btnConfigAddProductName" class="btn-primary" data-i18n="addProductName">新增商品名称</button>
           </div>
-          <div class="hint-line" id="productNameConfigGroupHint"></div>
+          <div class="hint-line" data-i18n="productNameConfigHint">先选择商品分组，再维护这个分组下面可以选择的商品名称。</div>
           <div class="config-list" id="productNameConfigList"></div>
+        </div>
+
+        <div class="config-panel" id="unitConfigPanel">
+          <div class="config-toolbar">
+            <div class="hint-line" data-i18n="unitConfigHint">维护单位下拉数据。基础单位相同的单位可以互相比较，例如 kg 和 g。</div>
+            <button type="button" id="btnConfigAddUnit" class="btn-primary" data-i18n="addUnit">新增单位</button>
+          </div>
+          <div class="config-list unit-config-list" id="unitConfigList"></div>
         </div>
 
         <div class="config-panel" id="storeConfigPanel">
@@ -1280,14 +1448,6 @@
             <button type="button" id="btnConfigAddStore" class="btn-primary" data-i18n="addStore">新增商家</button>
           </div>
           <div class="config-list" id="storeConfigList"></div>
-        </div>
-
-        <div class="config-panel" id="unitConfigPanel">
-          <div class="config-toolbar">
-            <div class="hint-line" data-i18n="unitConfigHint">维护单位下拉列表。基础单位相同的单位才会互相比较，例如 kg 和 g。</div>
-            <button type="button" id="btnConfigAddUnit" class="btn-primary" data-i18n="addUnit">新增单位</button>
-          </div>
-          <div class="config-list unit-config-list" id="unitConfigList"></div>
         </div>
 
         <div class="config-panel" id="syncConfigPanel">
@@ -1314,6 +1474,23 @@
     </section>
   </div>
 
+  <div class="config-overlay" id="recordEditOverlay" aria-hidden="true">
+    <section class="config-page record-edit-page card" role="dialog" aria-modal="true" aria-labelledby="recordEditTitle">
+      <div class="config-header">
+        <h2 class="config-title" id="recordEditTitle" data-i18n="editItem">编辑价格记录</h2>
+        <button type="button" id="btnCloseRecordEdit" class="btn-ghost" data-i18n="close">关闭</button>
+      </div>
+      <div class="config-body">
+        <form id="recordEditForm" class="record-edit-form"></form>
+        <div class="record-edit-actions">
+          <button type="button" id="btnCancelRecordEdit" class="btn-ghost" data-i18n="close">关闭</button>
+          <button type="button" id="btnSaveRecordEdit" class="btn-primary" data-i18n="save">保存</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+
   <script>
     function initAppleWebAppMode() {
       const ua = window.navigator.userAgent || "";
@@ -1326,7 +1503,7 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.22";
+    const APP_VERSION = "v1.0.28";
     const STORAGE_KEY = "productPriceCompare.v1";
     const LOCAL_SYNC_KEY = "productPriceCompare.localSync.v1";
 
@@ -1336,10 +1513,10 @@
         more: "更多",
         close: "关闭",
         productGroupConfig: "商品分组配置",
-        storeConfig: "商家 / 渠道配置",
-        cloudSyncConfig: "云端同步配置",
         productNameConfig: "商品名称配置",
+        storeConfig: "商家 / 渠道配置",
         unitConfig: "单位配置",
+        cloudSyncConfig: "云端同步配置",
         workerUrl: "Cloudflare Worker 地址",
         accessPassword: "访问密码",
         saveSyncConfig: "保存配置并同步",
@@ -1366,22 +1543,37 @@
         currentProductGroup: "当前商品",
         addGroup: "新增商品",
         addStore: "新增商家",
-        addProductName: "新增商品名称",
-        addUnit: "新增单位",
         renameGroup: "重命名",
         deleteGroup: "删除",
         setCurrent: "设为当前",
         current: "当前",
         groupHint: "同一个商品分组内才会进行比价，例如“洗面奶”下面录入不同商家的价格。",
         productConfigHint: "在这里维护商品分组，主页面只负责选择当前商品。",
+        productNameConfigHint: "先选择商品分组，再维护这个分组下面可以选择的商品名称。",
+        bindProductGroup: "绑定商品分组",
+        productName: "商品名称",
+        productNameName: "商品名称",
+        addProductName: "新增商品名称",
+        newProductNameDefault: "新商品名称",
+        confirmDeleteProductName: "确认删除这个商品名称吗？",
+        cannotDeleteLastProductName: "当前商品分组至少保留一个商品名称。",
+        productNameInUse: "该商品名称已经被价格记录使用，请先修改相关记录后再删除。",
         storeConfigHint: "在这里维护商家 / 渠道，价格记录中只能从下拉列表选择。",
-        productNameConfigHint: "维护当前商品分组下的商品名称，价格记录中从下拉列表选择。",
-        unitConfigHint: "维护单位下拉列表。基础单位相同的单位才会互相比较，例如 kg 和 g。",
+        unitConfigHint: "维护单位下拉数据。基础单位相同的单位可以互相比较，例如 kg 和 g。",
+        addUnit: "新增单位",
+        unitCode: "编码",
+        unitZh: "中文",
+        unitEn: "英文",
+        baseUnit: "基础单位",
+        unitFactor: "换算系数",
+        newUnitDefault: "新单位",
+        confirmDeleteUnit: "确认删除这个单位吗？",
+        cannotDeleteLastUnit: "至少保留一个单位。",
+        unitInUse: "该单位已经被价格记录使用，请先修改相关记录后再删除。",
         addItem: "新增价格记录",
         addRow: "新增",
         editItem: "编辑价格记录",
         store: "商家 / 渠道",
-        productName: "商品名称",
         storeName: "商家名称",
         selectStore: "请选择商家",
         storePlaceholder: "例如：淘宝 / 京东 / Migros",
@@ -1453,19 +1645,6 @@
         renameGroupPrompt: "请输入新的商品名称",
         newGroupDefault: "新商品",
         newStoreDefault: "新商家",
-        newProductNameDefault: "新商品名称",
-        newUnitDefault: "新单位",
-        unitCode: "编码",
-        unitZh: "中文",
-        unitEn: "英文",
-        unitBase: "基础单位",
-        unitFactor: "换算系数",
-        cannotDeleteLastProductName: "当前商品分组至少保留一个商品名称。",
-        productNameInUse: "该商品名称已经被价格记录使用，请先修改相关记录后再删除。",
-        cannotDeleteLastUnit: "至少保留一个单位。",
-        unitInUse: "该单位已经被价格记录使用，请先修改相关记录后再删除。",
-        unitCodeDuplicate: "单位编码不能重复。",
-        multipleProductNames: "当前存在多个商品名称，系统已按商品名称分别比较，请看表格中的最便宜结果。",
         importSuccess: "导入成功",
         importFail: "导入失败，请检查 JSON 文件格式。",
         resetSample: "示例数据",
@@ -1486,10 +1665,10 @@
         more: "More",
         close: "Close",
         productGroupConfig: "Product Group Settings",
-        storeConfig: "Store / Platform Settings",
-        cloudSyncConfig: "Cloud Sync Settings",
         productNameConfig: "Product Name Settings",
+        storeConfig: "Store / Platform Settings",
         unitConfig: "Unit Settings",
+        cloudSyncConfig: "Cloud Sync Settings",
         workerUrl: "Cloudflare Worker URL",
         accessPassword: "Access Password",
         saveSyncConfig: "Save Settings & Sync",
@@ -1516,22 +1695,37 @@
         currentProductGroup: "Current Product",
         addGroup: "Add Product",
         addStore: "Add Store",
-        addProductName: "Add Product Name",
-        addUnit: "Add Unit",
         renameGroup: "Rename",
         deleteGroup: "Delete",
         setCurrent: "Set Current",
         current: "Current",
         groupHint: "Items are compared only inside the same product group, such as different stores for Face Wash.",
         productConfigHint: "Manage product groups here. The main page only selects the current product.",
+        productNameConfigHint: "Choose a product group first, then maintain the product names under that group.",
+        bindProductGroup: "Linked Product Group",
+        productName: "Product Name",
+        productNameName: "Product Name",
+        addProductName: "Add Product Name",
+        newProductNameDefault: "New Product Name",
+        confirmDeleteProductName: "Delete this product name?",
+        cannotDeleteLastProductName: "Keep at least one product name under this product group.",
+        productNameInUse: "This product name is used by price records. Please change those records before deleting it.",
         storeConfigHint: "Manage stores / platforms here. Price records can only choose from the dropdown list.",
-        productNameConfigHint: "Manage product names under the current product group. Price records choose from this dropdown list.",
-        unitConfigHint: "Manage unit dropdown options. Units with the same base unit can be compared, such as kg and g.",
+        unitConfigHint: "Manage unit dropdown data. Units with the same base unit can be compared, such as kg and g.",
+        addUnit: "Add Unit",
+        unitCode: "Code",
+        unitZh: "Chinese",
+        unitEn: "English",
+        baseUnit: "Base Unit",
+        unitFactor: "Factor",
+        newUnitDefault: "New Unit",
+        confirmDeleteUnit: "Delete this unit?",
+        cannotDeleteLastUnit: "Keep at least one unit.",
+        unitInUse: "This unit is used by price records. Please change those records before deleting it.",
         addItem: "Add Price Record",
         addRow: "Add",
         editItem: "Edit Price Record",
         store: "Store / Platform",
-        productName: "Product Name",
         storeName: "Store Name",
         selectStore: "Select Store",
         storePlaceholder: "e.g. Amazon / Walmart / Migros",
@@ -1603,19 +1797,6 @@
         renameGroupPrompt: "Enter the new product name",
         newGroupDefault: "New Product",
         newStoreDefault: "New Store",
-        newProductNameDefault: "New Product Name",
-        newUnitDefault: "New Unit",
-        unitCode: "Code",
-        unitZh: "Chinese",
-        unitEn: "English",
-        unitBase: "Base Unit",
-        unitFactor: "Factor",
-        cannotDeleteLastProductName: "Keep at least one product name in the current product group.",
-        productNameInUse: "This product name is used by price records. Please change those records before deleting it.",
-        cannotDeleteLastUnit: "Keep at least one unit.",
-        unitInUse: "This unit is used by price records. Please change those records before deleting it.",
-        unitCodeDuplicate: "Unit codes cannot be duplicated.",
-        multipleProductNames: "Multiple product names exist. The app compares each product name separately; check Best Deal in the table.",
         importSuccess: "Imported successfully",
         importFail: "Import failed. Please check the JSON file format.",
         resetSample: "Sample Data",
@@ -1680,6 +1861,8 @@
     let state = loadState();
     applyLocalSyncConfig();
     let pendingFocusItemId = null;
+    let editingItemId = null;
+    let activeProductNameGroupId = "";
     let cloudSaveTimer = null;
     let isApplyingRemote = false;
     let syncStatus = { type: "local", textKey: "syncStatusLocal", params: {} };
@@ -1808,9 +1991,7 @@
           {
             id: groupId,
             name: "洗面奶",
-            productNames: [
-              { id: productNameId, name: "洗面奶" }
-            ],
+            productNames: [{ id: productNameId, name: "洗面奶" }],
             items: [
               { id: uid("item"), productNameId, storeId: storeAId, price: 88, cashback: 22.45, quantity: 1, size: 360, sizeCode: "", unit: "g", priceDate: todayDate(), status: "current" },
               { id: uid("item"), productNameId, storeId: storeBId, price: 82, cashback: 1.47, quantity: 1, size: 400, sizeCode: "", unit: "g", priceDate: todayDate(), status: "current" }
@@ -1869,39 +2050,31 @@
         function addProductName(name, id) {
           const cleanName = String(name || "").trim();
           if (!cleanName) return "";
-          const existingById = id ? productNames.find(product => product.id === id) : null;
+          const existingById = id ? productNames.find(p => p.id === id) : null;
           if (existingById) {
             existingById.name = cleanName;
             return existingById.id;
           }
-          const existingByName = productNames.find(product => product.name === cleanName);
+          const existingByName = productNames.find(p => p.name === cleanName);
           if (existingByName) return existingByName.id;
           const productNameId = id || uid("pname");
           productNames.push({ id: productNameId, name: cleanName });
           return productNameId;
         }
 
-        const productNameSource = Array.isArray(group.productNames)
-          ? group.productNames
-          : Array.isArray(group.products)
-            ? group.products
-            : [];
-        productNameSource.forEach(product => {
-          if (typeof product === "string") {
-            addProductName(product);
-          } else {
-            addProductName(product && product.name, product && product.id);
-          }
+        const nameSource = Array.isArray(group.productNames) ? group.productNames : [];
+        nameSource.forEach(p => {
+          if (typeof p === "string") addProductName(p);
+          else addProductName(p && p.name, p && p.id);
         });
-        if (!productNames.length) addProductName(groupName);
+        const fallbackProductNameId = productNames[0] ? productNames[0].id : addProductName(groupName || t("newProductNameDefault"));
 
-        const defaultProductNameId = productNames[0] ? productNames[0].id : "";
         const items = (group.items || []).map(item => {
           let storeId = item.storeId && stores.some(store => store.id === item.storeId) ? item.storeId : "";
           if (!storeId && item.store) storeId = addStore(item.store);
-          let productNameId = item.productNameId && productNames.some(product => product.id === item.productNameId) ? item.productNameId : "";
+          let productNameId = item.productNameId && productNames.some(p => p.id === item.productNameId) ? item.productNameId : "";
           if (!productNameId && item.productName) productNameId = addProductName(item.productName);
-          if (!productNameId) productNameId = defaultProductNameId;
+          if (!productNameId) productNameId = fallbackProductNameId;
           return {
             id: item.id || uid("item"),
             productNameId,
@@ -1917,6 +2090,7 @@
             createdAt: item.createdAt || Date.now()
           };
         });
+
         return { id: groupId, name: groupName, productNames, items };
       });
 
@@ -1983,19 +2157,17 @@
         activeGroupId: target.activeGroupId
       };
       target.groups = Array.isArray(target.groups) ? target.groups.map(group => {
-        const productNames = ensureGroupProductNames(group);
-        const defaultProductNameId = productNames[0] ? productNames[0].id : "";
-        return {
-          ...group,
-          productNames: productNames.map(product => ({ ...product })),
-          items: Array.isArray(group.items) ? group.items.map(item => ({
-            ...item,
-            productNameId: productNames.some(product => product.id === item.productNameId) ? item.productNameId : defaultProductNameId,
-            priceDate: normalizeDate(item.priceDate || item.purchaseDate || item.date) || todayDate(),
-            status: normalizeItemStatus(item.status || item.recordStatus),
-            sizeCode: String(item.sizeCode || item.codeSize || item.code || "")
-          })) : []
-        };
+        const nextGroup = { ...group };
+        normalizeGroupProductNames(nextGroup);
+        const defaultProductNameId = nextGroup.productNames[0] ? nextGroup.productNames[0].id : "";
+        nextGroup.items = Array.isArray(nextGroup.items) ? nextGroup.items.map(item => ({
+          ...item,
+          productNameId: nextGroup.productNames.some(p => p.id === item.productNameId) ? item.productNameId : defaultProductNameId,
+          priceDate: normalizeDate(item.priceDate || item.purchaseDate || item.date) || todayDate(),
+          status: normalizeItemStatus(item.status || item.recordStatus),
+          sizeCode: String(item.sizeCode || item.codeSize || item.code || "")
+        })) : [];
+        return nextGroup;
       }) : [];
       target.configs = {
         ...(target.configs || {}),
@@ -2024,6 +2196,42 @@
       return state.groups.find(g => g.id === state.activeGroupId) || state.groups[0];
     }
 
+    function normalizeGroupProductNames(group) {
+      if (!group) return [];
+      if (!Array.isArray(group.productNames)) group.productNames = [];
+      group.productNames = group.productNames
+        .map(p => ({ id: p.id || uid("pname"), name: String(p.name || "").trim() }))
+        .filter(p => p.name);
+      if (!group.productNames.length) {
+        group.productNames.push({ id: uid("pname"), name: group.name || t("newProductNameDefault") });
+      }
+      const defaultId = group.productNames[0].id;
+      if (Array.isArray(group.items)) {
+        group.items.forEach(item => {
+          if (!group.productNames.some(p => p.id === item.productNameId)) item.productNameId = defaultId;
+        });
+      }
+      return group.productNames;
+    }
+
+    function productNamesForGroup(group = currentGroup()) {
+      return normalizeGroupProductNames(group);
+    }
+
+    function productNameText(item, group = currentGroup()) {
+      const list = productNamesForGroup(group);
+      const found = list.find(p => p.id === item.productNameId);
+      return found ? found.name : (list[0] ? list[0].name : group.name);
+    }
+
+    function productNameOptionsHtml(group, selectedProductNameId) {
+      const list = productNamesForGroup(group);
+      return list.map((p, index) => {
+        const selected = p.id === selectedProductNameId || (!selectedProductNameId && index === 0) ? " selected" : "";
+        return `<option value="${escapeAttr(p.id)}"${selected}>${escapeHtml(p.name)}</option>`;
+      }).join("");
+    }
+
     function numberOrZero(value) {
       const n = Number(value);
       return Number.isFinite(n) ? n : 0;
@@ -2038,6 +2246,21 @@
       const n = numberOrZero(value);
       if (!Number.isFinite(n)) return "-";
       return Number(n.toFixed(max)).toLocaleString(undefined, { maximumFractionDigits: max });
+    }
+
+
+    function inputWidthStyle(value, minCh = 8, maxCh = 16) {
+      const text = String(value ?? "").trim();
+      const len = Math.max(minCh, Math.min(maxCh, text.length + 3));
+      return `width:${len}ch;`;
+    }
+
+    function resizeInlineInput(el) {
+      if (!el || !el.classList || !el.classList.contains("cell-input")) return;
+      const min = el.classList.contains("cell-date") ? 13 : el.classList.contains("cell-size-code") ? 7 : 8;
+      const max = el.classList.contains("cell-date") ? 14 : 18;
+      const len = Math.max(min, Math.min(max, String(el.value || "").length + 3));
+      el.style.width = `${len}ch`;
     }
 
     function unitInfo(code) {
@@ -2069,32 +2292,6 @@
       }).join("");
     }
 
-    function ensureGroupProductNames(group) {
-      if (!group) return [];
-      if (!Array.isArray(group.productNames) || !group.productNames.length) {
-        group.productNames = [{ id: uid("pname"), name: group.name || t("newProductNameDefault") }];
-      }
-      group.productNames = group.productNames.map(name => ({
-        id: name.id || uid("pname"),
-        name: String(name.name || group.name || t("newProductNameDefault")).trim() || t("newProductNameDefault")
-      }));
-      return group.productNames;
-    }
-
-    function productNameById(group, productNameId) {
-      const names = ensureGroupProductNames(group);
-      const found = names.find(name => name.id === productNameId);
-      return found ? found.name : (names[0] ? names[0].name : "");
-    }
-
-    function productNameOptionsHtml(group, selectedProductNameId) {
-      const names = ensureGroupProductNames(group);
-      return names.map((name, index) => {
-        const selected = name.id === selectedProductNameId || (!selectedProductNameId && index === 0) ? " selected" : "";
-        return `<option value="${escapeAttr(name.id)}"${selected}>${escapeHtml(name.name)}</option>`;
-      }).join("");
-    }
-
     function calcItem(item) {
       const info = unitInfo(item.unit);
       const price = numberOrZero(item.price);
@@ -2116,21 +2313,26 @@
       };
     }
 
+    function compareKeyForRow(row) {
+      const productNameId = row.item.productNameId || "__default_product_name__";
+      return `${productNameId}__${row.calc.base}`;
+    }
+
     function buildBestByBase(rows) {
       const byBase = {};
       rows.forEach(row => {
         if (!row.calc.valid) return;
-        const key = row.compareKey || row.calc.base;
+        const key = compareKeyForRow(row);
         if (!byBase[key]) byBase[key] = [];
         byBase[key].push(row);
       });
 
       const bestByBase = {};
-      Object.keys(byBase).forEach(base => {
-        const list = byBase[base];
+      Object.keys(byBase).forEach(key => {
+        const list = byBase[key];
         const minPrice = Math.min(...list.map(row => row.calc.unitPrice));
         const bestRows = list.filter(row => Math.abs(row.calc.unitPrice - minPrice) < 0.000000001);
-        bestByBase[base] = { minPrice, bestRows, total: list.length };
+        bestByBase[key] = { key, base: list[0].calc.base, productNameId: list[0].item.productNameId, minPrice, bestRows, total: list.length };
       });
 
       return { byBase, bestByBase };
@@ -2142,12 +2344,7 @@
     }
 
     function analysisForGroup(group) {
-      const rows = group.items.map(item => {
-        const calc = calcItem(item);
-        const names = ensureGroupProductNames(group);
-        const productNameId = names.some(product => product.id === item.productNameId) ? item.productNameId : (names[0] ? names[0].id : "");
-        return { item, calc, productNameId, compareKey: `${productNameId || "default"}|${calc.base}` };
-      });
+      const rows = group.items.map(item => ({ item, calc: calcItem(item) }));
       const currentRows = rows.filter(row => isCurrent(row.item));
       const historyRows = rows.filter(row => isPurchased(row.item));
       const currentAnalysis = buildBestByBase(currentRows);
@@ -2207,7 +2404,7 @@
 
     function historyCompareForRow(row, analysis) {
       if (!row.calc.valid) return { type: "muted", text: "-" };
-      const stats = analysis.historyStatsByBase[row.compareKey || row.calc.base];
+      const stats = analysis.historyStatsByBase[compareKeyForRow(row)];
       if (isPurchased(row.item)) {
         if (stats && stats.minRow && stats.minRow.item.id === row.item.id && stats.count > 1) {
           return { type: "good", text: t("historyLowest") };
@@ -2234,7 +2431,7 @@
       if (isPurchased(row.item)) {
         return historyCompareForRow(row, analysis);
       }
-      const best = bestByBase[row.compareKey || row.calc.base];
+      const best = bestByBase[compareKeyForRow(row)];
       if (!best) {
         return { type: "muted", text: t("notComparable") };
       }
@@ -2453,6 +2650,7 @@
     }
 
     function renderGroups() {
+      state.groups.forEach(group => normalizeGroupProductNames(group));
       const html = state.groups.map(group => `<option value="${group.id}">${escapeHtml(group.name)}</option>`).join("");
       $("#groupSelect").html(html).val(state.activeGroupId);
     }
@@ -2476,19 +2674,17 @@
       if (baseKeys.length === 1) {
         const base = baseKeys[0];
         const best = analysis.bestByBase[base];
-        const bestUnitBase = best.bestRows[0] ? best.bestRows[0].calc.base : base;
         const bestNames = best.bestRows.map(row => storeName(row.item.storeId)).filter(Boolean).join(" / ") || "-";
         $("#summaryStore").text(bestNames);
-        $("#summaryPrice").text(`${smartNumber(best.minPrice, 3)} / ${baseUnitLabel(bestUnitBase)}`);
+        $("#summaryPrice").text(`${smartNumber(best.minPrice, 3)} / ${baseUnitLabel(best.base)}`);
         $("#summaryNote").text(best.total > 1 ? "" : t("noValidBest"));
         return;
       }
 
       const firstBase = baseKeys[0];
       const firstBest = analysis.bestByBase[firstBase];
-      const firstUnitBase = firstBest.bestRows[0] ? firstBest.bestRows[0].calc.base : firstBase;
       $("#summaryStore").text(t("multiBest"));
-      $("#summaryPrice").text(`${smartNumber(firstBest.minPrice, 3)} / ${baseUnitLabel(firstUnitBase)} ...`);
+      $("#summaryPrice").text(`${smartNumber(firstBest.minPrice, 3)} / ${baseUnitLabel(firstBest.base)} ...`);
       $("#summaryNote").text(t("mixedUnits"));
     }
 
@@ -2512,7 +2708,7 @@
 
       const base = baseKeys[0];
       const best = analysis.bestByBase[base];
-      const unit = baseUnitLabel(best.bestRows[0] ? best.bestRows[0].calc.base : base);
+      const unit = baseUnitLabel(best.base);
       const bestNames = best.bestRows.map(row => storeName(row.item.storeId)).filter(Boolean).join(" / ") || "-";
       const stats = analysis.historyStatsByBase[base];
       const advice = purchaseAdvice(best.minPrice, stats);
@@ -2531,7 +2727,7 @@
       }
 
       if (baseKeys.length > 1) {
-        subParts.push(t("multipleProductNames"));
+        subParts.push(t("mixedUnits"));
       }
 
       const html = `
@@ -2552,9 +2748,7 @@
       renderBestStrip(analysis);
       const sortedRows = analysis.rows.slice().sort((a, b) => {
         if (isCurrent(a.item) !== isCurrent(b.item)) return isCurrent(a.item) ? -1 : 1;
-        const productCompare = String(productNameById(group, a.item.productNameId)).localeCompare(String(productNameById(group, b.item.productNameId)));
-        if (productCompare !== 0) return productCompare;
-        if (isCurrent(a.item) && a.calc.valid && b.calc.valid && a.compareKey === b.compareKey) return a.calc.unitPrice - b.calc.unitPrice;
+        if (isCurrent(a.item) && a.calc.valid && b.calc.valid && a.calc.base === b.calc.base) return a.calc.unitPrice - b.calc.unitPrice;
         if (isCurrent(a.item) && a.calc.valid !== b.calc.valid) return a.calc.valid ? -1 : 1;
         if (isPurchased(a.item) && isPurchased(b.item)) {
           const dateDiff = timestampForItem(b.item) - timestampForItem(a.item);
@@ -2594,42 +2788,42 @@
         <tr class="${isBest ? "best-row" : ""} ${isPurchased(item) ? "purchased-row" : ""}">
           <td>${chipHtml(result)}</td>
           <td class="cell-editable">
-            <input class="cell-input js-inline-edit" data-id="${item.id}" data-field="priceDate" type="date" value="${escapeAttr(item.priceDate || todayDate())}"${lockedAttr} />
+            <input class="cell-input cell-date js-inline-edit" data-id="${item.id}" data-field="priceDate" type="date" value="${escapeAttr(item.priceDate || todayDate())}"${lockedAttr} />
           </td>
           <td class="cell-editable">
-            <select class="cell-select js-inline-edit" data-id="${item.id}" data-field="status">${statusOptionsHtml(item.status)}</select>
+            <select class="cell-select cell-status js-inline-edit" data-id="${item.id}" data-field="status"${lockedAttr}>${statusOptionsHtml(item.status)}</select>
           </td>
           <td class="cell-editable">
-            <select class="cell-select js-inline-edit" data-id="${item.id}" data-field="productNameId"${lockedAttr}>${productNameOptionsHtml(group, item.productNameId)}</select>
+            <select class="cell-select cell-product-name js-inline-edit" data-id="${item.id}" data-field="productNameId"${lockedAttr}>${productNameOptionsHtml(group, item.productNameId)}</select>
           </td>
           <td class="cell-editable">
             <select class="cell-select cell-store js-inline-edit" data-id="${item.id}" data-field="storeId"${lockedAttr}>${storeOptionsHtml(item.storeId)}</select>
           </td>
           <td class="cell-editable">
-            <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="price" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.price)}"${lockedAttr} />
+            <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="price" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.price)}" style="${inputWidthStyle(item.price, 6, 12)}"${lockedAttr} />
           </td>
           <td class="cell-editable">
-            <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="cashback" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.cashback)}"${lockedAttr} />
+            <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="cashback" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.cashback)}" style="${inputWidthStyle(item.cashback, 6, 12)}"${lockedAttr} />
           </td>
-          <td class="num">${c.valid ? money(c.finalCost) : "-"}</td>
+          <td class="num" title="${c.valid ? money(c.finalCost) : "-"}">${c.valid ? money(c.finalCost) : "-"}</td>
           <td class="cell-editable">
-            <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="quantity" type="number" min="0" step="1" inputmode="numeric" value="${escapeAttr(item.quantity)}"${lockedAttr} />
-          </td>
-          <td class="cell-editable">
-            <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="size" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.size)}"${lockedAttr} />
+            <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="quantity" type="number" min="0" step="1" inputmode="numeric" value="${escapeAttr(item.quantity)}" style="${inputWidthStyle(item.quantity, 5, 10)}"${lockedAttr} />
           </td>
           <td class="cell-editable">
-            <input class="cell-input js-inline-edit" data-id="${item.id}" data-field="sizeCode" type="text" value="${escapeAttr(item.sizeCode || "")}"${lockedAttr} />
+            <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="size" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.size)}" style="${inputWidthStyle(item.size, 5, 10)}"${lockedAttr} />
+          </td>
+          <td class="cell-editable">
+            <input class="cell-input cell-size-code js-inline-edit" data-id="${item.id}" data-field="sizeCode" type="text" value="${escapeAttr(item.sizeCode || "")}" style="${inputWidthStyle(item.sizeCode || "", 4, 8)}"${lockedAttr} />
           </td>
           <td class="cell-editable">
             <select class="cell-select cell-unit js-inline-edit" data-id="${item.id}" data-field="unit"${lockedAttr}>${unitOptionsHtml(item.unit)}</select>
           </td>
-          <td class="num">${c.valid ? smartNumber(c.totalBaseSize, 4) : "-"}</td>
-          <td class="num ${isBest ? "unit-price-best" : ""}">${c.valid ? smartNumber(c.unitPrice, 3) : "-"}</td>
+          <td class="num" title="${c.valid ? smartNumber(c.totalBaseSize, 4) : "-"}">${c.valid ? smartNumber(c.totalBaseSize, 4) : "-"}</td>
+          <td class="num ${isBest ? "unit-price-best" : ""}" title="${c.valid ? smartNumber(c.unitPrice, 3) : "-"}">${c.valid ? smartNumber(c.unitPrice, 3) : "-"}</td>
           <td>${chipHtml(history)}</td>
-          <td>
+          <td class="actions-cell">
             <div class="row-actions">
-              ${isCurrent(item) ? `<button type="button" class="small-btn btn-buy btn-confirm-purchase" data-id="${item.id}">${t("confirmPurchase")}</button>` : ""}
+              ${isCurrent(item) ? `<button type="button" class="small-btn btn-buy btn-confirm-purchase" data-id="${item.id}">${t("confirmPurchase")}</button>` : `<button type="button" class="small-btn btn-ghost btn-edit-record" data-id="${item.id}">${t("edit")}</button>`}
               <button type="button" class="small-btn btn-ghost btn-copy" data-id="${item.id}">${t("copy")}</button>
               <button type="button" class="small-btn btn-danger btn-delete" data-id="${item.id}">${t("delete")}</button>
             </div>
@@ -2651,7 +2845,7 @@
         <article class="item-card ${isBest ? "best-card" : ""}">
           <div class="item-head">
             <div>
-              <div class="item-title">${escapeHtml(productNameById(group, item.productNameId) || group.name)} · ${escapeHtml(storeName(item.storeId) || "-")}</div>
+              <div class="item-title">${escapeHtml(productNameText(item, group))} · ${escapeHtml(storeName(item.storeId) || "-")}</div>
               <div class="item-subtitle">${escapeHtml(group.name)} · ${escapeHtml(item.priceDate || todayDate())}</div>
             </div>
             ${chipHtml(result)}
@@ -2677,9 +2871,9 @@
             </div>
             <div>
               <label>${t("status")}</label>
-              <select class="js-inline-edit" data-id="${item.id}" data-field="status">${statusOptionsHtml(item.status)}</select>
+              <select class="js-inline-edit" data-id="${item.id}" data-field="status"${lockedAttr}>${statusOptionsHtml(item.status)}</select>
             </div>
-            <div>
+            <div class="field-store-mobile">
               <label>${t("productName")}</label>
               <select class="js-inline-edit" data-id="${item.id}" data-field="productNameId"${lockedAttr}>${productNameOptionsHtml(group, item.productNameId)}</select>
             </div>
@@ -2713,7 +2907,7 @@
             </div>
           </div>
           <div class="row-actions">
-            ${isCurrent(item) ? `<button type="button" class="small-btn btn-buy btn-confirm-purchase" data-id="${item.id}">${t("confirmPurchase")}</button>` : ""}
+            ${isCurrent(item) ? `<button type="button" class="small-btn btn-buy btn-confirm-purchase" data-id="${item.id}">${t("confirmPurchase")}</button>` : `<button type="button" class="small-btn btn-ghost btn-edit-record" data-id="${item.id}">${t("edit")}</button>`}
             <button type="button" class="small-btn btn-ghost btn-copy" data-id="${item.id}">${t("copy")}</button>
             <button type="button" class="small-btn btn-danger btn-delete" data-id="${item.id}">${t("delete")}</button>
           </div>
@@ -2726,11 +2920,9 @@
     }
 
     function createBlankItem() {
-      const group = currentGroup();
-      const productNames = ensureGroupProductNames(group);
       return {
         id: uid("item"),
-        productNameId: productNames[0] ? productNames[0].id : "",
+        productNameId: productNamesForGroup(currentGroup())[0] ? productNamesForGroup(currentGroup())[0].id : "",
         storeId: state.stores[0] ? state.stores[0].id : "",
         price: 0,
         cashback: 0,
@@ -2739,7 +2931,7 @@
         sizeCode: "",
         priceDate: todayDate(),
         status: "current",
-        unit: "g",
+        unit: appUnits()[0] ? appUnits()[0].code : "g",
         createdAt: Date.now()
       };
     }
@@ -2776,10 +2968,99 @@
       const item = group.items.find(x => x.id === id);
       if (!item) return;
       item.status = "purchased";
-      item.priceDate = todayDate();
+      if (!item.priceDate) item.priceDate = todayDate();
       saveState();
       renderAll();
     }
+
+    function openRecordEdit(id) {
+      const group = currentGroup();
+      const item = group.items.find(x => x.id === id);
+      if (!item) return;
+      editingItemId = id;
+      $("#recordEditTitle").text(t("editItem"));
+      $("#recordEditForm").html(recordEditFormHtml(group, item));
+      $("#recordEditOverlay").addClass("show").attr("aria-hidden", "false");
+    }
+
+    function closeRecordEdit() {
+      editingItemId = null;
+      $("#recordEditOverlay").removeClass("show").attr("aria-hidden", "true");
+      $("#recordEditForm").empty();
+    }
+
+    function recordEditFormHtml(group, item) {
+      return `
+        <div>
+          <label>${t("priceDate")}</label>
+          <input id="editPriceDate" type="date" value="${escapeAttr(item.priceDate || todayDate())}" />
+        </div>
+        <div>
+          <label>${t("status")}</label>
+          <select id="editStatus">${statusOptionsHtml(item.status)}</select>
+        </div>
+        <div>
+          <label>${t("productName")}</label>
+          <select id="editProductNameId">${productNameOptionsHtml(group, item.productNameId)}</select>
+        </div>
+        <div>
+          <label>${t("store")}</label>
+          <select id="editStoreId">${storeOptionsHtml(item.storeId)}</select>
+        </div>
+        <div>
+          <label>${t("price")}</label>
+          <input id="editPrice" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.price)}" />
+        </div>
+        <div>
+          <label>${t("cashback")}</label>
+          <input id="editCashback" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.cashback)}" />
+        </div>
+        <div>
+          <label>${t("quantity")}</label>
+          <input id="editQuantity" type="number" min="0" step="1" inputmode="numeric" value="${escapeAttr(item.quantity)}" />
+        </div>
+        <div>
+          <label>${t("size")}</label>
+          <input id="editSize" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.size)}" />
+        </div>
+        <div>
+          <label>${t("sizeCode")}</label>
+          <input id="editSizeCode" type="text" value="${escapeAttr(item.sizeCode || "")}" />
+        </div>
+        <div>
+          <label>${t("unit")}</label>
+          <select id="editUnit">${unitOptionsHtml(item.unit)}</select>
+        </div>`;
+    }
+
+    function saveRecordEdit() {
+      if (!editingItemId) return;
+      const group = currentGroup();
+      const item = group.items.find(x => x.id === editingItemId);
+      if (!item) {
+        closeRecordEdit();
+        return;
+      }
+      const productNameId = String($("#editProductNameId").val() || "");
+      const storeId = String($("#editStoreId").val() || "");
+      const unit = String($("#editUnit").val() || "");
+      const names = productNamesForGroup(group);
+      const units = appUnits();
+      item.priceDate = normalizeDate($("#editPriceDate").val()) || todayDate();
+      item.status = normalizeItemStatus($("#editStatus").val());
+      item.productNameId = names.some(p => p.id === productNameId) ? productNameId : (names[0] ? names[0].id : "");
+      item.storeId = state.stores.some(store => store.id === storeId) ? storeId : (state.stores[0] ? state.stores[0].id : "");
+      item.price = numberOrZero($("#editPrice").val());
+      item.cashback = numberOrZero($("#editCashback").val());
+      item.quantity = numberOrZero($("#editQuantity").val());
+      item.size = numberOrZero($("#editSize").val());
+      item.sizeCode = String($("#editSizeCode").val() || "").trim();
+      item.unit = units.some(u => u.code === unit) ? unit : (units[0] ? units[0].code : "g");
+      saveState();
+      closeRecordEdit();
+      renderAll();
+    }
+
 
     function focusPendingRow() {
       if (!pendingFocusItemId) return;
@@ -2811,14 +3092,14 @@
       const group = currentGroup();
       const item = group.items.find(x => x.id === id);
       if (!item) return;
-      if (isPurchased(item) && field !== "status") {
+      if (isPurchased(item)) {
         renderAll();
         return;
       }
 
       if (field === "productNameId") {
-        const names = ensureGroupProductNames(group);
-        item.productNameId = names.some(product => product.id === value) ? value : (names[0] ? names[0].id : "");
+        const names = productNamesForGroup(group);
+        item.productNameId = names.some(p => p.id === value) ? value : (names[0] ? names[0].id : "");
       }
 
       if (field === "storeId") {
@@ -2881,6 +3162,7 @@
       const isStore = type === "store";
       const isUnit = type === "unit";
       const isSync = type === "sync";
+      if (isProductName && !activeProductNameGroupId) activeProductNameGroupId = state.activeGroupId;
       const title = isProduct ? t("productGroupConfig") : isProductName ? t("productNameConfig") : isStore ? t("storeConfig") : isUnit ? t("unitConfig") : t("cloudSyncConfig");
       $("#configTitle").text(title);
       $("#productConfigPanel").toggleClass("active", isProduct);
@@ -2918,15 +3200,39 @@
     }
 
     function renderProductNameConfig() {
-      const group = currentGroup();
-      const names = ensureGroupProductNames(group);
-      $("#productNameConfigGroupHint").text(`${t("currentProductGroup")}：${group.name}`);
-      const html = names.map(product => `
+      if (!activeProductNameGroupId || !state.groups.some(group => group.id === activeProductNameGroupId)) activeProductNameGroupId = state.activeGroupId;
+      const groupOptions = state.groups.map(group => `<option value="${escapeAttr(group.id)}"${group.id === activeProductNameGroupId ? " selected" : ""}>${escapeHtml(group.name)}</option>`).join("");
+      $("#productNameGroupSelect").html(groupOptions);
+      const group = state.groups.find(g => g.id === activeProductNameGroupId) || currentGroup();
+      const names = productNamesForGroup(group);
+      const html = names.map(productName => `
         <div class="config-row product-name-row">
-          <input class="js-config-product-name" data-id="${escapeAttr(product.id)}" type="text" value="${escapeAttr(product.name)}" placeholder="${escapeAttr(t("productName"))}" />
-          <button type="button" class="small-btn btn-danger btn-config-delete-product-name" data-id="${escapeAttr(product.id)}">${t("delete")}</button>
+          <input class="js-config-product-name" data-group-id="${escapeAttr(group.id)}" data-id="${escapeAttr(productName.id)}" type="text" value="${escapeAttr(productName.name)}" placeholder="${escapeAttr(t("productNameName"))}" />
+          <button type="button" class="small-btn btn-danger btn-config-delete-product-name" data-group-id="${escapeAttr(group.id)}" data-id="${escapeAttr(productName.id)}">${t("delete")}</button>
         </div>`).join("");
       $("#productNameConfigList").html(html);
+    }
+
+    function renderUnitConfig() {
+      const rows = appUnits().map(unit => `
+        <div class="unit-config-grid unit-config-row">
+          <input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="code" type="text" value="${escapeAttr(unit.code)}" placeholder="${escapeAttr(t("unitCode"))}" />
+          <input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="zh" type="text" value="${escapeAttr(unit.label && unit.label.zh ? unit.label.zh : "")}" placeholder="${escapeAttr(t("unitZh"))}" />
+          <input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="en" type="text" value="${escapeAttr(unit.label && unit.label.en ? unit.label.en : "")}" placeholder="${escapeAttr(t("unitEn"))}" />
+          <input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="base" type="text" value="${escapeAttr(unit.base)}" placeholder="${escapeAttr(t("baseUnit"))}" />
+          <input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="factor" type="number" min="0.000001" step="0.000001" value="${escapeAttr(unit.factor)}" placeholder="${escapeAttr(t("unitFactor"))}" />
+          <button type="button" class="small-btn btn-danger btn-config-delete-unit" data-code="${escapeAttr(unit.code)}">${t("delete")}</button>
+        </div>`).join("");
+      const header = `
+        <div class="unit-config-grid unit-config-head">
+          <span>${t("unitCode")}</span>
+          <span>${t("unitZh")}</span>
+          <span>${t("unitEn")}</span>
+          <span>${t("baseUnit")}</span>
+          <span>${t("unitFactor")}</span>
+          <span></span>
+        </div>`;
+      $("#unitConfigList").html(`<div class="unit-config-table">${header}${rows}</div>`);
     }
 
     function renderStoreConfig() {
@@ -2936,19 +3242,6 @@
           <button type="button" class="small-btn btn-danger btn-config-delete-store" data-id="${escapeAttr(store.id)}">${t("delete")}</button>
         </div>`).join("");
       $("#storeConfigList").html(html);
-    }
-
-    function renderUnitConfig() {
-      const html = appUnits().map(unit => `
-        <div class="config-row unit-row" data-code="${escapeAttr(unit.code)}">
-          <div class="unit-config-field"><label>${t("unitCode")}</label><input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="code" type="text" value="${escapeAttr(unit.code)}" /></div>
-          <div class="unit-config-field"><label>${t("unitZh")}</label><input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="zh" type="text" value="${escapeAttr(unit.label.zh)}" /></div>
-          <div class="unit-config-field"><label>${t("unitEn")}</label><input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="en" type="text" value="${escapeAttr(unit.label.en)}" /></div>
-          <div class="unit-config-field"><label>${t("unitBase")}</label><input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="base" type="text" value="${escapeAttr(unit.base)}" /></div>
-          <div class="unit-config-field"><label>${t("unitFactor")}</label><input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="factor" type="number" min="0.000001" step="0.000001" inputmode="decimal" value="${escapeAttr(unit.factor)}" /></div>
-          <button type="button" class="small-btn btn-danger btn-config-delete-unit" data-code="${escapeAttr(unit.code)}">${t("delete")}</button>
-        </div>`).join("");
-      $("#unitConfigList").html(html);
     }
 
     function addGroupFromConfig() {
@@ -2986,16 +3279,17 @@
 
 
     function addProductNameFromConfig() {
-      const group = currentGroup();
-      const names = ensureGroupProductNames(group);
-      const name = uniqueName(t("newProductNameDefault"), names, product => product.name);
-      const product = { id: uid("pname"), name };
-      names.push(product);
+      if (!activeProductNameGroupId || !state.groups.some(group => group.id === activeProductNameGroupId)) activeProductNameGroupId = state.activeGroupId;
+      const group = state.groups.find(g => g.id === activeProductNameGroupId) || currentGroup();
+      const names = productNamesForGroup(group);
+      const name = uniqueName(t("newProductNameDefault"), names, item => item.name);
+      const productName = { id: uid("pname"), name };
+      names.push(productName);
       saveState();
       renderAll();
       renderConfig();
       setTimeout(() => {
-        const input = $(`.js-config-product-name[data-id="${product.id}"]`).get(0);
+        const input = $(`.js-config-product-name[data-id="${productName.id}"]`).get(0);
         if (input) {
           input.focus();
           input.select();
@@ -3004,22 +3298,24 @@
     }
 
     function addUnitFromConfig() {
-      const codeBase = "unit";
-      let index = 1;
-      let code = `${codeBase}${index}`;
-      const existing = new Set(appUnits().map(unit => unit.code));
-      while (existing.has(code)) {
-        index += 1;
-        code = `${codeBase}${index}`;
-      }
-      state.units.push({ code, base: code, factor: 1, label: { zh: t("newUnitDefault"), en: t("newUnitDefault") } });
+      const codeBase = uniqueName("unit", appUnits(), unit => unit.code).replace(/\s+/g, "_").toLowerCase();
+      const unit = { code: codeBase, base: codeBase, factor: 1, label: { zh: t("newUnitDefault"), en: "New Unit" } };
+      state.units.push(unit);
       saveState();
       renderAll();
       renderConfig();
+      setTimeout(() => {
+        const input = $(`.js-config-unit[data-code="${unit.code}"][data-field="code"]`).get(0);
+        if (input) {
+          input.focus();
+          input.select();
+        }
+      }, 50);
     }
 
 
     $(document).on("input change", ".js-inline-edit", function (e) {
+      resizeInlineInput(this);
       const id = $(this).data("id");
       const field = $(this).data("field");
       updateInlineField(id, field, $(this).val());
@@ -3041,6 +3337,22 @@
 
     $(document).on("click", ".btn-confirm-purchase", function () {
       confirmPurchase($(this).data("id"));
+    });
+
+    $(document).on("click", ".btn-edit-record", function () {
+      openRecordEdit($(this).data("id"));
+    });
+
+    $("#btnSaveRecordEdit").on("click", saveRecordEdit);
+    $("#btnCloseRecordEdit, #btnCancelRecordEdit").on("click", closeRecordEdit);
+    $("#recordEditOverlay").on("click", function (e) {
+      if (e.target === this) closeRecordEdit();
+    });
+
+    $(document).on("keydown", function (e) {
+      if (e.key === "Escape" && $("#recordEditOverlay").hasClass("show")) {
+        closeRecordEdit();
+      }
     });
 
 
@@ -3097,15 +3409,74 @@
     });
 
 
+    $(document).on("change", "#productNameGroupSelect", function () {
+      activeProductNameGroupId = $(this).val();
+      renderProductNameConfig();
+    });
+
     $(document).on("input", ".js-config-product-name", function () {
+      const groupId = $(this).data("groupId");
       const id = $(this).data("id");
-      const group = currentGroup();
-      const product = ensureGroupProductNames(group).find(item => item.id === id);
-      if (!product) return;
-      product.name = String($(this).val() || "").trim() || t("newProductNameDefault");
+      const group = state.groups.find(g => g.id === groupId);
+      if (!group) return;
+      const productName = productNamesForGroup(group).find(p => p.id === id);
+      if (!productName) return;
+      productName.name = String($(this).val() || "").trim() || t("newProductNameDefault");
       saveState();
-      renderSummary();
       renderRecords();
+    });
+
+    $(document).on("click", ".btn-config-delete-product-name", function () {
+      const groupId = $(this).data("groupId");
+      const id = $(this).data("id");
+      const group = state.groups.find(g => g.id === groupId);
+      if (!group) return;
+      const names = productNamesForGroup(group);
+      if (names.length <= 1) return alert(t("cannotDeleteLastProductName"));
+      const used = group.items.some(item => item.productNameId === id);
+      if (used) return alert(t("productNameInUse"));
+      if (!confirm(t("confirmDeleteProductName"))) return;
+      group.productNames = names.filter(p => p.id !== id);
+      saveState();
+      renderAll();
+    });
+
+    $(document).on("input change", ".js-config-unit", function () {
+      const originalCode = String($(this).data("code") || "");
+      const field = $(this).data("field");
+      const unit = state.units.find(u => u.code === originalCode);
+      if (!unit) return;
+      if (field === "code") {
+        const newCode = String($(this).val() || "").trim().replace(/\s+/g, "_");
+        if (!newCode) return;
+        if (newCode !== originalCode && state.units.some(u => u.code === newCode)) return;
+        state.groups.forEach(group => group.items.forEach(item => { if (item.unit === originalCode) item.unit = newCode; }));
+        unit.code = newCode;
+        if (unit.base === originalCode) unit.base = newCode;
+      } else if (field === "zh") {
+        unit.label = unit.label || {};
+        unit.label.zh = String($(this).val() || "").trim() || unit.code;
+      } else if (field === "en") {
+        unit.label = unit.label || {};
+        unit.label.en = String($(this).val() || "").trim() || unit.code;
+      } else if (field === "base") {
+        unit.base = String($(this).val() || "").trim() || unit.code;
+      } else if (field === "factor") {
+        unit.factor = Math.max(0.000001, numberOrZero($(this).val()) || 1);
+      }
+      saveState();
+      renderAll();
+    });
+
+    $(document).on("click", ".btn-config-delete-unit", function () {
+      const code = String($(this).data("code") || "");
+      if (state.units.length <= 1) return alert(t("cannotDeleteLastUnit"));
+      const used = state.groups.some(group => group.items.some(item => item.unit === code));
+      if (used) return alert(t("unitInUse"));
+      if (!confirm(t("confirmDeleteUnit"))) return;
+      state.units = state.units.filter(unit => unit.code !== code);
+      saveState();
+      renderAll();
     });
 
     $(document).on("input", ".js-config-store-name", function () {
@@ -3116,39 +3487,6 @@
       saveState();
       renderSummary();
       renderRecords();
-    });
-
-
-    $(document).on("change", ".js-config-unit", function () {
-      const oldCode = String($(this).data("code") || "");
-      const field = String($(this).data("field") || "");
-      const unit = state.units.find(item => item.code === oldCode);
-      if (!unit) return;
-      let value = String($(this).val() || "").trim();
-      if (field === "code") {
-        value = value || oldCode;
-        const duplicate = state.units.some(item => item.code === value && item.code !== oldCode);
-        if (duplicate) {
-          alert(t("unitCodeDuplicate"));
-          renderConfig();
-          return;
-        }
-        unit.code = value;
-        if (unit.base === oldCode) unit.base = value;
-        state.groups.forEach(group => group.items.forEach(item => {
-          if (item.unit === oldCode) item.unit = value;
-        }));
-      } else if (field === "base") {
-        unit.base = value || unit.code;
-      } else if (field === "factor") {
-        unit.factor = numberOrZero(value) || 1;
-      } else if (field === "zh") {
-        unit.label.zh = value || unit.code;
-      } else if (field === "en") {
-        unit.label.en = value || unit.code;
-      }
-      saveState();
-      renderAll();
     });
 
     $(document).on("click", ".btn-config-current-group", function () {
@@ -3171,19 +3509,6 @@
       renderAll();
     });
 
-
-    $(document).on("click", ".btn-config-delete-product-name", function () {
-      const id = $(this).data("id");
-      const group = currentGroup();
-      const names = ensureGroupProductNames(group);
-      if (names.length <= 1) return alert(t("cannotDeleteLastProductName"));
-      const used = group.items.some(item => item.productNameId === id);
-      if (used) return alert(t("productNameInUse"));
-      group.productNames = names.filter(product => product.id !== id);
-      saveState();
-      renderAll();
-    });
-
     $(document).on("click", ".btn-config-delete-store", function () {
       const id = $(this).data("id");
       if (state.stores.length <= 1) return alert(t("cannotDeleteLastStore"));
@@ -3191,17 +3516,6 @@
       if (used) return alert(t("storeInUse"));
       if (!confirm(t("confirmDeleteStore"))) return;
       state.stores = state.stores.filter(store => store.id !== id);
-      saveState();
-      renderAll();
-    });
-
-
-    $(document).on("click", ".btn-config-delete-unit", function () {
-      const code = String($(this).data("code") || "");
-      if (state.units.length <= 1) return alert(t("cannotDeleteLastUnit"));
-      const used = state.groups.some(group => group.items.some(item => item.unit === code));
-      if (used) return alert(t("unitInUse"));
-      state.units = state.units.filter(unit => unit.code !== code);
       saveState();
       renderAll();
     });
