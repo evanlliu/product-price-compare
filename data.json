@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T13:10:52.849Z",
-    "lastSavedAt": "2026-05-13T13:10:58.976Z"
+    "lastSavedAt": "2026-05-13T13:11:07.193Z"
   },
   "units": [
     {
@@ -217,7 +217,22 @@
           "name": "爱他美"
         }
       ],
-      "items": []
+      "items": [
+        {
+          "id": "item_1778677866292_9f610fde7e33b",
+          "productNameId": "productName_1778670149375_253002c7faaf28",
+          "storeId": "store_a",
+          "price": 0,
+          "cashback": 0,
+          "quantity": 1,
+          "size": 0,
+          "sizeCode": "",
+          "priceDate": "2026-05-13",
+          "status": "current",
+          "unit": "g",
+          "createdAt": 1778677866292
+        }
+      ]
     }
   ],
   "activeGroupId": "group_1778670149375_13bf168a8eb7c8",
