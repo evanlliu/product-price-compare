@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T11:01:32.288Z",
-    "lastSavedAt": "2026-05-13T11:02:57.451Z"
+    "lastSavedAt": "2026-05-13T11:03:35.794Z"
   },
   "units": [
     {
@@ -120,7 +120,7 @@
       "productNames": [
         {
           "id": "productName_1778670092288_40a6322d0e94d",
-          "name": "洗面奶"
+          "name": "jiao'run'q"
         }
       ],
       "items": [
