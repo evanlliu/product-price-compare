@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>商品比价器 Price Compare v1.0.16</title>
+  <title>商品比价器 Price Compare v1.0.17</title>
   <meta name="theme-color" content="#2563eb" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -266,6 +266,21 @@
       display: flex;
     }
 
+    .best-strip.warn {
+      border-color: #fde68a;
+      background: linear-gradient(135deg, rgba(254, 243, 199, 0.95), rgba(255, 251, 235, 0.72));
+      color: #92400e;
+    }
+
+    .best-strip.bad {
+      border-color: #fecaca;
+      background: linear-gradient(135deg, rgba(254, 226, 226, 0.95), rgba(255, 241, 242, 0.72));
+      color: #991b1b;
+    }
+
+    .best-strip.warn .best-sub { color: #92400e; }
+    .best-strip.bad .best-sub { color: #991b1b; }
+
     .best-strip .best-icon {
       width: 28px;
       height: 28px;
@@ -451,7 +466,7 @@
       width: 100%;
       border-collapse: separate;
       border-spacing: 0;
-      min-width: 1180px;
+      min-width: 1380px;
       table-layout: fixed;
     }
 
@@ -489,17 +504,28 @@
       background: rgba(220, 252, 231, 0.86);
     }
 
-    .col-result { width: 108px; }
-    .col-store { width: 142px; }
-    .col-money { width: 84px; }
-    .col-final { width: 88px; }
-    .col-qty { width: 78px; }
-    .col-size { width: 90px; }
-    .col-size-code { width: 84px; }
-    .col-unit { width: 76px; }
-    .col-total { width: 96px; }
-    .col-unit-price { width: 124px; }
-    .col-actions { width: 112px; }
+    .col-result { width: 84px; }
+    .col-date { width: 106px; }
+    .col-status { width: 88px; }
+    .col-store { width: 124px; }
+    .col-money { width: 78px; }
+    .col-final { width: 78px; }
+    .col-qty { width: 70px; }
+    .col-size { width: 80px; }
+    .col-size-code { width: 70px; }
+    .col-unit { width: 64px; }
+    .col-total { width: 84px; }
+    .col-unit-price { width: 112px; }
+    .col-history { width: 126px; }
+    .col-actions { width: 150px; }
+
+    tbody tr.purchased-row {
+      background: rgba(248, 250, 252, 0.62);
+    }
+
+    tbody tr.purchased-row td {
+      color: #64748b;
+    }
 
     .unit-price-best {
       color: #15803d;
@@ -556,6 +582,12 @@
       padding: 5px 7px;
       font-size: 12px;
       border-radius: 10px;
+    }
+
+    .btn-buy {
+      color: #166534;
+      border-color: #bbf7d0;
+      background: rgba(240, 253, 244, 0.9);
     }
 
     .cell-input,
@@ -1118,7 +1150,7 @@
       <div class="brand">
         <div class="logo">¥</div>
         <div>
-          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.16</span></h1>
+          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.17</span></h1>
         </div>
       </div>
       <div class="top-actions">
@@ -1158,6 +1190,8 @@
             <thead>
               <tr>
                 <th class="col-result" data-i18n="result">比较结果</th>
+                <th class="col-date" data-i18n="priceDate">日期</th>
+                <th class="col-status" data-i18n="status">状态</th>
                 <th class="col-store" data-i18n="store">商家 / 渠道</th>
                 <th class="col-money" data-i18n="price">金额</th>
                 <th class="col-money" data-i18n="cashback">返现 / 优惠</th>
@@ -1168,6 +1202,7 @@
                 <th class="col-unit" data-i18n="unit">单位</th>
                 <th class="col-total" data-i18n="totalSize">总规格</th>
                 <th class="col-unit-price" data-i18n="unitPrice">每单位价格</th>
+                <th class="col-history" data-i18n="historyCompare">历史对比</th>
                 <th class="col-actions" data-i18n="actions">操作</th>
               </tr>
             </thead>
@@ -1243,7 +1278,7 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.16";
+    const APP_VERSION = "v1.0.17";
     const STORAGE_KEY = "productPriceCompare.v1";
 
     const i18n = {
@@ -1301,6 +1336,32 @@
         quantity: "购买数量",
         size: "单件规格",
         sizeCode: "码数",
+        priceDate: "日期",
+        status: "状态",
+        currentStatus: "本次待买",
+        purchasedStatus: "已购买",
+        confirmPurchase: "买了",
+        historyCompare: "历史对比",
+        historyLowest: "历史最低",
+        lastPurchased: "上次购买",
+        purchased: "已购买",
+        noHistory: "暂无历史",
+        cheaperThanLast: "比上次便宜 {percent}%",
+        higherThanLast: "比上次贵 {percent}%",
+        sameAsLast: "接近上次",
+        lowerThanHistoryLow: "低于历史最低",
+        buyAdviceCurrentBest: "当前最便宜：{store} · {price} / {unit}",
+        compareLastText: "比上次{direction} {percent}%",
+        compareAverageText: "比历史平均{direction} {percent}%",
+        compareMinText: "比历史最低{direction} {percent}%",
+        directionCheaper: "便宜",
+        directionHigher: "贵",
+        adviceNoHistory: "暂无历史价格，先比较当前商家",
+        adviceHistoricalLow: "历史低价，可以买",
+        adviceGoodBuy: "比上次便宜，可以买",
+        adviceSimilarBuy: "和上次差不多，可以买",
+        adviceWatch: "略贵，可以观望",
+        adviceWait: "偏贵，建议等等",
         unit: "单位",
         totalSize: "总规格",
         unitPrice: "每单位价格",
@@ -1405,6 +1466,32 @@
         quantity: "Quantity",
         size: "Item Size",
         sizeCode: "Size Code",
+        priceDate: "Date",
+        status: "Status",
+        currentStatus: "Current",
+        purchasedStatus: "Purchased",
+        confirmPurchase: "Bought",
+        historyCompare: "History",
+        historyLowest: "History Low",
+        lastPurchased: "Last Bought",
+        purchased: "Purchased",
+        noHistory: "No History",
+        cheaperThanLast: "{percent}% cheaper than last",
+        higherThanLast: "{percent}% higher than last",
+        sameAsLast: "Close to last",
+        lowerThanHistoryLow: "New Low",
+        buyAdviceCurrentBest: "Current best: {store} · {price} / {unit}",
+        compareLastText: "{percent}% {direction} than last",
+        compareAverageText: "{percent}% {direction} than average",
+        compareMinText: "{percent}% {direction} than history low",
+        directionCheaper: "cheaper",
+        directionHigher: "higher",
+        adviceNoHistory: "No history yet. Compare current stores first",
+        adviceHistoricalLow: "Historical low. Good to buy",
+        adviceGoodBuy: "Cheaper than last time. Good to buy",
+        adviceSimilarBuy: "Close to last time. Okay to buy",
+        adviceWatch: "A little high. Consider watching",
+        adviceWait: "High price. Better to wait",
         unit: "Unit",
         totalSize: "Total Size",
         unitPrice: "Unit Price",
@@ -1533,6 +1620,43 @@
       return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`;
     }
 
+    function todayDate() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    }
+
+    function normalizeDate(value) {
+      const text = String(value || "").trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+      if (/^\d{4}\/\d{1,2}\/\d{1,2}$/.test(text)) {
+        const parts = text.split("/");
+        return `${parts[0]}-${String(parts[1]).padStart(2, "0")}-${String(parts[2]).padStart(2, "0")}`;
+      }
+      return "";
+    }
+
+    function normalizeItemStatus(value) {
+      return String(value || "").toLowerCase() === "purchased" ? "purchased" : "current";
+    }
+
+    function isPurchased(item) {
+      return normalizeItemStatus(item && item.status) === "purchased";
+    }
+
+    function isCurrent(item) {
+      return !isPurchased(item);
+    }
+
+    function statusOptionsHtml(selectedStatus) {
+      const status = normalizeItemStatus(selectedStatus);
+      return `
+        <option value="current"${status === "current" ? " selected" : ""}>${escapeHtml(t("currentStatus"))}</option>
+        <option value="purchased"${status === "purchased" ? " selected" : ""}>${escapeHtml(t("purchasedStatus"))}</option>`;
+    }
+
     function defaultState() {
       const groupId = uid("group");
       const storeAId = uid("store");
@@ -1569,8 +1693,8 @@
             id: groupId,
             name: "洗面奶",
             items: [
-              { id: uid("item"), storeId: storeAId, price: 88, cashback: 22.45, quantity: 1, size: 360, sizeCode: "", unit: "g" },
-              { id: uid("item"), storeId: storeBId, price: 82, cashback: 1.47, quantity: 1, size: 400, sizeCode: "", unit: "g" }
+              { id: uid("item"), storeId: storeAId, price: 88, cashback: 22.45, quantity: 1, size: 360, sizeCode: "", unit: "g", priceDate: todayDate(), status: "current" },
+              { id: uid("item"), storeId: storeBId, price: 82, cashback: 1.47, quantity: 1, size: 400, sizeCode: "", unit: "g", priceDate: todayDate(), status: "current" }
             ]
           }
         ]
@@ -1633,6 +1757,8 @@
             quantity: item.quantity === undefined ? 1 : numberOrZero(item.quantity),
             size: numberOrZero(item.size),
             sizeCode: String(item.sizeCode || item.codeSize || item.code || ""),
+            priceDate: normalizeDate(item.priceDate || item.purchaseDate || item.date) || todayDate(),
+            status: normalizeItemStatus(item.status || item.recordStatus),
             unit: unitList.some(u => u.code === item.unit) ? item.unit : (unitList[0] ? unitList[0].code : "g"),
             createdAt: item.createdAt || Date.now()
           };
@@ -1701,6 +1827,15 @@
         language: target.lang,
         activeGroupId: target.activeGroupId
       };
+      target.groups = Array.isArray(target.groups) ? target.groups.map(group => ({
+        ...group,
+        items: Array.isArray(group.items) ? group.items.map(item => ({
+          ...item,
+          priceDate: normalizeDate(item.priceDate || item.purchaseDate || item.date) || todayDate(),
+          status: normalizeItemStatus(item.status || item.recordStatus),
+          sizeCode: String(item.sizeCode || item.codeSize || item.code || "")
+        })) : []
+      })) : [];
       target.configs = {
         ...(target.configs || {}),
         stores: target.stores.map(store => ({ ...store })),
@@ -1794,8 +1929,7 @@
       };
     }
 
-    function analysisForGroup(group) {
-      const rows = group.items.map(item => ({ item, calc: calcItem(item) }));
+    function buildBestByBase(rows) {
       const byBase = {};
       rows.forEach(row => {
         if (!row.calc.valid) return;
@@ -1811,12 +1945,101 @@
         bestByBase[base] = { minPrice, bestRows, total: list.length };
       });
 
-      return { rows, byBase, bestByBase };
+      return { byBase, bestByBase };
     }
 
-    function resultForRow(row, bestByBase) {
+    function timestampForItem(item) {
+      const date = normalizeDate(item.priceDate) || "1970-01-01";
+      return new Date(`${date}T00:00:00`).getTime() || 0;
+    }
+
+    function analysisForGroup(group) {
+      const rows = group.items.map(item => ({ item, calc: calcItem(item) }));
+      const currentRows = rows.filter(row => isCurrent(row.item));
+      const historyRows = rows.filter(row => isPurchased(row.item));
+      const currentAnalysis = buildBestByBase(currentRows);
+      const historyAnalysis = buildBestByBase(historyRows);
+      const historyStatsByBase = {};
+
+      Object.keys(historyAnalysis.byBase).forEach(base => {
+        const list = historyAnalysis.byBase[base].slice().sort((a, b) => {
+          const dateDiff = timestampForItem(a.item) - timestampForItem(b.item);
+          if (dateDiff !== 0) return dateDiff;
+          return (a.item.createdAt || 0) - (b.item.createdAt || 0);
+        });
+        const prices = list.map(row => row.calc.unitPrice);
+        const minPrice = Math.min(...prices);
+        const minRow = list.find(row => Math.abs(row.calc.unitPrice - minPrice) < 0.000000001);
+        const avgPrice = prices.reduce((sum, price) => sum + price, 0) / prices.length;
+        const lastRow = list[list.length - 1];
+        historyStatsByBase[base] = { list, count: list.length, minPrice, minRow, avgPrice, lastRow };
+      });
+
+      return {
+        rows,
+        currentRows,
+        historyRows,
+        byBase: currentAnalysis.byBase,
+        bestByBase: currentAnalysis.bestByBase,
+        historyByBase: historyAnalysis.byBase,
+        historyStatsByBase
+      };
+    }
+
+    function percentDiff(currentPrice, referencePrice) {
+      if (!referencePrice || referencePrice <= 0 || currentPrice === null || currentPrice === undefined) return 0;
+      return ((currentPrice - referencePrice) / referencePrice) * 100;
+    }
+
+    function compareText(currentPrice, referencePrice, mode) {
+      const diff = percentDiff(currentPrice, referencePrice);
+      const abs = Math.abs(diff);
+      if (abs < 0.5) return mode === "last" ? t("sameAsLast") : t("sameAsLast");
+      const key = mode === "min" ? "compareMinText" : mode === "average" ? "compareAverageText" : "compareLastText";
+      return t(key, {
+        direction: diff < 0 ? t("directionCheaper") : t("directionHigher"),
+        percent: smartNumber(abs, 2)
+      });
+    }
+
+    function purchaseAdvice(currentPrice, stats) {
+      if (!stats || !stats.lastRow) return { type: "muted", text: t("adviceNoHistory") };
+      const diffLast = percentDiff(currentPrice, stats.lastRow.calc.unitPrice);
+      if (currentPrice <= stats.minPrice + 0.000000001) return { type: "good", text: t("adviceHistoricalLow") };
+      if (diffLast <= 0) return { type: "good", text: t("adviceGoodBuy") };
+      if (diffLast <= 3) return { type: "good", text: t("adviceSimilarBuy") };
+      if (diffLast <= 8) return { type: "warn", text: t("adviceWatch") };
+      return { type: "bad", text: t("adviceWait") };
+    }
+
+    function historyCompareForRow(row, analysis) {
+      if (!row.calc.valid) return { type: "muted", text: "-" };
+      const stats = analysis.historyStatsByBase[row.calc.base];
+      if (isPurchased(row.item)) {
+        if (stats && stats.minRow && stats.minRow.item.id === row.item.id && stats.count > 1) {
+          return { type: "good", text: t("historyLowest") };
+        }
+        if (stats && stats.lastRow && stats.lastRow.item.id === row.item.id) {
+          return { type: "muted", text: t("lastPurchased") };
+        }
+        return { type: "muted", text: t("purchased") };
+      }
+      if (!stats || !stats.lastRow) return { type: "muted", text: t("noHistory") };
+      if (row.calc.unitPrice <= stats.minPrice + 0.000000001) {
+        return { type: "good", text: t("lowerThanHistoryLow") };
+      }
+      const diff = percentDiff(row.calc.unitPrice, stats.lastRow.calc.unitPrice);
+      if (Math.abs(diff) < 0.5) return { type: "muted", text: t("sameAsLast") };
+      if (diff < 0) return { type: "good", text: t("cheaperThanLast", { percent: smartNumber(Math.abs(diff), 2) }) };
+      return { type: diff > 8 ? "bad" : "warn", text: t("higherThanLast", { percent: smartNumber(diff, 2) }) };
+    }
+
+    function resultForRow(row, bestByBase, analysis) {
       if (!row.calc.valid) {
         return { type: "muted", text: t("invalid") };
+      }
+      if (isPurchased(row.item)) {
+        return historyCompareForRow(row, analysis);
       }
       const best = bestByBase[row.calc.base];
       if (!best) {
@@ -2063,7 +2286,17 @@
     function renderBestStrip(analysis) {
       const baseKeys = Object.keys(analysis.bestByBase);
       if (!baseKeys.length) {
-        $("#bestStrip").removeClass("show").empty();
+        if (analysis.historyRows.length) {
+          const html = `
+            <span class="best-icon">💡</span>
+            <span style="min-width:0;">
+              <div class="best-main">${escapeHtml(t("noValidBest"))}</div>
+              <div class="best-sub">${escapeHtml(t("adviceNoHistory"))}</div>
+            </span>`;
+          $("#bestStrip").removeClass("warn bad").addClass("show").html(html);
+          return;
+        }
+        $("#bestStrip").removeClass("show warn bad").empty();
         return;
       }
 
@@ -2071,17 +2304,20 @@
       const best = analysis.bestByBase[base];
       const unit = baseUnitLabel(base);
       const bestNames = best.bestRows.map(row => storeName(row.item.storeId)).filter(Boolean).join(" / ") || "-";
-      const sameBaseRows = analysis.byBase[base] || [];
-      const maxPrice = sameBaseRows.length ? Math.max(...sameBaseRows.map(row => row.calc.unitPrice)) : best.minPrice;
-      const cheaperPercent = maxPrice > best.minPrice && maxPrice > 0 ? ((maxPrice - best.minPrice) / maxPrice) * 100 : 0;
+      const stats = analysis.historyStatsByBase[base];
+      const advice = purchaseAdvice(best.minPrice, stats);
       const subParts = [];
+
+      if (stats && stats.lastRow) {
+        subParts.push(compareText(best.minPrice, stats.lastRow.calc.unitPrice, "last"));
+        subParts.push(compareText(best.minPrice, stats.avgPrice, "average"));
+        subParts.push(compareText(best.minPrice, stats.minPrice, "min"));
+      } else {
+        subParts.push(t("adviceNoHistory"));
+      }
 
       if (best.bestRows.length > 1) {
         subParts.push(t("bestTie", { count: best.bestRows.length }));
-      }
-
-      if (cheaperPercent > 0) {
-        subParts.push(t("cheaperThanHighest", { percent: smartNumber(cheaperPercent, 2) }));
       }
 
       if (baseKeys.length > 1) {
@@ -2089,12 +2325,15 @@
       }
 
       const html = `
-        <span class="best-icon">🏆</span>
+        <span class="best-icon">${advice.type === "bad" ? "⚠️" : advice.type === "warn" ? "⏳" : "🏆"}</span>
         <span style="min-width:0;">
-          <div class="best-main">${escapeHtml(t("bestStripPrefix"))}：${escapeHtml(bestNames)} · ${escapeHtml(smartNumber(best.minPrice, 6))} / ${escapeHtml(unit)}</div>
-          ${subParts.length ? `<div class="best-sub">${escapeHtml(subParts.join(" · "))}</div>` : ""}
+          <div class="best-main">${escapeHtml(t("buyAdviceCurrentBest", { store: bestNames, price: smartNumber(best.minPrice, 6), unit }))}</div>
+          <div class="best-sub">${escapeHtml([...subParts, advice.text].join(" · "))}</div>
         </span>`;
-      $("#bestStrip").addClass("show").html(html);
+      $("#bestStrip")
+        .removeClass("warn bad")
+        .addClass(`show ${advice.type === "warn" ? "warn" : advice.type === "bad" ? "bad" : ""}`)
+        .html(html);
     }
 
     function renderRecords() {
@@ -2102,15 +2341,20 @@
       const analysis = analysisForGroup(group);
       renderBestStrip(analysis);
       const sortedRows = analysis.rows.slice().sort((a, b) => {
-        if (a.calc.valid && b.calc.valid && a.calc.base === b.calc.base) return a.calc.unitPrice - b.calc.unitPrice;
-        if (a.calc.valid !== b.calc.valid) return a.calc.valid ? -1 : 1;
+        if (isCurrent(a.item) !== isCurrent(b.item)) return isCurrent(a.item) ? -1 : 1;
+        if (isCurrent(a.item) && a.calc.valid && b.calc.valid && a.calc.base === b.calc.base) return a.calc.unitPrice - b.calc.unitPrice;
+        if (isCurrent(a.item) && a.calc.valid !== b.calc.valid) return a.calc.valid ? -1 : 1;
+        if (isPurchased(a.item) && isPurchased(b.item)) {
+          const dateDiff = timestampForItem(b.item) - timestampForItem(a.item);
+          if (dateDiff !== 0) return dateDiff;
+        }
         const storeCompare = String(storeName(a.item.storeId)).localeCompare(String(storeName(b.item.storeId)));
         if (storeCompare !== 0) return storeCompare;
         return (a.item.createdAt || 0) - (b.item.createdAt || 0);
       });
 
-      const tableRows = sortedRows.map(row => tableRowHtml(group, row, analysis.bestByBase)).join("");
-      const cards = sortedRows.map(row => mobileCardHtml(group, row, analysis.bestByBase)).join("");
+      const tableRows = sortedRows.map(row => tableRowHtml(group, row, analysis)).join("");
+      const cards = sortedRows.map(row => mobileCardHtml(group, row, analysis)).join("");
 
       $("#tableBody").html(tableRows);
       $("#mobileList").html(cards);
@@ -2124,16 +2368,23 @@
       }).join("");
     }
 
-    function tableRowHtml(group, row, bestByBase) {
+    function tableRowHtml(group, row, analysis) {
       const item = row.item;
       const c = row.calc;
-      const result = resultForRow(row, bestByBase);
-      const isBest = result.type === "good" && result.text === t("bestDeal");
+      const result = resultForRow(row, analysis.bestByBase, analysis);
+      const history = historyCompareForRow(row, analysis);
+      const isBest = isCurrent(item) && result.type === "good" && result.text === t("bestDeal");
       const baseDisplay = baseUnitLabel(c.base);
 
       return `
-        <tr class="${isBest ? "best-row" : ""}">
+        <tr class="${isBest ? "best-row" : ""} ${isPurchased(item) ? "purchased-row" : ""}">
           <td>${chipHtml(result)}</td>
+          <td class="cell-editable">
+            <input class="cell-input js-inline-edit" data-id="${item.id}" data-field="priceDate" type="date" value="${escapeAttr(item.priceDate || todayDate())}" />
+          </td>
+          <td class="cell-editable">
+            <select class="cell-select js-inline-edit" data-id="${item.id}" data-field="status">${statusOptionsHtml(item.status)}</select>
+          </td>
           <td class="cell-editable">
             <select class="cell-select cell-store js-inline-edit" data-id="${item.id}" data-field="storeId">${storeOptionsHtml(item.storeId)}</select>
           </td>
@@ -2158,8 +2409,10 @@
           </td>
           <td class="num">${c.valid ? `${smartNumber(c.totalBaseSize, 4)} ${baseDisplay}` : "-"}</td>
           <td class="num ${isBest ? "unit-price-best" : ""}">${c.valid ? `${smartNumber(c.unitPrice, 6)} / ${baseDisplay}` : "-"}</td>
+          <td>${chipHtml(history)}</td>
           <td>
             <div class="row-actions">
+              ${isCurrent(item) ? `<button type="button" class="small-btn btn-buy btn-confirm-purchase" data-id="${item.id}">${t("confirmPurchase")}</button>` : ""}
               <button type="button" class="small-btn btn-ghost btn-copy" data-id="${item.id}">${t("copy")}</button>
               <button type="button" class="small-btn btn-danger btn-delete" data-id="${item.id}">${t("delete")}</button>
             </div>
@@ -2167,11 +2420,12 @@
         </tr>`;
     }
 
-    function mobileCardHtml(group, row, bestByBase) {
+    function mobileCardHtml(group, row, analysis) {
       const item = row.item;
       const c = row.calc;
-      const result = resultForRow(row, bestByBase);
-      const isBest = result.type === "good" && result.text === t("bestDeal");
+      const result = resultForRow(row, analysis.bestByBase, analysis);
+      const history = historyCompareForRow(row, analysis);
+      const isBest = isCurrent(item) && result.type === "good" && result.text === t("bestDeal");
       const baseDisplay = baseUnitLabel(c.base);
 
       return `
@@ -2179,7 +2433,7 @@
           <div class="item-head">
             <div>
               <div class="item-title">${escapeHtml(storeName(item.storeId) || "-")}</div>
-              <div class="item-subtitle">${escapeHtml(group.name)}</div>
+              <div class="item-subtitle">${escapeHtml(group.name)} · ${escapeHtml(item.priceDate || todayDate())}</div>
             </div>
             ${chipHtml(result)}
           </div>
@@ -2189,8 +2443,8 @@
               <div class="metric-value">${c.valid ? `${smartNumber(c.unitPrice, 6)} / ${baseDisplay}` : "-"}</div>
             </div>
             <div class="metric-pill">
-              <div class="metric-label">${t("finalCost")}</div>
-              <div class="metric-value">${c.valid ? money(c.finalCost) : "-"}</div>
+              <div class="metric-label">${t("historyCompare")}</div>
+              <div class="metric-value">${escapeHtml(history.text)}</div>
             </div>
             <div class="metric-pill">
               <div class="metric-label">${t("totalSize")}</div>
@@ -2198,6 +2452,14 @@
             </div>
           </div>
           <div class="mobile-edit-grid">
+            <div>
+              <label>${t("priceDate")}</label>
+              <input class="js-inline-edit" data-id="${item.id}" data-field="priceDate" type="date" value="${escapeAttr(item.priceDate || todayDate())}" />
+            </div>
+            <div>
+              <label>${t("status")}</label>
+              <select class="js-inline-edit" data-id="${item.id}" data-field="status">${statusOptionsHtml(item.status)}</select>
+            </div>
             <div class="field-store-mobile">
               <label>${t("store")}</label>
               <select class="js-inline-edit" data-id="${item.id}" data-field="storeId">${storeOptionsHtml(item.storeId)}</select>
@@ -2228,6 +2490,7 @@
             </div>
           </div>
           <div class="row-actions">
+            ${isCurrent(item) ? `<button type="button" class="small-btn btn-buy btn-confirm-purchase" data-id="${item.id}">${t("confirmPurchase")}</button>` : ""}
             <button type="button" class="small-btn btn-ghost btn-copy" data-id="${item.id}">${t("copy")}</button>
             <button type="button" class="small-btn btn-danger btn-delete" data-id="${item.id}">${t("delete")}</button>
           </div>
@@ -2248,6 +2511,8 @@
         quantity: 1,
         size: 0,
         sizeCode: "",
+        priceDate: todayDate(),
+        status: "current",
         unit: "g",
         createdAt: Date.now()
       };
@@ -2270,10 +2535,22 @@
       const copied = {
         ...source,
         id: uid("item"),
+        priceDate: todayDate(),
+        status: "current",
         createdAt: Date.now()
       };
       group.items.splice(sourceIndex + 1, 0, copied);
       pendingFocusItemId = copied.id;
+      saveState();
+      renderAll();
+    }
+
+    function confirmPurchase(id) {
+      const group = currentGroup();
+      const item = group.items.find(x => x.id === id);
+      if (!item) return;
+      item.status = "purchased";
+      item.priceDate = todayDate();
       saveState();
       renderAll();
     }
@@ -2319,6 +2596,15 @@
 
       if (field === "sizeCode") {
         item.sizeCode = String(value || "").trim();
+      }
+
+      if (field === "priceDate") {
+        item.priceDate = normalizeDate(value) || todayDate();
+      }
+
+      if (field === "status") {
+        item.status = normalizeItemStatus(value);
+        if (!item.priceDate) item.priceDate = todayDate();
       }
 
       if (field === "unit") {
@@ -2437,7 +2723,7 @@
       const id = $(this).data("id");
       const field = $(this).data("field");
       updateInlineField(id, field, $(this).val());
-      if (e.type === "change" && ["unit", "storeId"].includes(field)) {
+      if (e.type === "change" && ["unit", "storeId", "status", "priceDate"].includes(field)) {
         renderAll();
       }
     });
@@ -2451,6 +2737,10 @@
         e.preventDefault();
         this.blur();
       }
+    });
+
+    $(document).on("click", ".btn-confirm-purchase", function () {
+      confirmPurchase($(this).data("id"));
     });
 
 
