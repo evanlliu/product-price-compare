@@ -1,5 +1,5 @@
 {
-  "version": "v1.0.39",
+  "version": "v1.0.41",
   "lang": "zh",
   "settings": {
     "lang": "zh",
@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T14:12:06.231Z",
-    "lastSavedAt": "2026-05-13T14:13:02.641Z"
+    "lastLoadedAt": "2026-05-13T14:19:24.281Z",
+    "lastSavedAt": "2026-05-13T14:23:41.753Z"
   },
   "units": [
     {
@@ -107,29 +107,53 @@
   "stores": [
     {
       "id": "store_a",
-      "name": "抖音/DY"
+      "name": "抖音",
+      "label": {
+        "zh": "抖音",
+        "en": "抖音/DY"
+      }
     },
     {
       "id": "store_b",
-      "name": "淘宝/TB"
+      "name": "淘宝/TB",
+      "label": {
+        "zh": "淘宝/TB",
+        "en": "淘宝/TB"
+      }
     },
     {
       "id": "store_1778246138226_757f331a4c69f",
-      "name": "拼多多/PDD"
+      "name": "拼多多/PDD",
+      "label": {
+        "zh": "拼多多/PDD",
+        "en": "拼多多/PDD"
+      }
     },
     {
       "id": "store_1778246141400_3f8d9088d1eef",
-      "name": "京东/JD"
+      "name": "京东/JD",
+      "label": {
+        "zh": "京东/JD",
+        "en": "京东/JD"
+      }
     }
   ],
   "groups": [
     {
       "id": "group_face_wash",
       "name": "洗面奶",
+      "label": {
+        "zh": "洗面奶",
+        "en": "洗面奶"
+      },
       "productNames": [
         {
           "id": "productName_1778670092288_40a6322d0e94d",
-          "name": "娇润泉"
+          "name": "娇润泉",
+          "label": {
+            "zh": "娇润泉",
+            "en": "娇润泉"
+          }
         }
       ],
       "items": [
@@ -151,10 +175,18 @@
     {
       "id": "group_1778670149375_13bf168a8eb7c8",
       "name": "奶粉(3段)",
+      "label": {
+        "zh": "奶粉(3段)",
+        "en": "奶粉(3段)"
+      },
       "productNames": [
         {
           "id": "productName_1778670149375_253002c7faaf28",
-          "name": "爱他美"
+          "name": "爱他美",
+          "label": {
+            "zh": "爱他美",
+            "en": "爱他美"
+          }
         }
       ],
       "items": [
@@ -215,10 +247,18 @@
     {
       "id": "group_1778246168663_d24215f198b6e",
       "name": "尿不湿(L)",
+      "label": {
+        "zh": "尿不湿(L)",
+        "en": "尿不湿(L)"
+      },
       "productNames": [
         {
           "id": "productName_1778670092288_9292fbb9d15c5",
-          "name": "帮宝适"
+          "name": "帮宝适",
+          "label": {
+            "zh": "帮宝适",
+            "en": "帮宝适"
+          }
         }
       ],
       "items": [
@@ -266,10 +306,18 @@
     {
       "id": "group_1778680544317_27462cdbe879e",
       "name": "尿不湿(XL)",
+      "label": {
+        "zh": "尿不湿(XL)",
+        "en": "尿不湿(XL)"
+      },
       "productNames": [
         {
           "id": "pname_1778680544317_5a9630cbe17d28",
-          "name": "新商品"
+          "name": "新商品",
+          "label": {
+            "zh": "新商品",
+            "en": "新商品"
+          }
         }
       ],
       "items": []
@@ -280,19 +328,35 @@
     "stores": [
       {
         "id": "store_a",
-        "name": "抖音/DY"
+        "name": "抖音",
+        "label": {
+          "zh": "抖音",
+          "en": "抖音/DY"
+        }
       },
       {
         "id": "store_b",
-        "name": "淘宝/TB"
+        "name": "淘宝/TB",
+        "label": {
+          "zh": "淘宝/TB",
+          "en": "淘宝/TB"
+        }
       },
       {
         "id": "store_1778246138226_757f331a4c69f",
-        "name": "拼多多/PDD"
+        "name": "拼多多/PDD",
+        "label": {
+          "zh": "拼多多/PDD",
+          "en": "拼多多/PDD"
+        }
       },
       {
         "id": "store_1778246141400_3f8d9088d1eef",
-        "name": "京东/JD"
+        "name": "京东/JD",
+        "label": {
+          "zh": "京东/JD",
+          "en": "京东/JD"
+        }
       }
     ],
     "units": [
