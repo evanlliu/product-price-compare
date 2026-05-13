@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T11:24:13.944Z",
-    "lastSavedAt": "2026-05-13T11:25:37.871Z"
+    "lastSavedAt": "2026-05-13T11:25:38.966Z"
   },
   "units": [
     {
@@ -199,7 +199,7 @@
           "price": 100,
           "cashback": 0,
           "quantity": 2,
-          "size": 82,
+          "size": 34,
           "sizeCode": "XL",
           "priceDate": "2026-04-29",
           "status": "current",
