@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>商品比价器 Price Compare v1.0.33</title>
+  <title>商品比价器 Price Compare v1.0.34</title>
   <meta name="theme-color" content="#2563eb" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1416,7 +1416,7 @@
       <div class="brand">
         <div class="logo">¥</div>
         <div>
-          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.33</span></h1>
+          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.34</span></h1>
         </div>
       </div>
       <div class="top-actions">
@@ -1588,7 +1588,7 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.33";
+    const APP_VERSION = "v1.0.34";
     const STORAGE_KEY = "productPriceCompare.v1";
     const LOCAL_SYNC_KEY = "productPriceCompare.localSync.v1";
 
@@ -2938,8 +2938,8 @@
           <td class="cell-editable">
             <select class="cell-select cell-unit js-inline-edit" data-id="${item.id}" data-field="unit"${lockedAttr}>${unitOptionsHtml(item.unit)}</select>
           </td>
-          <td class="num" title="${c.valid ? smartNumber(c.totalBaseSize, 4) : "-"}">${c.valid ? smartNumber(c.totalBaseSize, 4) : "-"}</td>
-          <td class="num ${isBest ? "unit-price-best" : ""}" title="${c.valid ? smartNumber(c.unitPrice, 3) : "-"}">${c.valid ? smartNumber(c.unitPrice, 3) : "-"}</td>
+          <td class="num" title="${c.valid ? `${smartNumber(c.totalBaseSize, 4)}/${baseDisplay}` : "-"}">${c.valid ? `${smartNumber(c.totalBaseSize, 4)}/${baseDisplay}` : "-"}</td>
+          <td class="num ${isBest ? "unit-price-best" : ""}" title="${c.valid ? `${smartNumber(c.unitPrice, 3)}/${baseDisplay}` : "-"}">${c.valid ? `${smartNumber(c.unitPrice, 3)}/${baseDisplay}` : "-"}</td>
           <td>${chipHtml(history)}</td>
           <td class="actions-cell">
             <div class="row-actions">
@@ -2973,7 +2973,7 @@
           <div class="mobile-metrics">
             <div class="metric-pill ${isBest ? "best-metric" : ""}">
               <div class="metric-label">${t("unitPrice")}</div>
-              <div class="metric-value">${c.valid ? `${smartNumber(c.unitPrice, 3)} / ${baseDisplay}` : "-"}</div>
+              <div class="metric-value">${c.valid ? `${smartNumber(c.unitPrice, 3)}/${baseDisplay}` : "-"}</div>
             </div>
             <div class="metric-pill">
               <div class="metric-label">${t("historyCompare")}</div>
@@ -2981,7 +2981,7 @@
             </div>
             <div class="metric-pill">
               <div class="metric-label">${t("totalSize")}</div>
-              <div class="metric-value">${c.valid ? `${smartNumber(c.totalBaseSize, 4)} ${baseDisplay}` : "-"}</div>
+              <div class="metric-value">${c.valid ? `${smartNumber(c.totalBaseSize, 4)}/${baseDisplay}` : "-"}</div>
             </div>
           </div>
           <div class="mobile-edit-grid">
