@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>商品比价器 Price Compare v1.0.30</title>
+  <title>商品比价器 Price Compare v1.0.31</title>
   <meta name="theme-color" content="#2563eb" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1137,16 +1137,21 @@
     }
 
     .unit-config-actions {
+      display: none;
+    }
+
+    .config-overlay.unit-config-open .unit-config-actions {
       display: flex;
+      align-items: center;
       justify-content: flex-end;
       gap: 10px;
-      margin-top: 10px;
       padding-top: 10px;
+      margin-top: 10px;
       border-top: 1px solid var(--line);
     }
 
-    .unit-config-actions button {
-      min-width: 92px;
+    .config-overlay.unit-config-open .unit-config-actions button {
+      min-width: 96px;
     }
 
     .config-panel {
@@ -1433,7 +1438,7 @@
       <div class="brand">
         <div class="logo">¥</div>
         <div>
-          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.30</span></h1>
+          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.31</span></h1>
         </div>
       </div>
       <div class="top-actions">
@@ -1605,7 +1610,7 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.30";
+    const APP_VERSION = "v1.0.31";
     const STORAGE_KEY = "productPriceCompare.v1";
     const LOCAL_SYNC_KEY = "productPriceCompare.localSync.v1";
 
@@ -1663,7 +1668,6 @@
         storeConfigHint: "在这里维护商家 / 渠道，价格记录中只能从下拉列表选择。",
         unitConfigHint: "维护单位下拉数据。基础单位相同的单位可以互相比较，例如 kg 和 g。",
         addUnit: "新增单位",
-        duplicateUnitCode: "单位编码不能重复。",
         unitCode: "编码",
         unitZh: "中文",
         unitEn: "英文",
@@ -1672,6 +1676,8 @@
         newUnitDefault: "新单位",
         confirmDeleteUnit: "确认删除这个单位吗？",
         cannotDeleteLastUnit: "至少保留一个单位。",
+        unitCodeRequired: "单位编码不能为空。",
+        unitCodeDuplicate: "单位编码不能重复。",
         unitInUse: "该单位已经被价格记录使用，请先修改相关记录后再删除。",
         addItem: "新增价格记录",
         addRow: "新增",
@@ -1816,7 +1822,6 @@
         storeConfigHint: "Manage stores / platforms here. Price records can only choose from the dropdown list.",
         unitConfigHint: "Manage unit dropdown data. Units with the same base unit can be compared, such as kg and g.",
         addUnit: "Add Unit",
-        duplicateUnitCode: "Unit codes cannot be duplicated.",
         unitCode: "Code",
         unitZh: "Chinese",
         unitEn: "English",
@@ -1825,6 +1830,8 @@
         newUnitDefault: "New Unit",
         confirmDeleteUnit: "Delete this unit?",
         cannotDeleteLastUnit: "Keep at least one unit.",
+        unitCodeRequired: "Unit code cannot be empty.",
+        unitCodeDuplicate: "Unit codes cannot be duplicated.",
         unitInUse: "This unit is used by price records. Please change those records before deleting it.",
         addItem: "Add Price Record",
         addRow: "Add",
@@ -3292,6 +3299,61 @@
       $("#moreMenu").removeClass("open");
     }
 
+    function beginUnitConfigDraft() {
+      unitConfigDraft = appUnits().map(unit => ({
+        ...cloneUnit(unit),
+        _originalCode: unit.code || "",
+        _draftId: uid("unitdraft")
+      }));
+    }
+
+    function unitDraftList() {
+      if (!Array.isArray(unitConfigDraft)) beginUnitConfigDraft();
+      return unitConfigDraft;
+    }
+
+    function validateUnitDraft() {
+      const list = unitDraftList();
+      const seen = new Set();
+      for (const unit of list) {
+        unit.code = String(unit.code || "").trim().replace(/\s+/g, "_");
+        unit.base = String(unit.base || unit.code || "").trim().replace(/\s+/g, "_");
+        unit.factor = Math.max(0.000001, numberOrZero(unit.factor) || 1);
+        unit.label = unit.label || {};
+        unit.label.zh = String(unit.label.zh || unit.code).trim() || unit.code;
+        unit.label.en = String(unit.label.en || unit.code).trim() || unit.code;
+        if (!unit.code) return { ok: false, message: t("unitCodeRequired") };
+        if (seen.has(unit.code)) return { ok: false, message: t("unitCodeDuplicate") };
+        seen.add(unit.code);
+      }
+      return { ok: true };
+    }
+
+    async function saveUnitConfigDraft() {
+      const validation = validateUnitDraft();
+      if (!validation.ok) {
+        alert(validation.message);
+        return;
+      }
+      const list = unitDraftList();
+      const codeMap = {};
+      list.forEach(unit => {
+        const originalCode = String(unit._originalCode || "");
+        if (originalCode && originalCode !== unit.code) codeMap[originalCode] = unit.code;
+      });
+      state.groups.forEach(group => {
+        group.items.forEach(item => {
+          if (codeMap[item.unit]) item.unit = codeMap[item.unit];
+        });
+      });
+      state.units = normalizeUnits(list.map(unit => cloneUnit(unit)));
+      unitConfigDraft = null;
+      saveState();
+      closeConfig();
+      renderAll();
+      if (cloudConfigured()) await saveToCloud(false);
+    }
+
     function openConfig(type) {
       closeMoreMenu();
       const isProduct = type === "product";
@@ -3300,7 +3362,8 @@
       const isUnit = type === "unit";
       const isSync = type === "sync";
       if (isProductName && !activeProductNameGroupId) activeProductNameGroupId = state.activeGroupId;
-      if (isUnit) resetUnitConfigDraft();
+      if (isUnit) beginUnitConfigDraft();
+      else unitConfigDraft = null;
       const title = isProduct ? t("productGroupConfig") : isProductName ? t("productNameConfig") : isStore ? t("storeConfig") : isUnit ? t("unitConfig") : t("cloudSyncConfig");
       $("#configTitle").text(title);
       $("#productConfigPanel").toggleClass("active", isProduct);
@@ -3317,7 +3380,7 @@
     }
 
     function closeConfig() {
-      unitConfigDraft = null;
+      if ($("#unitConfigPanel").hasClass("active")) unitConfigDraft = null;
       $("#configOverlay").removeClass("show unit-config-open").attr("aria-hidden", "true");
     }
 
@@ -3355,17 +3418,9 @@
       $("#productNameConfigList").html(html);
     }
 
-    function resetUnitConfigDraft() {
-      unitConfigDraft = normalizeUnits(state.units).map(unit => ({ ...cloneUnit(unit), _originalCode: unit.code }));
-    }
-
-    function getUnitConfigDraft() {
-      if (!unitConfigDraft) resetUnitConfigDraft();
-      return unitConfigDraft;
-    }
-
     function renderUnitConfig() {
-      const rows = getUnitConfigDraft().map((unit, index) => `
+      const units = Array.isArray(unitConfigDraft) ? unitConfigDraft : appUnits().map(unit => ({ ...cloneUnit(unit), _originalCode: unit.code || "", _draftId: uid("unitdraft") }));
+      const rows = units.map((unit, index) => `
         <div class="unit-config-grid unit-config-row">
           <input class="js-config-unit" data-index="${index}" data-field="code" type="text" value="${escapeAttr(unit.code)}" placeholder="${escapeAttr(t("unitCode"))}" />
           <input class="js-config-unit" data-index="${index}" data-field="zh" type="text" value="${escapeAttr(unit.label && unit.label.zh ? unit.label.zh : "")}" placeholder="${escapeAttr(t("unitZh"))}" />
@@ -3449,13 +3504,13 @@
     }
 
     function addUnitFromConfig() {
-      const draft = getUnitConfigDraft();
-      const codeBase = uniqueName("unit", draft, unit => unit.code).replace(/\s+/g, "_").toLowerCase();
-      const unit = { code: codeBase, base: codeBase, factor: 1, label: { zh: t("newUnitDefault"), en: "New Unit" }, _originalCode: "" };
-      draft.push(unit);
+      const list = unitDraftList();
+      const codeBase = uniqueName("unit", list, unit => unit.code).replace(/\s+/g, "_").toLowerCase();
+      const unit = { code: codeBase, base: codeBase, factor: 1, label: { zh: t("newUnitDefault"), en: "New Unit" }, _originalCode: "", _draftId: uid("unitdraft") };
+      list.push(unit);
       renderUnitConfig();
       setTimeout(() => {
-        const input = $(`.js-config-unit[data-index="${draft.length - 1}"][data-field="code"]`).get(0);
+        const input = $(`.js-config-unit[data-index="${list.length - 1}"][data-field="code"]`).get(0);
         if (input) {
           input.focus();
           input.select();
@@ -3537,8 +3592,6 @@
     });
 
     $("#btnCloseConfig").on("click", closeConfig);
-    $("#btnCancelUnitConfig").on("click", closeConfig);
-    $("#btnSaveUnitConfig").on("click", saveUnitConfig);
 
     $("#configOverlay").on("click", function (e) {
       if (e.target === this) closeConfig();
@@ -3548,6 +3601,8 @@
     $("#btnConfigAddProductName").on("click", addProductNameFromConfig);
     $("#btnConfigAddStore").on("click", addStoreFromConfig);
     $("#btnConfigAddUnit").on("click", addUnitFromConfig);
+    $("#btnCancelUnitConfig").on("click", closeConfig);
+    $("#btnSaveUnitConfig").on("click", function () { saveUnitConfigDraft(); });
 
     $(document).on("input", ".js-config-group-name", function () {
       const id = $(this).data("id");
@@ -3596,14 +3651,14 @@
     $(document).on("input change", ".js-config-unit", function () {
       const index = Number($(this).data("index"));
       const field = $(this).data("field");
-      const draft = getUnitConfigDraft();
-      const unit = draft[index];
+      const list = unitDraftList();
+      const unit = list[index];
       if (!unit) return;
       if (field === "code") {
         const oldCode = unit.code;
         const newCode = String($(this).val() || "").trim().replace(/\s+/g, "_");
         unit.code = newCode;
-        if (!unit.base || unit.base === oldCode) unit.base = newCode;
+        if (unit.base === oldCode || unit.base === unit._originalCode) unit.base = newCode;
       } else if (field === "zh") {
         unit.label = unit.label || {};
         unit.label.zh = String($(this).val() || "").trim();
@@ -3611,7 +3666,7 @@
         unit.label = unit.label || {};
         unit.label.en = String($(this).val() || "").trim();
       } else if (field === "base") {
-        unit.base = String($(this).val() || "").trim();
+        unit.base = String($(this).val() || "").trim().replace(/\s+/g, "_");
       } else if (field === "factor") {
         unit.factor = Math.max(0.000001, numberOrZero($(this).val()) || 1);
       }
@@ -3619,48 +3674,17 @@
 
     $(document).on("click", ".btn-config-delete-unit", function () {
       const index = Number($(this).data("index"));
-      const draft = getUnitConfigDraft();
-      const unit = draft[index];
+      const list = unitDraftList();
+      const unit = list[index];
       if (!unit) return;
-      if (draft.length <= 1) return alert(t("cannotDeleteLastUnit"));
-      const originalCode = String(unit._originalCode || unit.code || "");
-      const used = originalCode && state.groups.some(group => group.items.some(item => item.unit === originalCode));
+      if (list.length <= 1) return alert(t("cannotDeleteLastUnit"));
+      const usedCode = String(unit._originalCode || unit.code || "");
+      const used = usedCode && state.groups.some(group => group.items.some(item => item.unit === usedCode));
       if (used) return alert(t("unitInUse"));
       if (!confirm(t("confirmDeleteUnit"))) return;
-      draft.splice(index, 1);
+      list.splice(index, 1);
       renderUnitConfig();
     });
-
-    function saveUnitConfig() {
-      const draft = getUnitConfigDraft().map(unit => ({
-        _originalCode: unit._originalCode || "",
-        code: String(unit.code || "").trim().replace(/\s+/g, "_"),
-        base: String(unit.base || unit.code || "").trim().replace(/\s+/g, "_"),
-        factor: Math.max(0.000001, numberOrZero(unit.factor) || 1),
-        label: {
-          zh: String(unit.label && unit.label.zh ? unit.label.zh : unit.code || "").trim(),
-          en: String(unit.label && unit.label.en ? unit.label.en : unit.code || "").trim()
-        }
-      })).filter(unit => unit.code);
-      if (!draft.length) return alert(t("cannotDeleteLastUnit"));
-      const seen = new Set();
-      for (const unit of draft) {
-        if (seen.has(unit.code)) return alert(t("duplicateUnitCode"));
-        seen.add(unit.code);
-      }
-      draft.forEach(unit => {
-        if (unit._originalCode && unit._originalCode !== unit.code) {
-          state.groups.forEach(group => group.items.forEach(item => {
-            if (item.unit === unit._originalCode) item.unit = unit.code;
-          }));
-        }
-      });
-      state.units = draft.map(unit => cloneUnit(unit));
-      unitConfigDraft = null;
-      saveState();
-      closeConfig();
-      renderAll();
-    }
 
     $(document).on("input", ".js-config-store-name", function () {
       const id = $(this).data("id");

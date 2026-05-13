@@ -1,4 +1,30 @@
-# 商品比价器 Price Compare v1.0.30
+# 商品比价器 Price Compare v1.0.31
+
+
+## v1.0.31 更新
+
+1. 修复单位配置保存问题
+   - 单位配置页面现在使用临时草稿。
+   - 修改、新增、删除单位后，只有点击底部“保存”才会写入当前数据。
+   - 点击“关闭”、右上角关闭或弹窗外关闭会放弃本次未保存改动。
+
+2. 修复保存到 data.json 的逻辑
+   - 点击单位配置“保存”后会更新 `state.units`。
+   - 同步更新 `configs.units`。
+   - 如果配置了 Cloudflare Worker，会立即保存到 GitHub `data.json`，不是只保存到本地。
+
+3. 保留现有功能
+   - 右下角 `btnFloatingSync` 仍然用于重新拉取云端 `data.json` 到当前设备。
+   - 其他配置仍然通过 `saveState()` 自动保存并同步。
+
+### GitHub 更新文件
+
+- `index.html`
+- `README.md`
+
+### Cloudflare Worker
+
+不需要更新。
 
 
 ## v1.0.30
