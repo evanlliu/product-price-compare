@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T11:01:32.288Z",
-    "lastSavedAt": "2026-05-13T11:02:50.832Z"
+    "lastSavedAt": "2026-05-13T11:02:54.754Z"
   },
   "units": [
     {
@@ -160,7 +160,7 @@
       "productNames": [
         {
           "id": "productName_1778670092288_9292fbb9d15c5",
-          "name": "bang'shu"
+          "name": "帮shu"
         }
       ],
       "items": [
