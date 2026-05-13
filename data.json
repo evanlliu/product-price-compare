@@ -1,16 +1,16 @@
 {
   "version": "v1.0.37",
-  "lang": "zh",
+  "lang": "en",
   "settings": {
-    "lang": "zh",
-    "language": "zh",
+    "lang": "en",
+    "language": "en",
     "activeGroupId": "group_1778670149375_13bf168a8eb7c8"
   },
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T13:40:06.382Z",
-    "lastSavedAt": "2026-05-13T13:40:36.631Z"
+    "lastSavedAt": "2026-05-13T13:41:08.934Z"
   },
   "units": [
     {
