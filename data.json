@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T11:25:56.349Z",
-    "lastSavedAt": "2026-05-13T11:26:01.621Z"
+    "lastSavedAt": "2026-05-13T11:26:03.653Z"
   },
   "units": [
     {
@@ -201,7 +201,7 @@
           "quantity": 2,
           "size": 34,
           "sizeCode": "XL",
-          "priceDate": "2026-04-13",
+          "priceDate": "2026-04-29",
           "status": "purchased",
           "unit": "sheet",
           "createdAt": 1778671456389
