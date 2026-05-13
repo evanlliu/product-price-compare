@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>商品比价器 Price Compare v1.0.44</title>
+  <title>商品比价器 Price Compare v1.0.46</title>
   <meta name="theme-color" content="#2563eb" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -871,17 +871,50 @@
       }
     }
 
+    .mobile-filter-bar {
+      display: none;
+      gap: 6px;
+      padding: 6px 8px 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .mobile-filter-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .mobile-filter-chip {
+      flex: 0 0 auto;
+      min-height: 28px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(203, 213, 225, 0.9);
+      background: rgba(255, 255, 255, 0.86);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      box-shadow: none;
+    }
+
+    .mobile-filter-chip.active {
+      color: #14532d;
+      border-color: rgba(134, 239, 172, 0.95);
+      background: rgba(220, 252, 231, 0.9);
+    }
+
     .mobile-list {
       display: none;
       padding: 8px;
-      gap: 8px;
+      gap: 7px;
     }
 
     .item-card {
+      position: relative;
       background: rgba(255, 255, 255, 0.9);
       border: 1px solid var(--line);
       border-radius: 16px;
-      padding: 10px;
+      padding: 8px;
       box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
     }
 
@@ -891,24 +924,66 @@
       box-shadow: 0 10px 24px rgba(22, 163, 74, 0.12);
     }
 
+    .item-card.is-tappable {
+      cursor: pointer;
+    }
+
     .item-head {
-      display: flex;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
       gap: 8px;
-      align-items: flex-start;
-      margin-bottom: 8px;
+      align-items: start;
+      margin-bottom: 6px;
     }
 
     .item-title {
-      font-weight: 900;
-      line-height: 1.25;
+      font-weight: 950;
+      line-height: 1.18;
       word-break: break-word;
+      font-size: 15px;
+      color: var(--text);
     }
 
     .item-subtitle {
       color: var(--muted);
+      font-size: 11px;
+      line-height: 1.25;
+      margin-top: 2px;
+    }
+
+    .mobile-history-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-width: 0;
+      margin: -1px 0 6px;
       font-size: 12px;
-      margin-top: 3px;
+      color: var(--muted);
+      line-height: 1.25;
+    }
+
+    .mobile-history-line strong {
+      min-width: 0;
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .mobile-card-actions {
+      display: flex;
+      gap: 5px;
+      justify-content: flex-end;
+      flex-wrap: nowrap;
+      margin-top: 6px;
+    }
+
+    .mobile-card-actions .small-btn {
+      min-height: 28px;
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 10px;
     }
 
     .mobile-edit-grid {
@@ -1539,6 +1614,10 @@
         display: none;
       }
 
+      .mobile-filter-bar {
+        display: flex;
+      }
+
       .mobile-list {
         display: grid;
       }
@@ -1659,10 +1738,259 @@
         padding: 12px;
       }
 
+      .records-card .card-inner {
+        padding: 10px 10px 0;
+      }
+
+      .record-top-line {
+        margin-bottom: 8px;
+      }
+
+      .best-strip {
+        margin-top: 4px;
+        padding: 8px 10px;
+        min-height: 0;
+      }
+
+      .best-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 15px;
+      }
+
+      .best-main {
+        font-size: 13px;
+      }
+
+      .best-sub {
+        font-size: 11px;
+        line-height: 1.25;
+      }
+
+      .mobile-list {
+        padding: 7px;
+        gap: 7px;
+      }
+
+      .item-card {
+        padding: 8px;
+        border-radius: 15px;
+      }
+
       .mobile-metrics {
         grid-template-columns: 1fr 1fr 1fr;
+        gap: 5px;
+        margin-bottom: 0;
+      }
+
+      .metric-pill {
+        padding: 6px 7px;
+        border-radius: 11px;
+      }
+
+      .metric-label {
+        font-size: 10px;
+        margin-bottom: 2px;
+      }
+
+      .metric-value {
+        font-size: 13px;
       }
     }
+
+    .mobile-header-sync {
+      display: none;
+      align-items: center;
+      gap: 4px;
+      margin-left: 7px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      vertical-align: middle;
+      max-width: 48vw;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mobile-header-sync .sync-dot {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .mobile-header-sync.ok .sync-dot { background: var(--good); }
+    .mobile-header-sync.busy .sync-dot { background: var(--warn); }
+    .mobile-header-sync.error .sync-dot { background: var(--bad); }
+
+    .floating-add {
+      display: none;
+      background: var(--primary);
+      color: #fff;
+      border-color: rgba(37, 99, 235, 0.92);
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    @media (max-width: 520px) {
+      .topbar {
+        margin-bottom: 7px;
+      }
+
+      h1 [data-i18n="appTitle"] {
+        display: none;
+      }
+
+      .title-version {
+        margin-left: 0;
+        font-size: 12px;
+      }
+
+      .mobile-header-sync {
+        display: inline-flex;
+      }
+
+      .product-switch-card #syncStatusMini {
+        display: none;
+      }
+
+      #btnMore {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        padding: 0;
+        font-size: 0;
+        border-radius: 15px;
+      }
+
+      #btnMore::before {
+        content: "⋯";
+        font-size: 24px;
+        line-height: 1;
+        font-weight: 900;
+      }
+
+      .product-switch-card .card-inner {
+        padding: 8px 10px;
+      }
+
+      .product-switch-row {
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 8px;
+      }
+
+      .group-combo-wrap {
+        position: static;
+      }
+
+      .group-combo-input,
+      .group-combo-btn,
+      .group-suggestions {
+        display: none !important;
+      }
+
+      .group-combo-wrap #groupSelect {
+        position: static !important;
+        width: 100% !important;
+        height: 34px !important;
+        min-height: 34px !important;
+        padding: 5px 10px !important;
+        margin: 0 !important;
+        overflow: visible !important;
+        clip: auto !important;
+        white-space: normal !important;
+        border: 1px solid var(--line) !important;
+        border-radius: 11px !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        color: var(--text) !important;
+        font: inherit !important;
+        font-weight: 900 !important;
+      }
+
+      #btnAddRow {
+        display: none;
+      }
+
+      .floating-add {
+        display: inline-grid;
+      }
+
+      body.mobile-actions-open .floating-actions {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(8px) scale(0.96);
+      }
+
+      .floating-actions {
+        transition: opacity 0.16s ease, transform 0.16s ease;
+      }
+
+      .mobile-list {
+        overflow: hidden;
+      }
+
+      .item-card {
+        padding: 0;
+        overflow: hidden;
+        background: rgba(229, 231, 235, 0.9);
+      }
+
+      .item-card.best-card {
+        background: rgba(220, 252, 231, 0.92);
+      }
+
+      .mobile-card-inner {
+        position: relative;
+        z-index: 2;
+        padding: 8px;
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.94);
+        transition: transform 0.18s ease;
+        will-change: transform;
+      }
+
+      .item-card.best-card .mobile-card-inner {
+        background: linear-gradient(135deg, rgba(220, 252, 231, 0.82), rgba(255, 255, 255, 0.96));
+      }
+
+      .item-card.swiped .mobile-card-inner {
+        transform: translateX(-188px);
+      }
+
+      .mobile-card-actions {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        width: 188px;
+        display: flex;
+        align-items: stretch;
+        justify-content: flex-end;
+        gap: 0;
+        margin: 0;
+        padding: 0;
+        background: rgba(248, 250, 252, 0.92);
+      }
+
+      .mobile-card-actions .small-btn {
+        min-height: 100%;
+        width: 47px;
+        padding: 0 4px;
+        border-radius: 0;
+        border-top: 0;
+        border-bottom: 0;
+        border-right: 0;
+        font-size: 11px;
+        box-shadow: none;
+        white-space: normal;
+        line-height: 1.15;
+      }
+
+      .mobile-card-actions .small-btn:first-child {
+        border-left: 1px solid var(--line);
+      }
+    }
+
   </style>
 </head>
 <body class="app-booting">
@@ -1680,7 +2008,7 @@
       <div class="brand">
         <div class="logo">¥</div>
         <div>
-          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.44</span></h1>
+          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.46</span><span id="mobileHeaderSync" class="mobile-header-sync"><span class="sync-dot"></span><span id="mobileHeaderSyncText"></span></span></h1>
         </div>
       </div>
       <div class="top-actions">
@@ -1746,11 +2074,18 @@
             <tbody id="tableBody"></tbody>
           </table>
         </div>
+        <div class="mobile-filter-bar" id="mobileFilterBar" aria-label="Mobile filters">
+          <button type="button" class="mobile-filter-chip active" data-mobile-filter="all" data-i18n="mobileFilterAll">全部</button>
+          <button type="button" class="mobile-filter-chip" data-mobile-filter="current" data-i18n="currentStatus">本次待买</button>
+          <button type="button" class="mobile-filter-chip" data-mobile-filter="purchased" data-i18n="purchasedStatus">已购买</button>
+          <button type="button" class="mobile-filter-chip" data-mobile-filter="best" data-i18n="mobileFilterBest">历史最低</button>
+        </div>
         <div class="mobile-list" id="mobileList"></div>
         <div class="empty" id="emptyState" style="display: none;" data-i18n="emptyState">暂无记录，请点击新增添加一行。</div>
       </div>
     </section>
     <div class="floating-actions" aria-label="Quick actions">
+      <button type="button" id="btnMobileAdd" class="floating-btn floating-add" aria-label="Add" title="Add">＋</button>
       <button type="button" id="btnFloatingSync" class="floating-btn floating-sync" aria-label="Cloud Sync" title="Cloud Sync">☁️</button>
       <button type="button" id="btnLang" class="floating-btn floating-lang" aria-label="Language" title="Language">🌐</button>
     </div>
@@ -1856,7 +2191,7 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.44";
+    const APP_VERSION = "v1.0.46";
     const STORAGE_KEY = "productPriceCompare.v1";
     const LOCAL_SYNC_KEY = "productPriceCompare.localSync.v1";
 
@@ -1998,6 +2333,8 @@
         historyLowest: "历史最低",
         lastPurchased: "上次购买",
         purchased: "已购买",
+        mobileFilterAll: "全部",
+        mobileFilterBest: "历史最低",
         noHistory: "暂无历史",
         cheaperThanLast: "比上次便宜 {amount}/{unit}",
         higherThanLast: "比上次贵 {amount}/{unit}",
@@ -2159,6 +2496,8 @@
         historyLowest: "History Low",
         lastPurchased: "Last Bought",
         purchased: "Purchased",
+        mobileFilterAll: "All",
+        mobileFilterBest: "Best",
         noHistory: "No History",
         cheaperThanLast: "{amount}/{unit} cheaper than last",
         higherThanLast: "{amount}/{unit} higher than last",
@@ -2331,6 +2670,7 @@
     let activeProductNameGroupId = "";
     let draggingGroupId = null;
     let unitConfigDraft = null;
+    let mobileFilter = "all";
     let cloudSaveTimer = null;
     let isApplyingRemote = false;
     let syncStatus = { type: "local", textKey: "syncStatusLocal", params: {} };
@@ -2993,6 +3333,10 @@
         .text("☁️")
         .attr("title", t("loadCloudData"))
         .attr("aria-label", t("loadCloudData"));
+      $("#btnMobileAdd")
+        .text("＋")
+        .attr("title", t("addRow"))
+        .attr("aria-label", t("addRow"));
     }
 
 
@@ -3007,6 +3351,10 @@
       $("#syncStatusMini").removeClass("ok busy error").addClass(cls);
       $("#btnFloatingSync").removeClass("ok busy error").addClass(cls).attr("title", text).attr("aria-label", `${t("loadCloudData")}：${text}`);
       $("#syncStatusText").text(text);
+      $("#mobileHeaderSync")
+        .removeClass("ok busy error")
+        .addClass(cls);
+      $("#mobileHeaderSyncText").text(text);
       $("#syncConfigStatus").text(text);
       if ($("#syncConfigPanel").hasClass("active")) {
         $("#syncWorkerUrl").val(state.sync && state.sync.workerUrl ? state.sync.workerUrl : "");
@@ -3333,11 +3681,27 @@
       });
 
       const tableRows = sortedRows.map(row => tableRowHtml(group, row, analysis)).join("");
-      const cards = sortedRows.map(row => mobileCardHtml(group, row, analysis)).join("");
+      const mobileRows = rowsForMobileFilter(sortedRows, analysis);
+      const cards = mobileRows.map(row => mobileCardHtml(group, row, analysis)).join("");
 
       $("#tableBody").html(tableRows);
+      closeMobileSwipeActions();
       $("#mobileList").html(cards);
       $("#emptyState").toggle(group.items.length === 0);
+      $(".mobile-filter-chip").removeClass("active").filter(`[data-mobile-filter="${mobileFilter}"]`).addClass("active");
+    }
+
+    function rowsForMobileFilter(rows, analysis) {
+      if (mobileFilter === "current") return rows.filter(row => isCurrent(row.item));
+      if (mobileFilter === "purchased") return rows.filter(row => isPurchased(row.item));
+      if (mobileFilter === "best") {
+        return rows.filter(row => {
+          const result = resultForRow(row, analysis.bestByBase, analysis);
+          const history = historyCompareForRow(row, analysis);
+          return result.type === "good" || history.type === "good";
+        });
+      }
+      return rows;
     }
 
     function unitOptionsHtml(selectedUnit) {
@@ -3409,75 +3773,46 @@
       const history = historyCompareForRow(row, analysis);
       const isBest = isCurrent(item) && result.type === "good" && result.text === t("bestDeal");
       const baseDisplay = baseUnitLabel(c.base);
-      const locked = isPurchased(item);
-      const lockedAttr = locked ? ' disabled aria-disabled="true"' : '';
+      const unitPriceText = c.valid ? `${smartNumber(c.unitPrice, 3)}/${baseDisplay}` : "-";
+      const finalCostText = c.valid ? money(c.finalCost) : "-";
+      const totalSizeText = c.valid ? `${smartNumber(c.totalBaseSize, 4)}${baseDisplay}` : "-";
+      const statusText = isPurchased(item) ? t("purchasedStatus") : t("currentStatus");
+      const dateText = item.priceDate || todayDate();
 
       return `
-        <article class="item-card ${isBest ? "best-card" : ""}">
-          <div class="item-head">
-            <div>
-              <div class="item-title">${escapeHtml(productNameText(item, group))} · ${escapeHtml(storeName(item.storeId) || "-")}</div>
-              <div class="item-subtitle">${escapeHtml(displayName(group))} · ${escapeHtml(item.priceDate || todayDate())}</div>
-            </div>
-            ${chipHtml(result)}
-          </div>
-          <div class="mobile-metrics">
-            <div class="metric-pill ${isBest ? "best-metric" : ""}">
-              <div class="metric-label">${t("unitPrice")}</div>
-              <div class="metric-value">${c.valid ? `${smartNumber(c.unitPrice, 3)}/${baseDisplay}` : "-"}</div>
-            </div>
-            <div class="metric-pill">
-              <div class="metric-label">${t("historyCompare")}</div>
-              <div class="metric-value">${escapeHtml(history.text)}</div>
-            </div>
-            <div class="metric-pill">
-              <div class="metric-label">${t("totalSize")}</div>
-              <div class="metric-value">${c.valid ? `${smartNumber(c.totalBaseSize, 4)}${baseDisplay}` : "-"}</div>
-            </div>
-          </div>
-          <div class="mobile-edit-grid">
-            <div>
-              <label>${t("priceDate")}</label>
-              <input class="js-inline-edit" data-id="${item.id}" data-field="priceDate" type="date" value="${escapeAttr(item.priceDate || todayDate())}"${lockedAttr} />
-            </div>
-            <div>
-              <label>${t("status")}</label>
-              <select class="js-inline-edit" data-id="${item.id}" data-field="status"${lockedAttr}>${statusOptionsHtml(item.status)}</select>
-            </div>
-            <div class="field-store-mobile">
-              <label>${t("productName")}</label>
-              <select class="js-inline-edit" data-id="${item.id}" data-field="productNameId"${lockedAttr}>${productNameOptionsHtml(group, item.productNameId)}</select>
-            </div>
-            <div class="field-store-mobile">
-              <label>${t("store")}</label>
-              <select class="js-inline-edit" data-id="${item.id}" data-field="storeId"${lockedAttr}>${storeOptionsHtml(item.storeId)}</select>
-            </div>
-            <div>
-              <label>${t("price")}</label>
-              <input class="js-inline-edit" data-id="${item.id}" data-field="price" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.price)}"${lockedAttr} />
-            </div>
-            <div>
-              <label>${t("cashback")}</label>
-              <input class="js-inline-edit" data-id="${item.id}" data-field="cashback" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.cashback)}"${lockedAttr} />
-            </div>
-            <div>
-              <label>${t("quantity")}</label>
-              <input class="js-inline-edit" data-id="${item.id}" data-field="quantity" type="number" min="0" step="1" inputmode="numeric" value="${escapeAttr(item.quantity)}"${lockedAttr} />
-            </div>
-            <div>
-              <label>${t("size")}</label>
-              <input class="js-inline-edit" data-id="${item.id}" data-field="size" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.size)}"${lockedAttr} />
-            </div>
-            <div>
-              <label>${t("unit")}</label>
-              <select class="js-inline-edit" data-id="${item.id}" data-field="unit"${lockedAttr}>${unitOptionsHtml(item.unit)}</select>
-            </div>
-          </div>
-          <div class="row-actions">
+        <article class="item-card is-tappable ${isBest ? "best-card" : ""}" data-id="${escapeAttr(item.id)}">
+          <div class="mobile-card-actions" aria-label="Row actions">
             ${isCurrent(item) ? `<button type="button" class="small-btn btn-buy btn-confirm-purchase" data-id="${item.id}">${t("confirmPurchase")}</button>` : ""}
             <button type="button" class="small-btn btn-ghost btn-edit-record" data-id="${item.id}">${t("edit")}</button>
             <button type="button" class="small-btn btn-ghost btn-copy" data-id="${item.id}">${t("copy")}</button>
             <button type="button" class="small-btn btn-danger btn-delete" data-id="${item.id}">${t("delete")}</button>
+          </div>
+          <div class="mobile-card-inner">
+            <div class="item-head">
+              <div>
+                <div class="item-title">${escapeHtml(productNameText(item, group))} · ${escapeHtml(storeName(item.storeId) || "-")}</div>
+                <div class="item-subtitle">${escapeHtml(displayName(group))} · ${escapeHtml(dateText)} · ${escapeHtml(statusText)}</div>
+              </div>
+              ${chipHtml(result)}
+            </div>
+            <div class="mobile-metrics">
+              <div class="metric-pill ${isBest ? "best-metric" : ""}">
+                <div class="metric-label">${t("unitPrice")}</div>
+                <div class="metric-value">${unitPriceText}</div>
+              </div>
+              <div class="metric-pill">
+                <div class="metric-label">${t("finalCost")}</div>
+                <div class="metric-value">${finalCostText}</div>
+              </div>
+              <div class="metric-pill">
+                <div class="metric-label">${t("totalSize")}</div>
+                <div class="metric-value">${totalSizeText}</div>
+              </div>
+            </div>
+            <div class="mobile-history-line">
+              <span>${t("historyCompare")}</span>
+              <strong>${escapeHtml(history.text)}</strong>
+            </div>
           </div>
         </article>`;
     }
@@ -4013,11 +4348,85 @@
       }
     });
 
+    function closeMobileSwipeActions() {
+      $(".item-card.swiped").removeClass("swiped");
+      $("body").removeClass("mobile-actions-open");
+    }
+
+    let mobileSwipeState = null;
+
+    function isMobileLayout() {
+      return window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
+    }
+
+    $(document).on("touchstart", ".item-card", function (e) {
+      if (!isMobileLayout()) return;
+      const touch = e.originalEvent.touches && e.originalEvent.touches[0];
+      if (!touch) return;
+      mobileSwipeState = {
+        card: $(this),
+        startX: touch.clientX,
+        startY: touch.clientY,
+        moved: false
+      };
+    });
+
+    $(document).on("touchmove", ".item-card", function (e) {
+      if (!mobileSwipeState || mobileSwipeState.card.get(0) !== this) return;
+      const touch = e.originalEvent.touches && e.originalEvent.touches[0];
+      if (!touch) return;
+      const dx = touch.clientX - mobileSwipeState.startX;
+      const dy = touch.clientY - mobileSwipeState.startY;
+      if (Math.abs(dx) > 26 && Math.abs(dx) > Math.abs(dy) * 1.15) {
+        mobileSwipeState.moved = true;
+        if (dx < 0) {
+          $(".item-card.swiped").not(mobileSwipeState.card).removeClass("swiped");
+          mobileSwipeState.card.addClass("swiped");
+          $("body").addClass("mobile-actions-open");
+        } else {
+          mobileSwipeState.card.removeClass("swiped");
+          if (!$('.item-card.swiped').length) $("body").removeClass("mobile-actions-open");
+        }
+      }
+    });
+
+    $(document).on("touchend touchcancel", ".item-card", function () {
+      if (mobileSwipeState && mobileSwipeState.card.get(0) === this && mobileSwipeState.moved) {
+        const card = mobileSwipeState.card;
+        card.data("swipeMoved", true);
+        setTimeout(() => card.removeData("swipeMoved"), 260);
+      }
+      mobileSwipeState = null;
+    });
+
+    $(document).on("click", function (e) {
+      if (!$(e.target).closest(".item-card, .floating-actions").length) {
+        closeMobileSwipeActions();
+      }
+    });
+
+    $(document).on("click", ".mobile-filter-chip", function () {
+      mobileFilter = String($(this).data("mobile-filter") || "all");
+      renderRecords();
+    });
+
+    $(document).on("click", ".item-card.is-tappable", function (e) {
+      if ($(e.target).closest("button, a, input, select, textarea, label").length) return;
+      const card = $(this);
+      if (card.data("swipeMoved")) return;
+      if (card.hasClass("swiped")) {
+        closeMobileSwipeActions();
+        return;
+      }
+      openRecordEdit(card.data("id"));
+    });
+
     $(document).on("click", ".btn-confirm-purchase", function () {
       confirmPurchase($(this).data("id"));
     });
 
     $(document).on("click", ".btn-edit-record", function () {
+      closeMobileSwipeActions();
       openRecordEdit($(this).data("id"));
     });
 
@@ -4275,7 +4684,7 @@
       saveToCloud(true);
     });
 
-    $(document).on("click", "#btnAddRow", function () {
+    $(document).on("click", "#btnAddRow, #btnMobileAdd", function () {
       addRow();
     });
 
