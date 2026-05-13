@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T13:34:39.271Z",
-    "lastSavedAt": "2026-05-13T13:34:53.228Z"
+    "lastSavedAt": "2026-05-13T13:35:40.437Z"
   },
   "units": [
     {
@@ -165,7 +165,7 @@
     },
     {
       "id": "group_1778246168663_d24215f198b6e",
-      "name": "尿不湿",
+      "name": "尿不湿()",
       "productNames": [
         {
           "id": "productName_1778670092288_9292fbb9d15c5",
