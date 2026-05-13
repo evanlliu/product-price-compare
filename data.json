@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T14:19:24.281Z",
-    "lastSavedAt": "2026-05-13T14:23:45.351Z"
+    "lastSavedAt": "2026-05-13T14:23:48.265Z"
   },
   "units": [
     {
@@ -118,7 +118,7 @@
       "name": "淘宝",
       "label": {
         "zh": "淘宝",
-        "en": "淘宝/TB"
+        "en": "TA"
       }
     },
     {
@@ -339,7 +339,7 @@
         "name": "淘宝",
         "label": {
           "zh": "淘宝",
-          "en": "淘宝/TB"
+          "en": "TA"
         }
       },
       {
