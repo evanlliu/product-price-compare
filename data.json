@@ -4,13 +4,13 @@
   "settings": {
     "lang": "zh",
     "language": "zh",
-    "activeGroupId": "group_1778680544317_27462cdbe879e"
+    "activeGroupId": "group_1778246168663_d24215f198b6e"
   },
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T13:55:08.192Z",
-    "lastSavedAt": "2026-05-13T13:55:50.489Z"
+    "lastLoadedAt": "2026-05-13T13:57:42.546Z",
+    "lastSavedAt": "2026-05-13T13:57:47.876Z"
   },
   "units": [
     {
@@ -288,16 +288,16 @@
     {
       "id": "group_1778680544317_27462cdbe879e",
       "name": "尿不湿(XL)",
-      "items": [],
       "productNames": [
         {
           "id": "pname_1778680544317_5a9630cbe17d28",
           "name": "新商品"
         }
-      ]
+      ],
+      "items": []
     }
   ],
-  "activeGroupId": "group_1778680544317_27462cdbe879e",
+  "activeGroupId": "group_1778246168663_d24215f198b6e",
   "configs": {
     "stores": [
       {
