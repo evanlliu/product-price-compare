@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>商品比价器 Price Compare v1.0.32</title>
+  <title>商品比价器 Price Compare v1.0.33</title>
   <meta name="theme-color" content="#2563eb" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -972,6 +972,41 @@
       overflow: auto;
     }
 
+    #configOverlay.unit-config-mode .config-page {
+      width: min(900px, calc(100vw - 24px));
+      max-height: calc(100vh - 24px);
+    }
+
+    #configOverlay.unit-config-mode .config-body {
+      overflow: hidden;
+      padding: 10px 12px 0;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #configOverlay.unit-config-mode #unitConfigPanel.active {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      flex: 1;
+    }
+
+    .config-footer {
+      display: none;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-top: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.86);
+    }
+
+    #configOverlay.unit-config-mode .config-footer {
+      display: flex;
+    }
+
     .config-toolbar {
       display: flex;
       gap: 8px;
@@ -1022,12 +1057,22 @@
       -webkit-overflow-scrolling: touch;
     }
 
+    #configOverlay.unit-config-mode .unit-config-list {
+      overflow: visible;
+      min-height: 0;
+    }
+
     .unit-config-table {
       min-width: 760px;
       border: 1px solid var(--line);
       border-radius: 16px;
       overflow: hidden;
       background: rgba(255, 255, 255, 0.7);
+    }
+
+    #configOverlay.unit-config-mode .unit-config-table {
+      min-width: 0;
+      width: 100%;
     }
 
     .unit-config-grid {
@@ -1037,6 +1082,12 @@
       align-items: center;
       padding: 8px 10px;
       border-bottom: 1px solid var(--line);
+    }
+
+    #configOverlay.unit-config-mode .unit-config-grid {
+      grid-template-columns: 72px minmax(90px, 1fr) minmax(90px, 1fr) 72px 84px 46px;
+      gap: 5px;
+      padding: 5px 6px;
     }
 
     .unit-config-grid:last-child {
@@ -1066,6 +1117,36 @@
       border-radius: 10px;
       padding: 6px 8px;
       font-size: 14px;
+    }
+
+    #configOverlay.unit-config-mode .unit-config-row input {
+      min-height: 28px;
+      border-radius: 8px;
+      padding: 4px 5px;
+      font-size: 12px;
+    }
+
+    #configOverlay.unit-config-mode .unit-config-head {
+      font-size: 11px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+
+    #configOverlay.unit-config-mode .config-toolbar {
+      margin-bottom: 6px;
+      gap: 6px;
+    }
+
+    #configOverlay.unit-config-mode .hint-line {
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    #configOverlay.unit-config-mode #btnConfigAddUnit,
+    #configOverlay.unit-config-mode .btn-config-delete-unit {
+      min-height: 28px;
+      padding: 4px 7px;
+      font-size: 12px;
     }
 
     .unit-config-row .btn-config-delete-unit {
@@ -1335,7 +1416,7 @@
       <div class="brand">
         <div class="logo">¥</div>
         <div>
-          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.32</span></h1>
+          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.33</span></h1>
         </div>
       </div>
       <div class="top-actions">
@@ -1471,6 +1552,10 @@
           <div class="hint-line" id="syncConfigStatus"></div>
         </div>
       </div>
+      <div class="config-footer" id="unitConfigFooter">
+        <button type="button" id="btnCancelUnitConfig" class="btn-ghost" data-i18n="close">关闭</button>
+        <button type="button" id="btnSaveUnitConfig" class="btn-primary" data-i18n="save">保存</button>
+      </div>
     </section>
   </div>
 
@@ -1503,7 +1588,7 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.32";
+    const APP_VERSION = "v1.0.33";
     const STORAGE_KEY = "productPriceCompare.v1";
     const LOCAL_SYNC_KEY = "productPriceCompare.localSync.v1";
 
@@ -1571,6 +1656,7 @@
         confirmDeleteUnit: "确认删除这个单位吗？",
         cannotDeleteLastUnit: "至少保留一个单位。",
         unitInUse: "该单位已经被价格记录使用，请先修改相关记录后再删除。",
+        unitConfigSaved: "单位配置已保存。",
         addItem: "新增价格记录",
         addRow: "新增",
         editItem: "编辑价格记录",
@@ -1723,6 +1809,7 @@
         confirmDeleteUnit: "Delete this unit?",
         cannotDeleteLastUnit: "Keep at least one unit.",
         unitInUse: "This unit is used by price records. Please change those records before deleting it.",
+        unitConfigSaved: "Unit settings saved.",
         addItem: "Add Price Record",
         addRow: "Add",
         editItem: "Edit Price Record",
@@ -1859,11 +1946,20 @@
       return state && Array.isArray(state.units) && state.units.length ? state.units : defaultUnits;
     }
 
+    function makeUnitDraft() {
+      return appUnits().map(unit => ({ ...cloneUnit(unit), _originalCode: unit.code }));
+    }
+
+    function activeUnitListForConfig() {
+      return Array.isArray(unitConfigDraft) ? unitConfigDraft : appUnits().map(unit => ({ ...cloneUnit(unit), _originalCode: unit.code }));
+    }
+
     let state = loadState();
     applyLocalSyncConfig();
     let pendingFocusItemId = null;
     let editingItemId = null;
     let activeProductNameGroupId = "";
+    let unitConfigDraft = null;
     let cloudSaveTimer = null;
     let isApplyingRemote = false;
     let syncStatus = { type: "local", textKey: "syncStatusLocal", params: {} };
@@ -2493,8 +2589,8 @@
         .attr("aria-label", t("switchLanguage"));
       $("#btnFloatingSync")
         .text("☁️")
-        .attr("title", t("cloudSyncNow"))
-        .attr("aria-label", t("cloudSyncNow"));
+        .attr("title", t("loadCloudData"))
+        .attr("aria-label", t("loadCloudData"));
     }
 
 
@@ -2507,7 +2603,7 @@
       const text = t(syncStatus.textKey || "syncStatusLocal", syncStatus.params || {});
       const cls = syncStatus.type === "ok" ? "ok" : syncStatus.type === "busy" ? "busy" : syncStatus.type === "error" ? "error" : "";
       $("#syncStatusMini").removeClass("ok busy error").addClass(cls);
-      $("#btnFloatingSync").removeClass("ok busy error").addClass(cls).attr("title", text).attr("aria-label", `${t("cloudSyncNow")}：${text}`);
+      $("#btnFloatingSync").removeClass("ok busy error").addClass(cls).attr("title", text).attr("aria-label", `${t("loadCloudData")}：${text}`);
       $("#syncStatusText").text(text);
       $("#syncConfigStatus").text(text);
       if ($("#syncConfigPanel").hasClass("active")) {
@@ -3086,6 +3182,67 @@
     }
 
 
+    function saveUnitConfig() {
+      if (!Array.isArray(unitConfigDraft) || !unitConfigDraft.length) return;
+      const normalizedDraft = normalizeUnits(unitConfigDraft.map(unit => cloneUnit(unit)));
+      const codeMap = {};
+      unitConfigDraft.forEach(unit => {
+        const original = String(unit._originalCode || unit.code || "");
+        const next = String(unit.code || "");
+        if (original && next && original !== next) codeMap[original] = next;
+      });
+      Object.keys(codeMap).forEach(oldCode => {
+        const newCode = codeMap[oldCode];
+        state.groups.forEach(group => group.items.forEach(item => {
+          if (item.unit === oldCode) item.unit = newCode;
+        }));
+      });
+      state.units = normalizedDraft;
+      syncConfigFields(state);
+      saveState();
+      unitConfigDraft = makeUnitDraft();
+      renderAll();
+      setSyncStatus("ok", "unitConfigSaved");
+    }
+
+    async function reloadDataJson(showAlert = false) {
+      setSyncStatus("busy", "syncStatusLoading");
+      let loaded = false;
+      const localRuntime = isLocalDebugRuntime();
+
+      if (!localRuntime) {
+        const directData = await fetchDirectDataJson();
+        if (directData && directData.groups) {
+          isApplyingRemote = true;
+          mergeRemoteState(directData, { preferLocalSync: false });
+          state.sync.lastLoadedAt = new Date().toISOString();
+          saveLocalSyncConfig(state.sync);
+          saveState({ localOnly: true });
+          isApplyingRemote = false;
+          loaded = true;
+        }
+      }
+
+      if (cloudConfigured()) {
+        const cloudLoaded = await loadFromCloud(false);
+        loaded = cloudLoaded || loaded;
+      } else if (localRuntime) {
+        setSyncStatus("local", "syncNotConfigured");
+        if (showAlert) alert(t("syncNotConfigured"));
+        return false;
+      }
+
+      if (loaded) {
+        renderAll();
+        setSyncStatus("ok", "syncStatusLoaded", { time: nowText() });
+        return true;
+      }
+
+      setSyncStatus("error", "syncStatusFailed", { message: "data.json" });
+      if (showAlert) alert(t("syncStatusFailed", { message: "data.json" }));
+      return false;
+    }
+
     function focusPendingRow() {
       if (!pendingFocusItemId) return;
       const id = pendingFocusItemId;
@@ -3187,6 +3344,8 @@
       const isUnit = type === "unit";
       const isSync = type === "sync";
       if (isProductName && !activeProductNameGroupId) activeProductNameGroupId = state.activeGroupId;
+      if (isUnit) unitConfigDraft = makeUnitDraft();
+      else unitConfigDraft = null;
       const title = isProduct ? t("productGroupConfig") : isProductName ? t("productNameConfig") : isStore ? t("storeConfig") : isUnit ? t("unitConfig") : t("cloudSyncConfig");
       $("#configTitle").text(title);
       $("#productConfigPanel").toggleClass("active", isProduct);
@@ -3194,13 +3353,14 @@
       $("#storeConfigPanel").toggleClass("active", isStore);
       $("#unitConfigPanel").toggleClass("active", isUnit);
       $("#syncConfigPanel").toggleClass("active", isSync);
-      $("#configOverlay").addClass("show").attr("aria-hidden", "false");
+      $("#configOverlay").toggleClass("unit-config-mode", isUnit).addClass("show").attr("aria-hidden", "false");
       renderConfig();
       renderSyncStatus();
     }
 
     function closeConfig() {
-      $("#configOverlay").removeClass("show").attr("aria-hidden", "true");
+      unitConfigDraft = null;
+      $("#configOverlay").removeClass("show unit-config-mode").attr("aria-hidden", "true");
     }
 
     function renderConfig() {
@@ -3238,15 +3398,19 @@
     }
 
     function renderUnitConfig() {
-      const rows = appUnits().map(unit => `
+      const list = activeUnitListForConfig();
+      const rows = list.map(unit => {
+        const rowKey = unit._originalCode || unit.code;
+        return `
         <div class="unit-config-grid unit-config-row">
-          <input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="code" type="text" value="${escapeAttr(unit.code)}" placeholder="${escapeAttr(t("unitCode"))}" />
-          <input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="zh" type="text" value="${escapeAttr(unit.label && unit.label.zh ? unit.label.zh : "")}" placeholder="${escapeAttr(t("unitZh"))}" />
-          <input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="en" type="text" value="${escapeAttr(unit.label && unit.label.en ? unit.label.en : "")}" placeholder="${escapeAttr(t("unitEn"))}" />
-          <input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="base" type="text" value="${escapeAttr(unit.base)}" placeholder="${escapeAttr(t("baseUnit"))}" />
-          <input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="factor" type="number" min="0.000001" step="0.000001" value="${escapeAttr(unit.factor)}" placeholder="${escapeAttr(t("unitFactor"))}" />
-          <button type="button" class="small-btn btn-danger btn-config-delete-unit" data-code="${escapeAttr(unit.code)}">${t("delete")}</button>
-        </div>`).join("");
+          <input class="js-config-unit" data-code="${escapeAttr(rowKey)}" data-field="code" type="text" value="${escapeAttr(unit.code)}" placeholder="${escapeAttr(t("unitCode"))}" />
+          <input class="js-config-unit" data-code="${escapeAttr(rowKey)}" data-field="zh" type="text" value="${escapeAttr(unit.label && unit.label.zh ? unit.label.zh : "")}" placeholder="${escapeAttr(t("unitZh"))}" />
+          <input class="js-config-unit" data-code="${escapeAttr(rowKey)}" data-field="en" type="text" value="${escapeAttr(unit.label && unit.label.en ? unit.label.en : "")}" placeholder="${escapeAttr(t("unitEn"))}" />
+          <input class="js-config-unit" data-code="${escapeAttr(rowKey)}" data-field="base" type="text" value="${escapeAttr(unit.base)}" placeholder="${escapeAttr(t("baseUnit"))}" />
+          <input class="js-config-unit" data-code="${escapeAttr(rowKey)}" data-field="factor" type="number" min="0.000001" step="0.000001" value="${escapeAttr(unit.factor)}" placeholder="${escapeAttr(t("unitFactor"))}" />
+          <button type="button" class="small-btn btn-danger btn-config-delete-unit" data-code="${escapeAttr(rowKey)}">${t("delete")}</button>
+        </div>`;
+      }).join("");
       const header = `
         <div class="unit-config-grid unit-config-head">
           <span>${t("unitCode")}</span>
@@ -3322,14 +3486,13 @@
     }
 
     function addUnitFromConfig() {
-      const codeBase = uniqueName("unit", appUnits(), unit => unit.code).replace(/\s+/g, "_").toLowerCase();
-      const unit = { code: codeBase, base: codeBase, factor: 1, label: { zh: t("newUnitDefault"), en: "New Unit" } };
-      state.units.push(unit);
-      saveState();
-      renderAll();
-      renderConfig();
+      if (!Array.isArray(unitConfigDraft)) unitConfigDraft = makeUnitDraft();
+      const codeBase = uniqueName("unit", unitConfigDraft, unit => unit.code).replace(/\s+/g, "_").toLowerCase();
+      const unit = { code: codeBase, _originalCode: codeBase, base: codeBase, factor: 1, label: { zh: t("newUnitDefault"), en: "New Unit" } };
+      unitConfigDraft.push(unit);
+      renderUnitConfig();
       setTimeout(() => {
-        const input = $(`.js-config-unit[data-code="${unit.code}"][data-field="code"]`).get(0);
+        const input = $(`.js-config-unit[data-code="${unit._originalCode}"][data-field="code"]`).get(0);
         if (input) {
           input.focus();
           input.select();
@@ -3411,6 +3574,8 @@
     });
 
     $("#btnCloseConfig").on("click", closeConfig);
+    $("#btnCancelUnitConfig").on("click", closeConfig);
+    $("#btnSaveUnitConfig").on("click", saveUnitConfig);
 
     $("#configOverlay").on("click", function (e) {
       if (e.target === this) closeConfig();
@@ -3466,17 +3631,18 @@
     });
 
     $(document).on("input change", ".js-config-unit", function () {
-      const originalCode = String($(this).data("code") || "");
+      if (!Array.isArray(unitConfigDraft)) unitConfigDraft = makeUnitDraft();
+      const rowKey = String($(this).data("code") || "");
       const field = $(this).data("field");
-      const unit = state.units.find(u => u.code === originalCode);
+      const unit = unitConfigDraft.find(u => String(u._originalCode || u.code) === rowKey);
       if (!unit) return;
       if (field === "code") {
+        const oldCode = unit.code;
         const newCode = String($(this).val() || "").trim().replace(/\s+/g, "_");
         if (!newCode) return;
-        if (newCode !== originalCode && state.units.some(u => u.code === newCode)) return;
-        state.groups.forEach(group => group.items.forEach(item => { if (item.unit === originalCode) item.unit = newCode; }));
+        if (newCode !== oldCode && unitConfigDraft.some(u => u !== unit && u.code === newCode)) return;
         unit.code = newCode;
-        if (unit.base === originalCode) unit.base = newCode;
+        if (!unit.base || unit.base === oldCode || unit.base === rowKey) unit.base = newCode;
       } else if (field === "zh") {
         unit.label = unit.label || {};
         unit.label.zh = String($(this).val() || "").trim() || unit.code;
@@ -3488,19 +3654,19 @@
       } else if (field === "factor") {
         unit.factor = Math.max(0.000001, numberOrZero($(this).val()) || 1);
       }
-      saveState();
-      renderAll();
     });
 
     $(document).on("click", ".btn-config-delete-unit", function () {
-      const code = String($(this).data("code") || "");
-      if (state.units.length <= 1) return alert(t("cannotDeleteLastUnit"));
-      const used = state.groups.some(group => group.items.some(item => item.unit === code));
+      if (!Array.isArray(unitConfigDraft)) unitConfigDraft = makeUnitDraft();
+      const rowKey = String($(this).data("code") || "");
+      if (unitConfigDraft.length <= 1) return alert(t("cannotDeleteLastUnit"));
+      const unit = unitConfigDraft.find(u => String(u._originalCode || u.code) === rowKey);
+      if (!unit) return;
+      const used = state.groups.some(group => group.items.some(item => item.unit === unit._originalCode || item.unit === unit.code));
       if (used) return alert(t("unitInUse"));
       if (!confirm(t("confirmDeleteUnit"))) return;
-      state.units = state.units.filter(unit => unit.code !== code);
-      saveState();
-      renderAll();
+      unitConfigDraft = unitConfigDraft.filter(u => String(u._originalCode || u.code) !== rowKey);
+      renderUnitConfig();
     });
 
     $(document).on("input", ".js-config-store-name", function () {
@@ -3620,7 +3786,7 @@
     });
 
     $("#btnFloatingSync").on("click", async function () {
-      await saveToCloud(true);
+      await reloadDataJson(true);
     });
 
     $("#btnLang").on("click", function () {

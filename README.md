@@ -1,51 +1,56 @@
-# 商品比价器 Price Compare v1.0.32
+# 商品比价器 Price Compare v1.0.33
 
-本版本从 **v1.0.28** 继续迭代，重点修复 Cloudflare Worker 地址和访问密码偶发变空的问题。
+本版本基于 **v1.0.32** 继续迭代，重点优化单位配置弹窗和右侧云端悬浮同步按钮的逻辑。
 
-## v1.0.32 更新内容
+## v1.0.33 更新内容
 
-1. 修复 Cloudflare 地址 / 密码偶发变空
-   - 本机缓存中的空 `workerUrl` / `appPassword` 不会再覆盖 `data.json` 里的真实配置。
-   - 合并远程数据时只用非空同步配置覆盖，避免新设备或 iOS 主屏幕环境把云端配置清空。
+1. 单位配置弹窗改为一页紧凑显示
+   - PC 端单位配置页面继续使用紧凑表格布局。
+   - 弹窗内部取消单位配置区域滚动条，默认单位数量下一页内直接显示完整内容。
+   - 压缩单位配置行高、输入框高度、列间距，让一屏可以看到更多内容。
 
-2. 云端部署环境优先读取 `data.json`
-   - GitHub Pages / Cloudflare Pages 等线上环境打开页面时，会每次先请求同目录 `data.json`。
-   - 新设备不依赖旧缓存，直接以线上 `data.json` 作为启动数据来源。
-   - 读取到 `data.json` 后，再继续使用其中的 Cloudflare Worker 地址和密码进行云端加载。
+2. 单位配置底部新增「关闭 / 保存」按钮
+   - 单位配置页面最下方新增固定操作区。
+   - 点击「关闭」会放弃本次未保存的单位配置修改。
+   - 点击「保存」后，才会把当前页面中的单位配置一次性写入正式数据。
 
-3. 本地 debug 逻辑保留
-   - `file://`、`localhost`、`127.0.0.1` 本地环境仍然优先使用本机保存的同步配置。
-   - 本地第一次使用需要在「更多 → 云端同步配置」中配置一次 Worker 地址和密码。
-   - 配置后会缓存到当前浏览器，后续本地 debug 可以继续同步云端 `data.json`。
+3. 单位配置改为草稿编辑
+   - 新增、修改、删除单位时，先只修改当前弹窗里的临时草稿。
+   - 不会边输入边立即写入 `state.units`。
+   - 点击「保存」后才会写入正式数据，并同步更新 `data.json` 保存链路。
 
-4. 云端同步配置保存保护
-   - 保存云端同步配置时，Worker 地址和访问密码都不能为空。
-   - 防止误点保存空配置，把当前设备或云端的同步配置清空。
+4. 右侧悬浮云端按钮逻辑调整
+   - `id=btnFloatingSync` 现在改为重新加载云端数据。
+   - 点击右侧 `☁️` 后，会立即重新拉取 `data.json` 数据并加载到当前设备。
+   - 不再执行“保存当前设备数据到云端”，避免误把本地旧数据覆盖到 GitHub 的 `data.json`。
 
-## 当前同步逻辑
+5. 保留 v1.0.32 的同步修复
+   - 云端部署环境每次优先读取同目录 `data.json`。
+   - 本机缓存中的空 Cloudflare 地址 / 密码不会覆盖 `data.json` 里的真实配置。
+   - 本地 debug 环境仍然支持配置一次后缓存到当前浏览器。
 
-### 线上部署
+## 当前右侧云端按钮逻辑
 
 ```text
-打开页面 / 刷新页面
+点击右侧 ☁️
 ↓
-直接请求 ./data.json，不依赖本机旧缓存
+线上部署环境优先请求 ./data.json
 ↓
-读取 data.json 里的 Cloudflare Worker 地址和访问密码
+读取并合并 data.json 数据
 ↓
-通过 Worker 继续加载 GitHub 上的 data.json
+如果已配置 Cloudflare Worker，再通过 Worker 继续加载 GitHub data.json
+↓
+刷新当前页面数据
 ```
 
-### 本地 debug
+本地 debug 环境：
 
 ```text
-打开本地 index.html / localhost
+点击右侧 ☁️
 ↓
-优先读取本机 localStorage 中保存的 Worker 地址和密码
+如果本机已配置 Worker 地址和密码，直接通过 Worker 加载云端 data.json
 ↓
-如果已配置，直接通过 Worker 加载云端 data.json
-↓
-如果未配置，需要手动配置一次
+如果未配置，提示先配置云端同步
 ```
 
 ## GitHub 更新文件
@@ -58,14 +63,19 @@
 通常保留你线上已有的：
 
 - `data.json`
+
+不要用压缩包里的示例 `data.json` 覆盖线上真实数据，除非你确认要重置数据。
+
+## Cloudflare Worker 更新
+
+不需要更新。
+
+继续使用原来的：
+
 - `worker.js`
-- `manifest.webmanifest`
-- `icons/`
-
-## Cloudflare 更新
-
-本版本不需要更新 Cloudflare Worker。
-
-## 注意
-
-不建议直接覆盖线上真实 `data.json`，除非你明确要重置线上数据。
+- `APP_PASSWORD`
+- `DATA_PATH`
+- `GH_BRANCH`
+- `GH_OWNER`
+- `GH_REPO`
+- `GH_TOKEN`
