@@ -1,5 +1,5 @@
 {
-  "version": "v1.0.22",
+  "version": "v1.0.27",
   "lang": "zh",
   "settings": {
     "lang": "zh",
@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T11:26:42.264Z",
-    "lastSavedAt": "2026-05-13T11:27:25.053Z"
+    "lastLoadedAt": "2026-05-13T12:17:44.295Z",
+    "lastSavedAt": "2026-05-13T12:17:45.784Z"
   },
   "units": [
     {
