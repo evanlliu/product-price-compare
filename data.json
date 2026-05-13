@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T11:01:32.288Z",
-    "lastSavedAt": "2026-05-13T11:03:41.222Z"
+    "lastLoadedAt": "2026-05-13T11:23:37.953Z",
+    "lastSavedAt": "2026-05-13T11:24:00.912Z"
   },
   "units": [
     {
@@ -191,19 +191,33 @@
           "status": "purchased",
           "unit": "sheet",
           "createdAt": 1778666801934
+        },
+        {
+          "id": "item_1778671440011_e5cdb9b72cb92",
+          "productNameId": "productName_1778670092288_9292fbb9d15c5",
+          "storeId": "store_a",
+          "price": 0,
+          "cashback": 0,
+          "quantity": 1,
+          "size": 0,
+          "sizeCode": "",
+          "priceDate": "2026-05-13",
+          "status": "current",
+          "unit": "g",
+          "createdAt": 1778671440011
         }
       ]
     },
     {
       "id": "group_1778670149375_13bf168a8eb7c8",
       "name": "奶粉",
-      "items": [],
       "productNames": [
         {
           "id": "productName_1778670149375_253002c7faaf28",
           "name": "新商品"
         }
-      ]
+      ],
+      "items": []
     }
   ],
   "activeGroupId": "group_1778246168663_d24215f198b6e",
