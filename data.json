@@ -1,16 +1,16 @@
 {
-  "version": "v1.0.18",
+  "version": "v1.0.20",
   "lang": "zh",
   "settings": {
     "lang": "zh",
     "language": "zh",
-    "activeGroupId": "group_1778246168663_d24215f198b6e"
+    "activeGroupId": "group_1778670475695_0d7f2bc3a5d218"
   },
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T11:01:32.288Z",
-    "lastSavedAt": "2026-05-13T11:03:41.222Z"
+    "lastLoadedAt": "",
+    "lastSavedAt": "2026-05-13T11:08:58.060Z"
   },
   "units": [
     {
@@ -81,7 +81,7 @@
       "base": "sheet",
       "factor": 1,
       "label": {
-        "zh": "片",
+        "zh": "片 / 抽",
         "en": "sheet"
       }
     },
@@ -97,37 +97,22 @@
   ],
   "stores": [
     {
-      "id": "store_a",
-      "name": "抖音/DY"
+      "id": "store_1778670475695_618bd6424af0f",
+      "name": "店铺A"
     },
     {
-      "id": "store_b",
-      "name": "淘宝/TB"
-    },
-    {
-      "id": "store_1778246138226_757f331a4c69f",
-      "name": "拼多多/PDD"
-    },
-    {
-      "id": "store_1778246141400_3f8d9088d1eef",
-      "name": "京东/JD"
+      "id": "store_1778670475695_d4d89300787d3",
+      "name": "店铺B"
     }
   ],
   "groups": [
     {
-      "id": "group_face_wash",
+      "id": "group_1778670475695_0d7f2bc3a5d218",
       "name": "洗面奶",
-      "productNames": [
-        {
-          "id": "productName_1778670092288_40a6322d0e94d",
-          "name": "娇润泉"
-        }
-      ],
       "items": [
         {
-          "id": "item_001",
-          "productNameId": "productName_1778670092288_40a6322d0e94d",
-          "storeId": "store_a",
+          "id": "item_1778670475695_4ebaa7ba62bf3",
+          "storeId": "store_1778670475695_618bd6424af0f",
           "price": 88,
           "cashback": 22.45,
           "quantity": 1,
@@ -136,12 +121,11 @@
           "priceDate": "2026-05-13",
           "status": "current",
           "unit": "g",
-          "createdAt": 1715150000000
+          "createdAt": 1778670476864
         },
         {
-          "id": "item_002",
-          "productNameId": "productName_1778670092288_40a6322d0e94d",
-          "storeId": "store_a",
+          "id": "item_1778670475695_ea48f6e0cd40c8",
+          "storeId": "store_1778670475695_d4d89300787d3",
           "price": 82,
           "cashback": 1.47,
           "quantity": 1,
@@ -150,80 +134,21 @@
           "priceDate": "2026-05-13",
           "status": "current",
           "unit": "g",
-          "createdAt": 1715150001000
-        }
-      ]
-    },
-    {
-      "id": "group_1778246168663_d24215f198b6e",
-      "name": "尿不湿",
-      "productNames": [
-        {
-          "id": "productName_1778670092288_9292fbb9d15c5",
-          "name": "帮舒宝"
-        }
-      ],
-      "items": [
-        {
-          "id": "item_1778253591752_312aff5e69c1b8",
-          "productNameId": "productName_1778670092288_9292fbb9d15c5",
-          "storeId": "store_1778246138226_757f331a4c69f",
-          "price": 91.9,
-          "cashback": 0,
-          "quantity": 1,
-          "size": 84,
-          "sizeCode": "L",
-          "priceDate": "2026-01-20",
-          "status": "purchased",
-          "unit": "sheet",
-          "createdAt": 1778253591752
-        },
-        {
-          "id": "item_1778666801934_94ec269b20a248",
-          "productNameId": "productName_1778670092288_9292fbb9d15c5",
-          "storeId": "store_1778246138226_757f331a4c69f",
-          "price": 109,
-          "cashback": 0,
-          "quantity": 1,
-          "size": 82,
-          "sizeCode": "L",
-          "priceDate": "2026-05-13",
-          "status": "purchased",
-          "unit": "sheet",
-          "createdAt": 1778666801934
-        }
-      ]
-    },
-    {
-      "id": "group_1778670149375_13bf168a8eb7c8",
-      "name": "奶粉",
-      "items": [],
-      "productNames": [
-        {
-          "id": "productName_1778670149375_253002c7faaf28",
-          "name": "新商品"
+          "createdAt": 1778670476864
         }
       ]
     }
   ],
-  "activeGroupId": "group_1778246168663_d24215f198b6e",
+  "activeGroupId": "group_1778670475695_0d7f2bc3a5d218",
   "configs": {
     "stores": [
       {
-        "id": "store_a",
-        "name": "抖音/DY"
+        "id": "store_1778670475695_618bd6424af0f",
+        "name": "店铺A"
       },
       {
-        "id": "store_b",
-        "name": "淘宝/TB"
-      },
-      {
-        "id": "store_1778246138226_757f331a4c69f",
-        "name": "拼多多/PDD"
-      },
-      {
-        "id": "store_1778246141400_3f8d9088d1eef",
-        "name": "京东/JD"
+        "id": "store_1778670475695_d4d89300787d3",
+        "name": "店铺B"
       }
     ],
     "units": [
@@ -295,7 +220,7 @@
         "base": "sheet",
         "factor": 1,
         "label": {
-          "zh": "片",
+          "zh": "片 / 抽",
           "en": "sheet"
         }
       },
