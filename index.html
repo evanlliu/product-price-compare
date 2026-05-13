@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>商品比价器 Price Compare v1.0.36</title>
+  <title>商品比价器 Price Compare v1.0.37</title>
   <meta name="theme-color" content="#2563eb" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -56,6 +56,94 @@
       -webkit-tap-highlight-color: transparent;
       overscroll-behavior-y: none;
     }
+
+
+    body.app-booting {
+      overflow: hidden;
+    }
+
+    body.app-booting .app,
+    body.app-booting .config-overlay {
+      visibility: hidden;
+    }
+
+    .boot-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.16), transparent 34%),
+        radial-gradient(circle at top right, rgba(22, 163, 74, 0.14), transparent 30%),
+        var(--bg);
+    }
+
+    .boot-card {
+      width: min(420px, 100%);
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      padding: 24px;
+      text-align: center;
+    }
+
+    .boot-logo {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 14px;
+      border-radius: 17px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--primary), #22c55e);
+    }
+
+    .boot-title {
+      font-weight: 900;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .boot-hint {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .boot-dots {
+      display: inline-flex;
+      gap: 5px;
+      margin-top: 14px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .boot-dots span {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--primary);
+      animation: bootPulse 1s infinite ease-in-out;
+    }
+
+    .boot-dots span:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    .boot-dots span:nth-child(3) {
+      animation-delay: 0.30s;
+    }
+
+    @keyframes bootPulse {
+      0%, 80%, 100% { opacity: 0.32; transform: translateY(0); }
+      40% { opacity: 1; transform: translateY(-4px); }
+    }
+
 
     html.ios-standalone .app {
       padding-top: max(18px, env(safe-area-inset-top));
@@ -1410,13 +1498,22 @@
     }
   </style>
 </head>
-<body>
+<body class="app-booting">
+  <div class="boot-screen" id="bootScreen" role="status" aria-live="polite">
+    <div class="boot-card">
+      <div class="boot-logo">¥</div>
+      <div class="boot-title">正在加载 data.json...</div>
+      <div class="boot-hint">正在优先读取云端最新数据，加载完成后再显示页面，避免先看到本机缓存旧数据。</div>
+      <div class="boot-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+
   <main class="app">
     <header class="topbar">
       <div class="brand">
         <div class="logo">¥</div>
         <div>
-          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.36</span></h1>
+          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.37</span></h1>
         </div>
       </div>
       <div class="top-actions">
@@ -1588,7 +1685,7 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.36";
+    const APP_VERSION = "v1.0.37";
     const STORAGE_KEY = "productPriceCompare.v1";
     const LOCAL_SYNC_KEY = "productPriceCompare.localSync.v1";
 
@@ -3809,8 +3906,19 @@
     });
 
 
-    renderAll();
-    bootstrapCloudData();
+    async function initApp() {
+      $("#bootScreen").show();
+      document.body.classList.add("app-booting");
+      try {
+        await bootstrapCloudData();
+      } finally {
+        renderAll();
+        document.body.classList.remove("app-booting");
+        $("#bootScreen").fadeOut(120);
+      }
+    }
+
+    initApp();
   </script>
 </body>
 </html>
