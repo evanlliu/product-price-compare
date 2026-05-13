@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>商品比价器 Price Compare v1.0.18</title>
+  <title>商品比价器 Price Compare v1.0.22</title>
   <meta name="theme-color" content="#2563eb" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -506,9 +506,9 @@
 
     .col-result { width: 84px; }
     .col-date { width: 106px; }
-    .col-status { width: 86px; }
-    .col-product-name { width: 118px; }
-    .col-store { width: 118px; }
+    .col-status { width: 88px; }
+    .col-product-name { width: 128px; }
+    .col-store { width: 124px; }
     .col-money { width: 78px; }
     .col-final { width: 78px; }
     .col-qty { width: 70px; }
@@ -518,7 +518,7 @@
     .col-total { width: 84px; }
     .col-unit-price { width: 112px; }
     .col-history { width: 126px; }
-    .col-actions { width: 142px; }
+    .col-actions { width: 150px; }
 
     tbody tr.purchased-row {
       background: rgba(248, 250, 252, 0.62);
@@ -934,30 +934,30 @@
       grid-template-columns: 1fr auto;
     }
 
-    .config-inline-actions {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .config-inline-actions select {
-      min-width: 180px;
-    }
-
-    .unit-config-head,
     .config-row.unit-row {
-      display: grid;
-      grid-template-columns: 0.9fr 1fr 1fr 0.9fr 0.8fr auto;
-      gap: 8px;
-      align-items: center;
+      grid-template-columns: minmax(70px, 0.7fr) minmax(80px, 1fr) minmax(80px, 1fr) minmax(70px, 0.7fr) minmax(80px, 0.8fr) auto;
+      align-items: end;
     }
 
-    .unit-config-head {
-      padding: 0 8px 6px;
-      font-size: 12px;
+    .unit-config-field label {
+      display: block;
+      font-size: 11px;
       color: var(--muted);
+      margin: 0 0 4px 2px;
       font-weight: 800;
+    }
+
+    .unit-config-field input {
+      width: 100%;
+    }
+
+    @media (max-width: 720px) {
+      .config-row.unit-row {
+        grid-template-columns: 1fr 1fr;
+      }
+      .config-row.unit-row .btn-danger {
+        grid-column: 1 / -1;
+      }
     }
 
     .config-panel {
@@ -1053,20 +1053,6 @@
 
       .mobile-list {
         display: grid;
-      }
-    }
-
-    @media (max-width: 680px) {
-      .unit-config-head {
-        display: none;
-      }
-
-      .config-row.unit-row {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .config-row.unit-row .btn-config-delete-unit {
-        grid-column: 1 / -1;
       }
     }
 
@@ -1192,7 +1178,7 @@
       <div class="brand">
         <div class="logo">¥</div>
         <div>
-          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.18</span></h1>
+          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.22</span></h1>
         </div>
       </div>
       <div class="top-actions">
@@ -1200,7 +1186,7 @@
           <button type="button" id="btnMore" class="btn-ghost" data-i18n="more">更多</button>
           <div class="more-menu" id="moreMenu">
             <button type="button" id="btnOpenProductConfig" data-i18n="productGroupConfig">商品分组配置</button>
-            <button type="button" id="btnOpenProductNameConfig" data-i18n="productNameConfig">商品名称维护</button>
+            <button type="button" id="btnOpenProductNameConfig" data-i18n="productNameConfig">商品名称配置</button>
             <button type="button" id="btnOpenStoreConfig" data-i18n="storeConfig">商家 / 渠道配置</button>
             <button type="button" id="btnOpenUnitConfig" data-i18n="unitConfig">单位配置</button>
             <button type="button" id="btnOpenSyncConfig" data-i18n="cloudSyncConfig">云端同步配置</button>
@@ -1281,12 +1267,10 @@
 
         <div class="config-panel" id="productNameConfigPanel">
           <div class="config-toolbar">
-            <div class="hint-line" data-i18n="productNameConfigHint">在这里维护当前商品分组下的商品名称，价格记录中从下拉列表选择。</div>
-            <div class="config-inline-actions">
-              <select id="productNameConfigGroupSelect"></select>
-              <button type="button" id="btnConfigAddProductName" class="btn-primary" data-i18n="addProductName">新增商品名称</button>
-            </div>
+            <div class="hint-line" data-i18n="productNameConfigHint">维护当前商品分组下的商品名称，价格记录中从下拉列表选择。</div>
+            <button type="button" id="btnConfigAddProductName" class="btn-primary" data-i18n="addProductName">新增商品名称</button>
           </div>
+          <div class="hint-line" id="productNameConfigGroupHint"></div>
           <div class="config-list" id="productNameConfigList"></div>
         </div>
 
@@ -1300,18 +1284,10 @@
 
         <div class="config-panel" id="unitConfigPanel">
           <div class="config-toolbar">
-            <div class="hint-line" data-i18n="unitConfigHint">在这里维护单位下拉项。基础单位和换算系数会影响 kg/g、L/ml 这类换算比价。</div>
+            <div class="hint-line" data-i18n="unitConfigHint">维护单位下拉列表。基础单位相同的单位才会互相比较，例如 kg 和 g。</div>
             <button type="button" id="btnConfigAddUnit" class="btn-primary" data-i18n="addUnit">新增单位</button>
           </div>
-          <div class="unit-config-head">
-            <span data-i18n="unitCode">编码</span>
-            <span data-i18n="unitZh">中文</span>
-            <span data-i18n="unitEn">英文</span>
-            <span data-i18n="baseUnit">基础单位</span>
-            <span data-i18n="unitFactor">换算系数</span>
-            <span data-i18n="actions">操作</span>
-          </div>
-          <div class="config-list" id="unitConfigList"></div>
+          <div class="config-list unit-config-list" id="unitConfigList"></div>
         </div>
 
         <div class="config-panel" id="syncConfigPanel">
@@ -1350,8 +1326,9 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.18";
+    const APP_VERSION = "v1.0.22";
     const STORAGE_KEY = "productPriceCompare.v1";
+    const LOCAL_SYNC_KEY = "productPriceCompare.localSync.v1";
 
     const i18n = {
       zh: {
@@ -1359,10 +1336,10 @@
         more: "更多",
         close: "关闭",
         productGroupConfig: "商品分组配置",
-        productNameConfig: "商品名称维护",
         storeConfig: "商家 / 渠道配置",
-        unitConfig: "单位配置",
         cloudSyncConfig: "云端同步配置",
+        productNameConfig: "商品名称配置",
+        unitConfig: "单位配置",
         workerUrl: "Cloudflare Worker 地址",
         accessPassword: "访问密码",
         saveSyncConfig: "保存配置并同步",
@@ -1370,7 +1347,7 @@
         saveCloudNow: "立即保存云端",
         cloudSyncNow: "云端同步",
         switchLanguage: "切换语言",
-        syncConfigHint: "Worker 地址和访问密码会保存到 data.json，方便其他设备打开页面后自动读取并同步。每次打开或刷新页面都会重新加载 data.json。",
+        syncConfigHint: "Worker 地址和访问密码会保存到 data.json，同时也会保存一份到本机浏览器配置，方便本地 debug 时直接同步云端 data.json。每次打开或刷新页面都会重新加载 data.json。",
         syncSecurityNote: "注意：如果 GitHub 仓库或 GitHub Pages 是公开的，data.json 里的 Worker 地址和访问密码也可能被看到。当前版本按你的需求保存，后续可以改成只本机保存密码。",
         syncStatusLocal: "本地模式",
         syncStatusLoading: "正在加载 data.json...",
@@ -1397,19 +1374,18 @@
         current: "当前",
         groupHint: "同一个商品分组内才会进行比价，例如“洗面奶”下面录入不同商家的价格。",
         productConfigHint: "在这里维护商品分组，主页面只负责选择当前商品。",
-        productNameConfigHint: "在这里维护商品名称，商品名称会绑定到所属商品分组，价格记录中从下拉列表选择。",
         storeConfigHint: "在这里维护商家 / 渠道，价格记录中只能从下拉列表选择。",
-        unitConfigHint: "在这里维护单位下拉项。基础单位和换算系数用于 kg/g、L/ml 这类统一比价。",
+        productNameConfigHint: "维护当前商品分组下的商品名称，价格记录中从下拉列表选择。",
+        unitConfigHint: "维护单位下拉列表。基础单位相同的单位才会互相比较，例如 kg 和 g。",
         addItem: "新增价格记录",
         addRow: "新增",
         editItem: "编辑价格记录",
         store: "商家 / 渠道",
+        productName: "商品名称",
         storeName: "商家名称",
         selectStore: "请选择商家",
         storePlaceholder: "例如：淘宝 / 京东 / Migros",
         product: "商品",
-        productName: "商品名称",
-        productNamePlaceholder: "例如：洗面奶 / 牙膏",
         price: "金额",
         cashback: "返现 / 优惠",
         finalCost: "实际金额",
@@ -1472,12 +1448,6 @@
         confirmDeleteStore: "确认删除这个商家 / 渠道吗？",
         cannotDeleteLastGroup: "至少保留一个商品分组。",
         cannotDeleteLastStore: "至少保留一个商家 / 渠道。",
-        cannotDeleteLastProductName: "每个商品分组至少保留一个商品名称。",
-        cannotDeleteLastUnit: "至少保留一个单位。",
-        productNameInUse: "该商品名称已经被价格记录使用，请先修改相关记录后再删除。",
-        unitInUse: "该单位已经被价格记录使用，请先修改相关记录后再删除。",
-        confirmDeleteProductName: "确认删除这个商品名称吗？",
-        confirmDeleteUnit: "确认删除这个单位吗？",
         storeInUse: "该商家 / 渠道已经被价格记录使用，请先修改相关记录后再删除。",
         groupNamePrompt: "请输入商品名称，例如：洗面奶",
         renameGroupPrompt: "请输入新的商品名称",
@@ -1488,8 +1458,14 @@
         unitCode: "编码",
         unitZh: "中文",
         unitEn: "英文",
-        baseUnit: "基础单位",
+        unitBase: "基础单位",
         unitFactor: "换算系数",
+        cannotDeleteLastProductName: "当前商品分组至少保留一个商品名称。",
+        productNameInUse: "该商品名称已经被价格记录使用，请先修改相关记录后再删除。",
+        cannotDeleteLastUnit: "至少保留一个单位。",
+        unitInUse: "该单位已经被价格记录使用，请先修改相关记录后再删除。",
+        unitCodeDuplicate: "单位编码不能重复。",
+        multipleProductNames: "当前存在多个商品名称，系统已按商品名称分别比较，请看表格中的最便宜结果。",
         importSuccess: "导入成功",
         importFail: "导入失败，请检查 JSON 文件格式。",
         resetSample: "示例数据",
@@ -1510,10 +1486,10 @@
         more: "More",
         close: "Close",
         productGroupConfig: "Product Group Settings",
-        productNameConfig: "Product Name Settings",
         storeConfig: "Store / Platform Settings",
-        unitConfig: "Unit Settings",
         cloudSyncConfig: "Cloud Sync Settings",
+        productNameConfig: "Product Name Settings",
+        unitConfig: "Unit Settings",
         workerUrl: "Cloudflare Worker URL",
         accessPassword: "Access Password",
         saveSyncConfig: "Save Settings & Sync",
@@ -1521,7 +1497,7 @@
         saveCloudNow: "Save to Cloud Now",
         cloudSyncNow: "Cloud Sync",
         switchLanguage: "Switch Language",
-        syncConfigHint: "The Worker URL and access password will be saved to data.json, so other devices can read them and sync automatically. The app reloads data.json every time it opens or refreshes.",
+        syncConfigHint: "The Worker URL and access password will be saved to data.json and also to this browser for local debugging, so the app can sync cloud data.json when opened locally. The app reloads data.json every time it opens or refreshes.",
         syncSecurityNote: "Note: if your GitHub repo or GitHub Pages is public, the Worker URL and access password in data.json may be visible. This version saves them as requested; later we can keep the password local only.",
         syncStatusLocal: "Local mode",
         syncStatusLoading: "Loading data.json...",
@@ -1548,19 +1524,18 @@
         current: "Current",
         groupHint: "Items are compared only inside the same product group, such as different stores for Face Wash.",
         productConfigHint: "Manage product groups here. The main page only selects the current product.",
-        productNameConfigHint: "Manage product names here. Product names are bound to product groups and selected from dropdowns in price records.",
         storeConfigHint: "Manage stores / platforms here. Price records can only choose from the dropdown list.",
-        unitConfigHint: "Manage unit dropdowns here. Base unit and factor are used for conversions such as kg/g and L/ml.",
+        productNameConfigHint: "Manage product names under the current product group. Price records choose from this dropdown list.",
+        unitConfigHint: "Manage unit dropdown options. Units with the same base unit can be compared, such as kg and g.",
         addItem: "Add Price Record",
         addRow: "Add",
         editItem: "Edit Price Record",
         store: "Store / Platform",
+        productName: "Product Name",
         storeName: "Store Name",
         selectStore: "Select Store",
         storePlaceholder: "e.g. Amazon / Walmart / Migros",
         product: "Product",
-        productName: "Product Name",
-        productNamePlaceholder: "e.g. Face Wash / Toothpaste",
         price: "Price",
         cashback: "Cashback / Discount",
         finalCost: "Final Cost",
@@ -1623,12 +1598,6 @@
         confirmDeleteStore: "Delete this store / platform?",
         cannotDeleteLastGroup: "Keep at least one product group.",
         cannotDeleteLastStore: "Keep at least one store / platform.",
-        cannotDeleteLastProductName: "Keep at least one product name in each product group.",
-        cannotDeleteLastUnit: "Keep at least one unit.",
-        productNameInUse: "This product name is used by price records. Please change those records before deleting it.",
-        unitInUse: "This unit is used by price records. Please change those records before deleting it.",
-        confirmDeleteProductName: "Delete this product name?",
-        confirmDeleteUnit: "Delete this unit?",
         storeInUse: "This store / platform is used by price records. Please change those records before deleting it.",
         groupNamePrompt: "Enter product name, e.g. Face Wash",
         renameGroupPrompt: "Enter the new product name",
@@ -1639,8 +1608,14 @@
         unitCode: "Code",
         unitZh: "Chinese",
         unitEn: "English",
-        baseUnit: "Base Unit",
+        unitBase: "Base Unit",
         unitFactor: "Factor",
+        cannotDeleteLastProductName: "Keep at least one product name in the current product group.",
+        productNameInUse: "This product name is used by price records. Please change those records before deleting it.",
+        cannotDeleteLastUnit: "Keep at least one unit.",
+        unitInUse: "This unit is used by price records. Please change those records before deleting it.",
+        unitCodeDuplicate: "Unit codes cannot be duplicated.",
+        multipleProductNames: "Multiple product names exist. The app compares each product name separately; check Best Deal in the table.",
         importSuccess: "Imported successfully",
         importFail: "Import failed. Please check the JSON file format.",
         resetSample: "Sample Data",
@@ -1703,11 +1678,11 @@
     }
 
     let state = loadState();
+    applyLocalSyncConfig();
     let pendingFocusItemId = null;
     let cloudSaveTimer = null;
     let isApplyingRemote = false;
     let syncStatus = { type: "local", textKey: "syncStatusLocal", params: {} };
-    let productNameConfigGroupId = state.activeGroupId;
 
     function normalizeSync(sync) {
       const s = sync && typeof sync === "object" ? sync : {};
@@ -1717,6 +1692,31 @@
         lastLoadedAt: String(s.lastLoadedAt || ""),
         lastSavedAt: String(s.lastSavedAt || "")
       };
+    }
+
+    function readLocalSyncConfig() {
+      try {
+        return normalizeSync(JSON.parse(localStorage.getItem(LOCAL_SYNC_KEY) || "{}"));
+      } catch (error) {
+        return normalizeSync({});
+      }
+    }
+
+    function saveLocalSyncConfig(sync) {
+      const normalized = normalizeSync(sync);
+      if (normalized.workerUrl || normalized.appPassword) {
+        localStorage.setItem(LOCAL_SYNC_KEY, JSON.stringify(normalized));
+      }
+    }
+
+    function applyLocalSyncConfig() {
+      const localSync = readLocalSyncConfig();
+      state.sync = normalizeSync({ ...state.sync, ...localSync });
+    }
+
+    function isLocalDebugRuntime() {
+      const host = window.location.hostname || "";
+      return window.location.protocol === "file:" || host === "localhost" || host === "127.0.0.1" || host === "0.0.0.0";
     }
 
     function cloudConfigured() {
@@ -1774,9 +1774,9 @@
 
     function defaultState() {
       const groupId = uid("group");
+      const productNameId = uid("pname");
       const storeAId = uid("store");
       const storeBId = uid("store");
-      const productNameId = uid("productName");
       return {
         version: APP_VERSION,
         lang: "zh",
@@ -1866,7 +1866,6 @@
         const groupId = group.id || uid("group");
         const groupName = group.name || "Product";
         const productNames = [];
-
         function addProductName(name, id) {
           const cleanName = String(name || "").trim();
           if (!cleanName) return "";
@@ -1877,17 +1876,24 @@
           }
           const existingByName = productNames.find(product => product.name === cleanName);
           if (existingByName) return existingByName.id;
-          const productId = id || uid("productName");
-          productNames.push({ id: productId, name: cleanName });
-          return productId;
+          const productNameId = id || uid("pname");
+          productNames.push({ id: productNameId, name: cleanName });
+          return productNameId;
         }
 
-        const productNameSource = Array.isArray(group.productNames) ? group.productNames : (Array.isArray(group.products) ? group.products : []);
+        const productNameSource = Array.isArray(group.productNames)
+          ? group.productNames
+          : Array.isArray(group.products)
+            ? group.products
+            : [];
         productNameSource.forEach(product => {
-          if (typeof product === "string") addProductName(product);
-          else addProductName(product && product.name, product && product.id);
+          if (typeof product === "string") {
+            addProductName(product);
+          } else {
+            addProductName(product && product.name, product && product.id);
+          }
         });
-        if (!productNames.length) addProductName(groupName, uid("productName"));
+        if (!productNames.length) addProductName(groupName);
 
         const defaultProductNameId = productNames[0] ? productNames[0].id : "";
         const items = (group.items || []).map(item => {
@@ -1911,13 +1917,7 @@
             createdAt: item.createdAt || Date.now()
           };
         });
-
-        return {
-          id: groupId,
-          name: groupName,
-          productNames,
-          items
-        };
+        return { id: groupId, name: groupName, productNames, items };
       });
 
       const normalizedLang = (settingsInput.lang || settingsInput.language || input.lang) === "en" ? "en" : "zh";
@@ -1951,14 +1951,9 @@
 
       const defaultStoreId = normalized.stores[0] ? normalized.stores[0].id : "";
       normalized.groups.forEach(group => {
-        group.productNames = Array.isArray(group.productNames) && group.productNames.length ? group.productNames : [{ id: uid("productName"), name: group.name || (normalized.lang === "en" ? "New Product Name" : "新商品名称") }];
-        const defaultProductNameId = group.productNames[0] ? group.productNames[0].id : "";
         group.items.forEach(item => {
           if (!normalized.stores.some(store => store.id === item.storeId)) {
             item.storeId = defaultStoreId;
-          }
-          if (!group.productNames.some(product => product.id === item.productNameId)) {
-            item.productNameId = defaultProductNameId;
           }
         });
       });
@@ -1988,16 +1983,11 @@
         activeGroupId: target.activeGroupId
       };
       target.groups = Array.isArray(target.groups) ? target.groups.map(group => {
-        const productNames = Array.isArray(group.productNames) && group.productNames.length
-          ? group.productNames.map(product => ({
-              id: product.id || uid("productName"),
-              name: String(product.name || "").trim() || String(group.name || target.lang === "en" ? "Product" : "商品")
-            }))
-          : [{ id: uid("productName"), name: String(group.name || (target.lang === "en" ? "Product" : "商品")) }];
+        const productNames = ensureGroupProductNames(group);
         const defaultProductNameId = productNames[0] ? productNames[0].id : "";
         return {
           ...group,
-          productNames,
+          productNames: productNames.map(product => ({ ...product })),
           items: Array.isArray(group.items) ? group.items.map(item => ({
             ...item,
             productNameId: productNames.some(product => product.id === item.productNameId) ? item.productNameId : defaultProductNameId,
@@ -2072,32 +2062,36 @@
       return store ? store.name : "";
     }
 
-    function ensureGroupProductNames(group) {
-      if (!group) return [];
-      if (!Array.isArray(group.productNames) || !group.productNames.length) {
-        group.productNames = [{ id: uid("productName"), name: group.name || t("newProductNameDefault") }];
-      }
-      return group.productNames;
-    }
-
-    function productName(group, productNameId) {
-      const list = ensureGroupProductNames(group);
-      const product = list.find(p => p.id === productNameId) || list[0];
-      return product ? product.name : "";
-    }
-
-    function productNameOptionsHtml(group, selectedProductNameId) {
-      const list = ensureGroupProductNames(group);
-      return list.map((product, index) => {
-        const selected = product.id === selectedProductNameId || (!selectedProductNameId && index === 0) ? " selected" : "";
-        return `<option value="${escapeAttr(product.id)}"${selected}>${escapeHtml(product.name)}</option>`;
-      }).join("");
-    }
-
     function storeOptionsHtml(selectedStoreId) {
       return (state.stores || []).map((store, index) => {
         const selected = store.id === selectedStoreId || (!selectedStoreId && index === 0) ? " selected" : "";
         return `<option value="${escapeAttr(store.id)}"${selected}>${escapeHtml(store.name)}</option>`;
+      }).join("");
+    }
+
+    function ensureGroupProductNames(group) {
+      if (!group) return [];
+      if (!Array.isArray(group.productNames) || !group.productNames.length) {
+        group.productNames = [{ id: uid("pname"), name: group.name || t("newProductNameDefault") }];
+      }
+      group.productNames = group.productNames.map(name => ({
+        id: name.id || uid("pname"),
+        name: String(name.name || group.name || t("newProductNameDefault")).trim() || t("newProductNameDefault")
+      }));
+      return group.productNames;
+    }
+
+    function productNameById(group, productNameId) {
+      const names = ensureGroupProductNames(group);
+      const found = names.find(name => name.id === productNameId);
+      return found ? found.name : (names[0] ? names[0].name : "");
+    }
+
+    function productNameOptionsHtml(group, selectedProductNameId) {
+      const names = ensureGroupProductNames(group);
+      return names.map((name, index) => {
+        const selected = name.id === selectedProductNameId || (!selectedProductNameId && index === 0) ? " selected" : "";
+        return `<option value="${escapeAttr(name.id)}"${selected}>${escapeHtml(name.name)}</option>`;
       }).join("");
     }
 
@@ -2122,15 +2116,11 @@
       };
     }
 
-    function rowCompareKey(row) {
-      return `${row.item.productNameId || ""}__${row.calc.base || ""}`;
-    }
-
     function buildBestByBase(rows) {
       const byBase = {};
       rows.forEach(row => {
         if (!row.calc.valid) return;
-        const key = rowCompareKey(row);
+        const key = row.compareKey || row.calc.base;
         if (!byBase[key]) byBase[key] = [];
         byBase[key].push(row);
       });
@@ -2140,7 +2130,7 @@
         const list = byBase[base];
         const minPrice = Math.min(...list.map(row => row.calc.unitPrice));
         const bestRows = list.filter(row => Math.abs(row.calc.unitPrice - minPrice) < 0.000000001);
-        bestByBase[base] = { minPrice, bestRows, total: list.length, base: list[0] && list[0].calc ? list[0].calc.base : base };
+        bestByBase[base] = { minPrice, bestRows, total: list.length };
       });
 
       return { byBase, bestByBase };
@@ -2152,7 +2142,12 @@
     }
 
     function analysisForGroup(group) {
-      const rows = group.items.map(item => ({ item, calc: calcItem(item) }));
+      const rows = group.items.map(item => {
+        const calc = calcItem(item);
+        const names = ensureGroupProductNames(group);
+        const productNameId = names.some(product => product.id === item.productNameId) ? item.productNameId : (names[0] ? names[0].id : "");
+        return { item, calc, productNameId, compareKey: `${productNameId || "default"}|${calc.base}` };
+      });
       const currentRows = rows.filter(row => isCurrent(row.item));
       const historyRows = rows.filter(row => isPurchased(row.item));
       const currentAnalysis = buildBestByBase(currentRows);
@@ -2212,7 +2207,7 @@
 
     function historyCompareForRow(row, analysis) {
       if (!row.calc.valid) return { type: "muted", text: "-" };
-      const stats = analysis.historyStatsByBase[rowCompareKey(row)];
+      const stats = analysis.historyStatsByBase[row.compareKey || row.calc.base];
       if (isPurchased(row.item)) {
         if (stats && stats.minRow && stats.minRow.item.id === row.item.id && stats.count > 1) {
           return { type: "good", text: t("historyLowest") };
@@ -2239,7 +2234,7 @@
       if (isPurchased(row.item)) {
         return historyCompareForRow(row, analysis);
       }
-      const best = bestByBase[rowCompareKey(row)];
+      const best = bestByBase[row.compareKey || row.calc.base];
       if (!best) {
         return { type: "muted", text: t("notComparable") };
       }
@@ -2315,12 +2310,14 @@
     }
 
     function mergeRemoteState(remoteInput) {
-      const localSync = normalizeSync(state.sync);
+      const browserSync = readLocalSyncConfig();
+      const currentSync = normalizeSync({ ...state.sync, ...browserSync });
       const remote = normalizeState(remoteInput);
-      remote.sync = normalizeSync({ ...localSync, ...remote.sync });
-      if (!remote.sync.workerUrl && localSync.workerUrl) remote.sync.workerUrl = localSync.workerUrl;
-      if (!remote.sync.appPassword && localSync.appPassword) remote.sync.appPassword = localSync.appPassword;
+      remote.sync = normalizeSync({ ...remote.sync, ...currentSync });
+      if (!remote.sync.workerUrl && currentSync.workerUrl) remote.sync.workerUrl = currentSync.workerUrl;
+      if (!remote.sync.appPassword && currentSync.appPassword) remote.sync.appPassword = currentSync.appPassword;
       state = remote;
+      saveLocalSyncConfig(state.sync);
     }
 
     async function fetchDirectDataJson() {
@@ -2371,6 +2368,7 @@
         isApplyingRemote = true;
         mergeRemoteState(remoteData);
         state.sync.lastLoadedAt = new Date().toISOString();
+        saveLocalSyncConfig(state.sync);
         saveState({ localOnly: true });
         isApplyingRemote = false;
         renderAll();
@@ -2398,6 +2396,7 @@
         const payload = JSON.parse(JSON.stringify(state));
         payload.version = APP_VERSION;
         payload.sync = { ...normalizeSync(state.sync), lastSavedAt: savedAt };
+        saveLocalSyncConfig(payload.sync);
         payload.settings = { ...(payload.settings || {}), lang: payload.lang, language: payload.lang, activeGroupId: payload.activeGroupId };
         payload.configs = {
           ...(payload.configs || {}),
@@ -2406,6 +2405,7 @@
         };
         await cloudRequest("PUT", payload);
         state.sync.lastSavedAt = savedAt;
+        saveLocalSyncConfig(state.sync);
         saveState({ localOnly: true });
         renderSyncStatus();
         setSyncStatus("ok", "syncStatusSaved", { time: nowText() });
@@ -2418,12 +2418,20 @@
     }
 
     async function bootstrapCloudData() {
+      applyLocalSyncConfig();
       setSyncStatus("busy", "syncStatusLoading");
+
+      if (isLocalDebugRuntime() && cloudConfigured()) {
+        const loaded = await loadFromCloud(false);
+        if (loaded) return;
+      }
+
       const directData = await fetchDirectDataJson();
       if (directData && directData.groups) {
         isApplyingRemote = true;
         mergeRemoteState(directData);
         state.sync.lastLoadedAt = new Date().toISOString();
+        saveLocalSyncConfig(state.sync);
         saveState({ localOnly: true });
         isApplyingRemote = false;
         renderAll();
@@ -2466,19 +2474,21 @@
       }
 
       if (baseKeys.length === 1) {
-        const key = baseKeys[0];
-        const best = analysis.bestByBase[key];
-        const bestNames = best.bestRows.map(row => `${productName(group, row.item.productNameId) || group.name} · ${storeName(row.item.storeId)}`).filter(Boolean).join(" / ") || "-";
+        const base = baseKeys[0];
+        const best = analysis.bestByBase[base];
+        const bestUnitBase = best.bestRows[0] ? best.bestRows[0].calc.base : base;
+        const bestNames = best.bestRows.map(row => storeName(row.item.storeId)).filter(Boolean).join(" / ") || "-";
         $("#summaryStore").text(bestNames);
-        $("#summaryPrice").text(`${smartNumber(best.minPrice, 6)} / ${baseUnitLabel(best.base)}`);
+        $("#summaryPrice").text(`${smartNumber(best.minPrice, 3)} / ${baseUnitLabel(bestUnitBase)}`);
         $("#summaryNote").text(best.total > 1 ? "" : t("noValidBest"));
         return;
       }
 
-      const firstKey = baseKeys[0];
-      const firstBest = analysis.bestByBase[firstKey];
+      const firstBase = baseKeys[0];
+      const firstBest = analysis.bestByBase[firstBase];
+      const firstUnitBase = firstBest.bestRows[0] ? firstBest.bestRows[0].calc.base : firstBase;
       $("#summaryStore").text(t("multiBest"));
-      $("#summaryPrice").text(`${smartNumber(firstBest.minPrice, 6)} / ${baseUnitLabel(firstBest.base)} ...`);
+      $("#summaryPrice").text(`${smartNumber(firstBest.minPrice, 3)} / ${baseUnitLabel(firstUnitBase)} ...`);
       $("#summaryNote").text(t("mixedUnits"));
     }
 
@@ -2500,12 +2510,11 @@
         return;
       }
 
-      const key = baseKeys[0];
-      const best = analysis.bestByBase[key];
-      const unit = baseUnitLabel(best.base);
-      const group = currentGroup();
-      const bestNames = best.bestRows.map(row => `${productName(group, row.item.productNameId) || group.name} · ${storeName(row.item.storeId)}`).filter(Boolean).join(" / ") || "-";
-      const stats = analysis.historyStatsByBase[key];
+      const base = baseKeys[0];
+      const best = analysis.bestByBase[base];
+      const unit = baseUnitLabel(best.bestRows[0] ? best.bestRows[0].calc.base : base);
+      const bestNames = best.bestRows.map(row => storeName(row.item.storeId)).filter(Boolean).join(" / ") || "-";
+      const stats = analysis.historyStatsByBase[base];
       const advice = purchaseAdvice(best.minPrice, stats);
       const subParts = [];
 
@@ -2522,13 +2531,13 @@
       }
 
       if (baseKeys.length > 1) {
-        subParts.push(t("mixedUnits"));
+        subParts.push(t("multipleProductNames"));
       }
 
       const html = `
         <span class="best-icon">${advice.type === "bad" ? "⚠️" : advice.type === "warn" ? "⏳" : "🏆"}</span>
         <span style="min-width:0;">
-          <div class="best-main">${escapeHtml(t("buyAdviceCurrentBest", { store: bestNames, price: smartNumber(best.minPrice, 6), unit }))}</div>
+          <div class="best-main">${escapeHtml(t("buyAdviceCurrentBest", { store: bestNames, price: smartNumber(best.minPrice, 3), unit }))}</div>
           <div class="best-sub">${escapeHtml([...subParts, advice.text].join(" · "))}</div>
         </span>`;
       $("#bestStrip")
@@ -2543,14 +2552,14 @@
       renderBestStrip(analysis);
       const sortedRows = analysis.rows.slice().sort((a, b) => {
         if (isCurrent(a.item) !== isCurrent(b.item)) return isCurrent(a.item) ? -1 : 1;
-        if (isCurrent(a.item) && a.calc.valid && b.calc.valid && a.calc.base === b.calc.base) return a.calc.unitPrice - b.calc.unitPrice;
+        const productCompare = String(productNameById(group, a.item.productNameId)).localeCompare(String(productNameById(group, b.item.productNameId)));
+        if (productCompare !== 0) return productCompare;
+        if (isCurrent(a.item) && a.calc.valid && b.calc.valid && a.compareKey === b.compareKey) return a.calc.unitPrice - b.calc.unitPrice;
         if (isCurrent(a.item) && a.calc.valid !== b.calc.valid) return a.calc.valid ? -1 : 1;
         if (isPurchased(a.item) && isPurchased(b.item)) {
           const dateDiff = timestampForItem(b.item) - timestampForItem(a.item);
           if (dateDiff !== 0) return dateDiff;
         }
-        const productCompare = String(productName(group, a.item.productNameId)).localeCompare(String(productName(group, b.item.productNameId)));
-        if (productCompare !== 0) return productCompare;
         const storeCompare = String(storeName(a.item.storeId)).localeCompare(String(storeName(b.item.storeId)));
         if (storeCompare !== 0) return storeCompare;
         return (a.item.createdAt || 0) - (b.item.createdAt || 0);
@@ -2578,43 +2587,45 @@
       const history = historyCompareForRow(row, analysis);
       const isBest = isCurrent(item) && result.type === "good" && result.text === t("bestDeal");
       const baseDisplay = baseUnitLabel(c.base);
+      const locked = isPurchased(item);
+      const lockedAttr = locked ? ' disabled aria-disabled="true"' : '';
 
       return `
         <tr class="${isBest ? "best-row" : ""} ${isPurchased(item) ? "purchased-row" : ""}">
           <td>${chipHtml(result)}</td>
           <td class="cell-editable">
-            <input class="cell-input js-inline-edit" data-id="${item.id}" data-field="priceDate" type="date" value="${escapeAttr(item.priceDate || todayDate())}" />
+            <input class="cell-input js-inline-edit" data-id="${item.id}" data-field="priceDate" type="date" value="${escapeAttr(item.priceDate || todayDate())}"${lockedAttr} />
           </td>
           <td class="cell-editable">
             <select class="cell-select js-inline-edit" data-id="${item.id}" data-field="status">${statusOptionsHtml(item.status)}</select>
           </td>
           <td class="cell-editable">
-            <select class="cell-select js-inline-edit" data-id="${item.id}" data-field="productNameId">${productNameOptionsHtml(group, item.productNameId)}</select>
+            <select class="cell-select js-inline-edit" data-id="${item.id}" data-field="productNameId"${lockedAttr}>${productNameOptionsHtml(group, item.productNameId)}</select>
           </td>
           <td class="cell-editable">
-            <select class="cell-select cell-store js-inline-edit" data-id="${item.id}" data-field="storeId">${storeOptionsHtml(item.storeId)}</select>
+            <select class="cell-select cell-store js-inline-edit" data-id="${item.id}" data-field="storeId"${lockedAttr}>${storeOptionsHtml(item.storeId)}</select>
           </td>
           <td class="cell-editable">
-            <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="price" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.price)}" />
+            <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="price" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.price)}"${lockedAttr} />
           </td>
           <td class="cell-editable">
-            <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="cashback" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.cashback)}" />
+            <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="cashback" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.cashback)}"${lockedAttr} />
           </td>
           <td class="num">${c.valid ? money(c.finalCost) : "-"}</td>
           <td class="cell-editable">
-            <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="quantity" type="number" min="0" step="1" inputmode="numeric" value="${escapeAttr(item.quantity)}" />
+            <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="quantity" type="number" min="0" step="1" inputmode="numeric" value="${escapeAttr(item.quantity)}"${lockedAttr} />
           </td>
           <td class="cell-editable">
-            <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="size" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.size)}" />
+            <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="size" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.size)}"${lockedAttr} />
           </td>
           <td class="cell-editable">
-            <input class="cell-input js-inline-edit" data-id="${item.id}" data-field="sizeCode" type="text" value="${escapeAttr(item.sizeCode || "")}" />
+            <input class="cell-input js-inline-edit" data-id="${item.id}" data-field="sizeCode" type="text" value="${escapeAttr(item.sizeCode || "")}"${lockedAttr} />
           </td>
           <td class="cell-editable">
-            <select class="cell-select cell-unit js-inline-edit" data-id="${item.id}" data-field="unit">${unitOptionsHtml(item.unit)}</select>
+            <select class="cell-select cell-unit js-inline-edit" data-id="${item.id}" data-field="unit"${lockedAttr}>${unitOptionsHtml(item.unit)}</select>
           </td>
           <td class="num">${c.valid ? smartNumber(c.totalBaseSize, 4) : "-"}</td>
-          <td class="num ${isBest ? "unit-price-best" : ""}">${c.valid ? smartNumber(c.unitPrice, 6) : "-"}</td>
+          <td class="num ${isBest ? "unit-price-best" : ""}">${c.valid ? smartNumber(c.unitPrice, 3) : "-"}</td>
           <td>${chipHtml(history)}</td>
           <td>
             <div class="row-actions">
@@ -2633,12 +2644,14 @@
       const history = historyCompareForRow(row, analysis);
       const isBest = isCurrent(item) && result.type === "good" && result.text === t("bestDeal");
       const baseDisplay = baseUnitLabel(c.base);
+      const locked = isPurchased(item);
+      const lockedAttr = locked ? ' disabled aria-disabled="true"' : '';
 
       return `
         <article class="item-card ${isBest ? "best-card" : ""}">
           <div class="item-head">
             <div>
-              <div class="item-title">${escapeHtml(productName(group, item.productNameId) || group.name)} · ${escapeHtml(storeName(item.storeId) || "-")}</div>
+              <div class="item-title">${escapeHtml(productNameById(group, item.productNameId) || group.name)} · ${escapeHtml(storeName(item.storeId) || "-")}</div>
               <div class="item-subtitle">${escapeHtml(group.name)} · ${escapeHtml(item.priceDate || todayDate())}</div>
             </div>
             ${chipHtml(result)}
@@ -2646,7 +2659,7 @@
           <div class="mobile-metrics">
             <div class="metric-pill ${isBest ? "best-metric" : ""}">
               <div class="metric-label">${t("unitPrice")}</div>
-              <div class="metric-value">${c.valid ? `${smartNumber(c.unitPrice, 6)} / ${baseDisplay}` : "-"}</div>
+              <div class="metric-value">${c.valid ? `${smartNumber(c.unitPrice, 3)} / ${baseDisplay}` : "-"}</div>
             </div>
             <div class="metric-pill">
               <div class="metric-label">${t("historyCompare")}</div>
@@ -2660,43 +2673,43 @@
           <div class="mobile-edit-grid">
             <div>
               <label>${t("priceDate")}</label>
-              <input class="js-inline-edit" data-id="${item.id}" data-field="priceDate" type="date" value="${escapeAttr(item.priceDate || todayDate())}" />
+              <input class="js-inline-edit" data-id="${item.id}" data-field="priceDate" type="date" value="${escapeAttr(item.priceDate || todayDate())}"${lockedAttr} />
             </div>
             <div>
               <label>${t("status")}</label>
               <select class="js-inline-edit" data-id="${item.id}" data-field="status">${statusOptionsHtml(item.status)}</select>
             </div>
-            <div class="field-store-mobile">
+            <div>
               <label>${t("productName")}</label>
-              <select class="js-inline-edit" data-id="${item.id}" data-field="productNameId">${productNameOptionsHtml(group, item.productNameId)}</select>
+              <select class="js-inline-edit" data-id="${item.id}" data-field="productNameId"${lockedAttr}>${productNameOptionsHtml(group, item.productNameId)}</select>
             </div>
             <div class="field-store-mobile">
               <label>${t("store")}</label>
-              <select class="js-inline-edit" data-id="${item.id}" data-field="storeId">${storeOptionsHtml(item.storeId)}</select>
+              <select class="js-inline-edit" data-id="${item.id}" data-field="storeId"${lockedAttr}>${storeOptionsHtml(item.storeId)}</select>
             </div>
             <div>
               <label>${t("price")}</label>
-              <input class="js-inline-edit" data-id="${item.id}" data-field="price" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.price)}" />
+              <input class="js-inline-edit" data-id="${item.id}" data-field="price" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.price)}"${lockedAttr} />
             </div>
             <div>
               <label>${t("cashback")}</label>
-              <input class="js-inline-edit" data-id="${item.id}" data-field="cashback" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.cashback)}" />
+              <input class="js-inline-edit" data-id="${item.id}" data-field="cashback" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.cashback)}"${lockedAttr} />
             </div>
             <div>
               <label>${t("quantity")}</label>
-              <input class="js-inline-edit" data-id="${item.id}" data-field="quantity" type="number" min="0" step="1" inputmode="numeric" value="${escapeAttr(item.quantity)}" />
+              <input class="js-inline-edit" data-id="${item.id}" data-field="quantity" type="number" min="0" step="1" inputmode="numeric" value="${escapeAttr(item.quantity)}"${lockedAttr} />
             </div>
             <div>
               <label>${t("size")}</label>
-              <input class="js-inline-edit" data-id="${item.id}" data-field="size" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.size)}" />
+              <input class="js-inline-edit" data-id="${item.id}" data-field="size" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.size)}"${lockedAttr} />
             </div>
             <div>
               <label>${t("sizeCode")}</label>
-              <input class="js-inline-edit" data-id="${item.id}" data-field="sizeCode" type="text" value="${escapeAttr(item.sizeCode || "")}" />
+              <input class="js-inline-edit" data-id="${item.id}" data-field="sizeCode" type="text" value="${escapeAttr(item.sizeCode || "")}"${lockedAttr} />
             </div>
             <div>
               <label>${t("unit")}</label>
-              <select class="js-inline-edit" data-id="${item.id}" data-field="unit">${unitOptionsHtml(item.unit)}</select>
+              <select class="js-inline-edit" data-id="${item.id}" data-field="unit"${lockedAttr}>${unitOptionsHtml(item.unit)}</select>
             </div>
           </div>
           <div class="row-actions">
@@ -2726,7 +2739,7 @@
         sizeCode: "",
         priceDate: todayDate(),
         status: "current",
-        unit: appUnits()[0] ? appUnits()[0].code : "g",
+        unit: "g",
         createdAt: Date.now()
       };
     }
@@ -2798,14 +2811,18 @@
       const group = currentGroup();
       const item = group.items.find(x => x.id === id);
       if (!item) return;
-
-      if (field === "storeId") {
-        item.storeId = state.stores.some(store => store.id === value) ? value : (state.stores[0] ? state.stores[0].id : "");
+      if (isPurchased(item) && field !== "status") {
+        renderAll();
+        return;
       }
 
       if (field === "productNameId") {
-        const productNames = ensureGroupProductNames(group);
-        item.productNameId = productNames.some(product => product.id === value) ? value : (productNames[0] ? productNames[0].id : "");
+        const names = ensureGroupProductNames(group);
+        item.productNameId = names.some(product => product.id === value) ? value : (names[0] ? names[0].id : "");
+      }
+
+      if (field === "storeId") {
+        item.storeId = state.stores.some(store => store.id === value) ? value : (state.stores[0] ? state.stores[0].id : "");
       }
 
       if (["price", "cashback", "quantity", "size"].includes(field)) {
@@ -2864,16 +2881,7 @@
       const isStore = type === "store";
       const isUnit = type === "unit";
       const isSync = type === "sync";
-      if (isProductName) productNameConfigGroupId = state.activeGroupId;
-      const title = isProduct
-        ? t("productGroupConfig")
-        : isProductName
-          ? t("productNameConfig")
-          : isStore
-            ? t("storeConfig")
-            : isUnit
-              ? t("unitConfig")
-              : t("cloudSyncConfig");
+      const title = isProduct ? t("productGroupConfig") : isProductName ? t("productNameConfig") : isStore ? t("storeConfig") : isUnit ? t("unitConfig") : t("cloudSyncConfig");
       $("#configTitle").text(title);
       $("#productConfigPanel").toggleClass("active", isProduct);
       $("#productNameConfigPanel").toggleClass("active", isProductName);
@@ -2909,46 +2917,16 @@
       $("#productConfigList").html(html);
     }
 
-    function currentProductNameConfigGroup() {
-      if (!state.groups.some(group => group.id === productNameConfigGroupId)) {
-        productNameConfigGroupId = state.activeGroupId;
-      }
-      return state.groups.find(group => group.id === productNameConfigGroupId) || currentGroup();
-    }
-
     function renderProductNameConfig() {
-      const groupOptions = state.groups.map(group => `<option value="${escapeAttr(group.id)}">${escapeHtml(group.name)}</option>`).join("");
-      const group = currentProductNameConfigGroup();
-      ensureGroupProductNames(group);
-      $("#productNameConfigGroupSelect").html(groupOptions).val(group.id);
-      const html = group.productNames.map(product => `
+      const group = currentGroup();
+      const names = ensureGroupProductNames(group);
+      $("#productNameConfigGroupHint").text(`${t("currentProductGroup")}：${group.name}`);
+      const html = names.map(product => `
         <div class="config-row product-name-row">
-          <input class="js-config-product-name" data-group-id="${escapeAttr(group.id)}" data-id="${escapeAttr(product.id)}" type="text" value="${escapeAttr(product.name)}" placeholder="${escapeAttr(t("productNamePlaceholder"))}" />
-          <button type="button" class="small-btn btn-danger btn-config-delete-product-name" data-group-id="${escapeAttr(group.id)}" data-id="${escapeAttr(product.id)}">${t("delete")}</button>
+          <input class="js-config-product-name" data-id="${escapeAttr(product.id)}" type="text" value="${escapeAttr(product.name)}" placeholder="${escapeAttr(t("productName"))}" />
+          <button type="button" class="small-btn btn-danger btn-config-delete-product-name" data-id="${escapeAttr(product.id)}">${t("delete")}</button>
         </div>`).join("");
       $("#productNameConfigList").html(html);
-    }
-
-    function unitBaseOptionsHtml(selectedBase) {
-      const bases = [];
-      appUnits().forEach(unit => {
-        if (!bases.includes(unit.code)) bases.push(unit.code);
-        if (unit.base && !bases.includes(unit.base)) bases.push(unit.base);
-      });
-      return bases.map(base => `<option value="${escapeAttr(base)}"${base === selectedBase ? " selected" : ""}>${escapeHtml(base)}</option>`).join("");
-    }
-
-    function renderUnitConfig() {
-      const html = appUnits().map(unit => `
-        <div class="config-row unit-row">
-          <input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="code" type="text" value="${escapeAttr(unit.code)}" placeholder="${escapeAttr(t("unitCode"))}" />
-          <input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="zh" type="text" value="${escapeAttr(unit.label.zh)}" placeholder="${escapeAttr(t("unitZh"))}" />
-          <input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="en" type="text" value="${escapeAttr(unit.label.en)}" placeholder="${escapeAttr(t("unitEn"))}" />
-          <select class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="base">${unitBaseOptionsHtml(unit.base)}</select>
-          <input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="factor" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(unit.factor)}" placeholder="${escapeAttr(t("unitFactor"))}" />
-          <button type="button" class="small-btn btn-danger btn-config-delete-unit" data-code="${escapeAttr(unit.code)}">${t("delete")}</button>
-        </div>`).join("");
-      $("#unitConfigList").html(html);
     }
 
     function renderStoreConfig() {
@@ -2958,6 +2936,19 @@
           <button type="button" class="small-btn btn-danger btn-config-delete-store" data-id="${escapeAttr(store.id)}">${t("delete")}</button>
         </div>`).join("");
       $("#storeConfigList").html(html);
+    }
+
+    function renderUnitConfig() {
+      const html = appUnits().map(unit => `
+        <div class="config-row unit-row" data-code="${escapeAttr(unit.code)}">
+          <div class="unit-config-field"><label>${t("unitCode")}</label><input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="code" type="text" value="${escapeAttr(unit.code)}" /></div>
+          <div class="unit-config-field"><label>${t("unitZh")}</label><input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="zh" type="text" value="${escapeAttr(unit.label.zh)}" /></div>
+          <div class="unit-config-field"><label>${t("unitEn")}</label><input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="en" type="text" value="${escapeAttr(unit.label.en)}" /></div>
+          <div class="unit-config-field"><label>${t("unitBase")}</label><input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="base" type="text" value="${escapeAttr(unit.base)}" /></div>
+          <div class="unit-config-field"><label>${t("unitFactor")}</label><input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="factor" type="number" min="0.000001" step="0.000001" inputmode="decimal" value="${escapeAttr(unit.factor)}" /></div>
+          <button type="button" class="small-btn btn-danger btn-config-delete-unit" data-code="${escapeAttr(unit.code)}">${t("delete")}</button>
+        </div>`).join("");
+      $("#unitConfigList").html(html);
     }
 
     function addGroupFromConfig() {
@@ -2993,12 +2984,13 @@
       }, 50);
     }
 
+
     function addProductNameFromConfig() {
-      const group = currentProductNameConfigGroup();
-      ensureGroupProductNames(group);
-      const name = uniqueName(t("newProductNameDefault"), group.productNames, product => product.name);
-      const product = { id: uid("productName"), name };
-      group.productNames.push(product);
+      const group = currentGroup();
+      const names = ensureGroupProductNames(group);
+      const name = uniqueName(t("newProductNameDefault"), names, product => product.name);
+      const product = { id: uid("pname"), name };
+      names.push(product);
       saveState();
       renderAll();
       renderConfig();
@@ -3011,52 +3003,19 @@
       }, 50);
     }
 
-    function uniqueUnitCode(baseCode) {
-      const base = String(baseCode || "unit").trim().toLowerCase().replace(/[^a-z0-9_-]/g, "") || "unit";
-      const codes = new Set(appUnits().map(unit => unit.code));
-      if (!codes.has(base)) return base;
-      let index = 2;
-      while (codes.has(`${base}${index}`)) index += 1;
-      return `${base}${index}`;
-    }
-
     function addUnitFromConfig() {
-      const code = uniqueUnitCode("unit");
-      state.units.push({ code, base: code, factor: 1, label: { zh: t("newUnitDefault"), en: "New Unit" } });
+      const codeBase = "unit";
+      let index = 1;
+      let code = `${codeBase}${index}`;
+      const existing = new Set(appUnits().map(unit => unit.code));
+      while (existing.has(code)) {
+        index += 1;
+        code = `${codeBase}${index}`;
+      }
+      state.units.push({ code, base: code, factor: 1, label: { zh: t("newUnitDefault"), en: t("newUnitDefault") } });
       saveState();
       renderAll();
       renderConfig();
-      setTimeout(() => {
-        const input = $(`.js-config-unit[data-code="${code}"][data-field="code"]`).get(0);
-        if (input) {
-          input.focus();
-          input.select();
-        }
-      }, 50);
-    }
-
-    function updateUnitConfig(oldCode, field, value) {
-      const unit = state.units.find(u => u.code === oldCode);
-      if (!unit) return;
-      if (field === "code") {
-        let newCode = String(value || "").trim().toLowerCase().replace(/[^a-z0-9_-]/g, "");
-        if (!newCode) newCode = oldCode;
-        if (newCode !== oldCode && state.units.some(u => u.code === newCode)) newCode = uniqueUnitCode(newCode);
-        state.groups.forEach(group => group.items.forEach(item => {
-          if (item.unit === oldCode) item.unit = newCode;
-        }));
-        state.units.forEach(u => {
-          if (u.base === oldCode) u.base = newCode;
-        });
-        unit.code = newCode;
-        if (unit.base === oldCode) unit.base = newCode;
-      }
-      if (field === "zh") unit.label.zh = String(value || "").trim() || unit.code;
-      if (field === "en") unit.label.en = String(value || "").trim() || unit.code;
-      if (field === "base") unit.base = String(value || unit.code).trim() || unit.code;
-      if (field === "factor") unit.factor = numberOrZero(value) || 1;
-      saveState();
-      renderRecords();
     }
 
 
@@ -3137,6 +3096,18 @@
       renderRecords();
     });
 
+
+    $(document).on("input", ".js-config-product-name", function () {
+      const id = $(this).data("id");
+      const group = currentGroup();
+      const product = ensureGroupProductNames(group).find(item => item.id === id);
+      if (!product) return;
+      product.name = String($(this).val() || "").trim() || t("newProductNameDefault");
+      saveState();
+      renderSummary();
+      renderRecords();
+    });
+
     $(document).on("input", ".js-config-store-name", function () {
       const id = $(this).data("id");
       const store = state.stores.find(s => s.id === id);
@@ -3147,30 +3118,37 @@
       renderRecords();
     });
 
-    $(document).on("change", "#productNameConfigGroupSelect", function () {
-      productNameConfigGroupId = $(this).val();
-      renderProductNameConfig();
-    });
-
-    $(document).on("input", ".js-config-product-name", function () {
-      const groupId = $(this).data("groupId");
-      const id = $(this).data("id");
-      const group = state.groups.find(g => g.id === groupId);
-      if (!group) return;
-      const product = ensureGroupProductNames(group).find(p => p.id === id);
-      if (!product) return;
-      product.name = String($(this).val() || "").trim() || t("newProductNameDefault");
-      saveState();
-      renderRecords();
-    });
 
     $(document).on("change", ".js-config-unit", function () {
-      updateUnitConfig($(this).data("code"), $(this).data("field"), $(this).val());
-      renderConfig();
-    });
-
-    $(document).on("input", ".js-config-unit[data-field='zh'], .js-config-unit[data-field='en'], .js-config-unit[data-field='factor']", function () {
-      updateUnitConfig($(this).data("code"), $(this).data("field"), $(this).val());
+      const oldCode = String($(this).data("code") || "");
+      const field = String($(this).data("field") || "");
+      const unit = state.units.find(item => item.code === oldCode);
+      if (!unit) return;
+      let value = String($(this).val() || "").trim();
+      if (field === "code") {
+        value = value || oldCode;
+        const duplicate = state.units.some(item => item.code === value && item.code !== oldCode);
+        if (duplicate) {
+          alert(t("unitCodeDuplicate"));
+          renderConfig();
+          return;
+        }
+        unit.code = value;
+        if (unit.base === oldCode) unit.base = value;
+        state.groups.forEach(group => group.items.forEach(item => {
+          if (item.unit === oldCode) item.unit = value;
+        }));
+      } else if (field === "base") {
+        unit.base = value || unit.code;
+      } else if (field === "factor") {
+        unit.factor = numberOrZero(value) || 1;
+      } else if (field === "zh") {
+        unit.label.zh = value || unit.code;
+      } else if (field === "en") {
+        unit.label.en = value || unit.code;
+      }
+      saveState();
+      renderAll();
     });
 
     $(document).on("click", ".btn-config-current-group", function () {
@@ -3193,6 +3171,19 @@
       renderAll();
     });
 
+
+    $(document).on("click", ".btn-config-delete-product-name", function () {
+      const id = $(this).data("id");
+      const group = currentGroup();
+      const names = ensureGroupProductNames(group);
+      if (names.length <= 1) return alert(t("cannotDeleteLastProductName"));
+      const used = group.items.some(item => item.productNameId === id);
+      if (used) return alert(t("productNameInUse"));
+      group.productNames = names.filter(product => product.id !== id);
+      saveState();
+      renderAll();
+    });
+
     $(document).on("click", ".btn-config-delete-store", function () {
       const id = $(this).data("id");
       if (state.stores.length <= 1) return alert(t("cannotDeleteLastStore"));
@@ -3204,31 +3195,13 @@
       renderAll();
     });
 
-    $(document).on("click", ".btn-config-delete-product-name", function () {
-      const groupId = $(this).data("groupId");
-      const id = $(this).data("id");
-      const group = state.groups.find(g => g.id === groupId);
-      if (!group) return;
-      ensureGroupProductNames(group);
-      if (group.productNames.length <= 1) return alert(t("cannotDeleteLastProductName"));
-      const used = group.items.some(item => item.productNameId === id);
-      if (used) return alert(t("productNameInUse"));
-      if (!confirm(t("confirmDeleteProductName"))) return;
-      group.productNames = group.productNames.filter(product => product.id !== id);
-      saveState();
-      renderAll();
-    });
 
     $(document).on("click", ".btn-config-delete-unit", function () {
-      const code = $(this).data("code");
+      const code = String($(this).data("code") || "");
       if (state.units.length <= 1) return alert(t("cannotDeleteLastUnit"));
       const used = state.groups.some(group => group.items.some(item => item.unit === code));
       if (used) return alert(t("unitInUse"));
-      if (!confirm(t("confirmDeleteUnit"))) return;
       state.units = state.units.filter(unit => unit.code !== code);
-      state.units.forEach(unit => {
-        if (unit.base === code) unit.base = unit.code;
-      });
       saveState();
       renderAll();
     });
@@ -3239,6 +3212,7 @@
         workerUrl: $("#syncWorkerUrl").val(),
         appPassword: $("#syncPassword").val()
       });
+      saveLocalSyncConfig(state.sync);
       saveState({ localOnly: true });
       setSyncStatus("ok", "syncConfigSaved");
       await saveToCloud(true);
