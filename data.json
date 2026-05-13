@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T13:10:52.849Z",
-    "lastSavedAt": "2026-05-13T13:11:32.015Z"
+    "lastSavedAt": "2026-05-13T13:11:35.284Z"
   },
   "units": [
     {
@@ -221,7 +221,7 @@
         {
           "id": "item_1778677866292_9f610fde7e33b",
           "productNameId": "productName_1778670149375_253002c7faaf28",
-          "storeId": "store_a",
+          "storeId": "store_1778246138226_757f331a4c69f",
           "price": 0,
           "cashback": 0,
           "quantity": 1,
