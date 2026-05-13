@@ -1,5 +1,5 @@
 {
-  "version": "v1.0.43",
+  "version": "v1.0.44",
   "lang": "zh",
   "settings": {
     "lang": "zh",
@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T14:30:35.801Z",
-    "lastSavedAt": "2026-05-13T14:34:31.536Z"
+    "lastLoadedAt": "2026-05-13T14:34:52.506Z",
+    "lastSavedAt": "2026-05-13T14:35:34.801Z"
   },
   "units": [
     {
@@ -177,7 +177,7 @@
       "name": "奶粉(3段)",
       "label": {
         "zh": "奶粉(3段)",
-        "en": "奶粉(3段)"
+        "en": "formula"
       },
       "productNames": [
         {
