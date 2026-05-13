@@ -1,5 +1,5 @@
 {
-  "version": "v1.0.18",
+  "version": "v1.0.19",
   "lang": "zh",
   "settings": {
     "lang": "zh",
@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T11:01:32.288Z",
-    "lastSavedAt": "2026-05-13T11:03:41.222Z"
+    "lastLoadedAt": "2026-05-13T11:10:13.027Z",
+    "lastSavedAt": "2026-05-13T11:10:29.925Z"
   },
   "units": [
     {
@@ -117,16 +117,9 @@
     {
       "id": "group_face_wash",
       "name": "洗面奶",
-      "productNames": [
-        {
-          "id": "productName_1778670092288_40a6322d0e94d",
-          "name": "娇润泉"
-        }
-      ],
       "items": [
         {
           "id": "item_001",
-          "productNameId": "productName_1778670092288_40a6322d0e94d",
           "storeId": "store_a",
           "price": 88,
           "cashback": 22.45,
@@ -140,7 +133,6 @@
         },
         {
           "id": "item_002",
-          "productNameId": "productName_1778670092288_40a6322d0e94d",
           "storeId": "store_a",
           "price": 82,
           "cashback": 1.47,
@@ -157,16 +149,9 @@
     {
       "id": "group_1778246168663_d24215f198b6e",
       "name": "尿不湿",
-      "productNames": [
-        {
-          "id": "productName_1778670092288_9292fbb9d15c5",
-          "name": "帮舒宝"
-        }
-      ],
       "items": [
         {
           "id": "item_1778253591752_312aff5e69c1b8",
-          "productNameId": "productName_1778670092288_9292fbb9d15c5",
           "storeId": "store_1778246138226_757f331a4c69f",
           "price": 91.9,
           "cashback": 0,
@@ -180,7 +165,6 @@
         },
         {
           "id": "item_1778666801934_94ec269b20a248",
-          "productNameId": "productName_1778670092288_9292fbb9d15c5",
           "storeId": "store_1778246138226_757f331a4c69f",
           "price": 109,
           "cashback": 0,
@@ -191,19 +175,26 @@
           "status": "purchased",
           "unit": "sheet",
           "createdAt": 1778666801934
+        },
+        {
+          "id": "item_1778670629014_d8d79e348cfd2",
+          "storeId": "store_a",
+          "price": 0,
+          "cashback": 0,
+          "quantity": 1,
+          "size": 0,
+          "sizeCode": "",
+          "priceDate": "2026-05-13",
+          "status": "current",
+          "unit": "g",
+          "createdAt": 1778670629014
         }
       ]
     },
     {
       "id": "group_1778670149375_13bf168a8eb7c8",
       "name": "奶粉",
-      "items": [],
-      "productNames": [
-        {
-          "id": "productName_1778670149375_253002c7faaf28",
-          "name": "新商品"
-        }
-      ]
+      "items": []
     }
   ],
   "activeGroupId": "group_1778246168663_d24215f198b6e",
