@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>商品比价器 Price Compare v1.0.34</title>
+  <title>商品比价器 Price Compare v1.0.36</title>
   <meta name="theme-color" content="#2563eb" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1416,7 +1416,7 @@
       <div class="brand">
         <div class="logo">¥</div>
         <div>
-          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.34</span></h1>
+          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.36</span></h1>
         </div>
       </div>
       <div class="top-actions">
@@ -1588,7 +1588,7 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.34";
+    const APP_VERSION = "v1.0.36";
     const STORAGE_KEY = "productPriceCompare.v1";
     const LOCAL_SYNC_KEY = "productPriceCompare.localSync.v1";
 
@@ -1681,14 +1681,14 @@
         lastPurchased: "上次购买",
         purchased: "已购买",
         noHistory: "暂无历史",
-        cheaperThanLast: "比上次便宜 {percent}%",
-        higherThanLast: "比上次贵 {percent}%",
+        cheaperThanLast: "比上次便宜 {amount}/{unit}",
+        higherThanLast: "比上次贵 {amount}/{unit}",
         sameAsLast: "接近上次",
-        lowerThanHistoryLow: "低于历史最低",
+        lowerThanHistoryLow: "比历史最低便宜 {amount}/{unit}",
         buyAdviceCurrentBest: "当前最便宜：{store} · {price} / {unit}",
-        compareLastText: "比上次{direction} {percent}%",
-        compareAverageText: "比历史平均{direction} {percent}%",
-        compareMinText: "比历史最低{direction} {percent}%",
+        compareLastText: "比上次{direction} {amount}/{unit}",
+        compareAverageText: "比历史平均{direction} {amount}/{unit}",
+        compareMinText: "比历史最低{direction} {amount}/{unit}",
         directionCheaper: "便宜",
         directionHigher: "贵",
         adviceNoHistory: "暂无历史价格，先比较当前商家",
@@ -1703,7 +1703,7 @@
         result: "比较结果",
         actions: "操作",
         bestStripPrefix: "当前最便宜",
-        cheaperThanHighest: "比最贵便宜 {percent}%",
+        cheaperThanHighest: "比最贵便宜 {amount}/{unit}",
         bestTie: "并列最便宜 {count} 条",
         save: "保存",
         update: "更新",
@@ -1715,7 +1715,7 @@
         emptyState: "暂无记录，请点击新增添加一行。",
         formulaHint: "公式：实际金额 = 金额 - 返现；总规格 = 购买数量 × 单件规格；每单位价格 = 实际金额 ÷ 总规格。",
         bestDeal: "最便宜",
-        higherThanBest: "贵 {percent}%",
+        higherThanBest: "贵 {amount}/{unit}",
         onlyItem: "唯一记录",
         invalid: "数据不完整",
         notComparable: "单位不可比较",
@@ -1834,14 +1834,14 @@
         lastPurchased: "Last Bought",
         purchased: "Purchased",
         noHistory: "No History",
-        cheaperThanLast: "{percent}% cheaper than last",
-        higherThanLast: "{percent}% higher than last",
+        cheaperThanLast: "{amount}/{unit} cheaper than last",
+        higherThanLast: "{amount}/{unit} higher than last",
         sameAsLast: "Close to last",
-        lowerThanHistoryLow: "New Low",
+        lowerThanHistoryLow: "{amount}/{unit} below history low",
         buyAdviceCurrentBest: "Current best: {store} · {price} / {unit}",
-        compareLastText: "{percent}% {direction} than last",
-        compareAverageText: "{percent}% {direction} than average",
-        compareMinText: "{percent}% {direction} than history low",
+        compareLastText: "{amount}/{unit} {direction} than last",
+        compareAverageText: "{amount}/{unit} {direction} than average",
+        compareMinText: "{amount}/{unit} {direction} than history low",
         directionCheaper: "cheaper",
         directionHigher: "higher",
         adviceNoHistory: "No history yet. Compare current stores first",
@@ -1856,7 +1856,7 @@
         result: "Result",
         actions: "Actions",
         bestStripPrefix: "Current Best Deal",
-        cheaperThanHighest: "{percent}% cheaper than the highest",
+        cheaperThanHighest: "{amount}/{unit} cheaper than the highest",
         bestTie: "{count} tied best deals",
         save: "Save",
         update: "Update",
@@ -1868,7 +1868,7 @@
         emptyState: "No records yet. Click Add to insert a new row.",
         formulaHint: "Formula: Final Cost = Price - Cashback; Total Size = Quantity × Item Size; Unit Price = Final Cost ÷ Total Size.",
         bestDeal: "Best Deal",
-        higherThanBest: "{percent}% higher",
+        higherThanBest: "{amount}/{unit} higher",
         onlyItem: "Only Item",
         invalid: "Incomplete Data",
         notComparable: "Not Comparable",
@@ -2491,14 +2491,24 @@
       return ((currentPrice - referencePrice) / referencePrice) * 100;
     }
 
-    function compareText(currentPrice, referencePrice, mode) {
-      const diff = percentDiff(currentPrice, referencePrice);
+    function priceDiffAmount(currentPrice, referencePrice) {
+      if (referencePrice === null || referencePrice === undefined || currentPrice === null || currentPrice === undefined) return 0;
+      return currentPrice - referencePrice;
+    }
+
+    function formatPriceDiffAmount(diff) {
+      return smartNumber(Math.abs(diff), 3);
+    }
+
+    function compareText(currentPrice, referencePrice, mode, unit) {
+      const diff = priceDiffAmount(currentPrice, referencePrice);
       const abs = Math.abs(diff);
-      if (abs < 0.5) return mode === "last" ? t("sameAsLast") : t("sameAsLast");
+      if (abs < 0.0005) return mode === "last" ? t("sameAsLast") : t("sameAsLast");
       const key = mode === "min" ? "compareMinText" : mode === "average" ? "compareAverageText" : "compareLastText";
       return t(key, {
         direction: diff < 0 ? t("directionCheaper") : t("directionHigher"),
-        percent: smartNumber(abs, 2)
+        amount: formatPriceDiffAmount(diff),
+        unit
       });
     }
 
@@ -2525,13 +2535,17 @@
         return { type: "muted", text: t("purchased") };
       }
       if (!stats || !stats.lastRow) return { type: "muted", text: t("noHistory") };
+      const unit = baseUnitLabel(row.calc.base);
       if (row.calc.unitPrice <= stats.minPrice + 0.000000001) {
-        return { type: "good", text: t("lowerThanHistoryLow") };
+        const diffMin = priceDiffAmount(row.calc.unitPrice, stats.minPrice);
+        if (Math.abs(diffMin) < 0.0005) return { type: "good", text: t("lowerThanHistoryLow", { amount: "0", unit }) };
+        return { type: "good", text: t("lowerThanHistoryLow", { amount: formatPriceDiffAmount(diffMin), unit }) };
       }
-      const diff = percentDiff(row.calc.unitPrice, stats.lastRow.calc.unitPrice);
-      if (Math.abs(diff) < 0.5) return { type: "muted", text: t("sameAsLast") };
-      if (diff < 0) return { type: "good", text: t("cheaperThanLast", { percent: smartNumber(Math.abs(diff), 2) }) };
-      return { type: diff > 8 ? "bad" : "warn", text: t("higherThanLast", { percent: smartNumber(diff, 2) }) };
+      const diffAmount = priceDiffAmount(row.calc.unitPrice, stats.lastRow.calc.unitPrice);
+      const diffPercent = percentDiff(row.calc.unitPrice, stats.lastRow.calc.unitPrice);
+      if (Math.abs(diffAmount) < 0.0005) return { type: "muted", text: t("sameAsLast") };
+      if (diffAmount < 0) return { type: "good", text: t("cheaperThanLast", { amount: formatPriceDiffAmount(diffAmount), unit }) };
+      return { type: diffPercent > 8 ? "bad" : "warn", text: t("higherThanLast", { amount: formatPriceDiffAmount(diffAmount), unit }) };
     }
 
     function resultForRow(row, bestByBase, analysis) {
@@ -2552,8 +2566,7 @@
       if (Math.abs(diff) < 0.000000001) {
         return { type: "good", text: t("bestDeal") };
       }
-      const percent = best.minPrice > 0 ? (diff / best.minPrice) * 100 : 0;
-      return { type: "warn", text: t("higherThanBest", { percent: smartNumber(percent, 2) }) };
+      return { type: "warn", text: t("higherThanBest", { amount: formatPriceDiffAmount(diff), unit: baseUnitLabel(row.calc.base) }) };
     }
 
     function renderAll() {
@@ -2835,9 +2848,9 @@
       const subParts = [];
 
       if (stats && stats.lastRow) {
-        subParts.push(compareText(best.minPrice, stats.lastRow.calc.unitPrice, "last"));
-        subParts.push(compareText(best.minPrice, stats.avgPrice, "average"));
-        subParts.push(compareText(best.minPrice, stats.minPrice, "min"));
+        subParts.push(compareText(best.minPrice, stats.lastRow.calc.unitPrice, "last", unit));
+        subParts.push(compareText(best.minPrice, stats.avgPrice, "average", unit));
+        subParts.push(compareText(best.minPrice, stats.minPrice, "min", unit));
       } else {
         subParts.push(t("adviceNoHistory"));
       }
@@ -2938,7 +2951,7 @@
           <td class="cell-editable">
             <select class="cell-select cell-unit js-inline-edit" data-id="${item.id}" data-field="unit"${lockedAttr}>${unitOptionsHtml(item.unit)}</select>
           </td>
-          <td class="num" title="${c.valid ? `${smartNumber(c.totalBaseSize, 4)}/${baseDisplay}` : "-"}">${c.valid ? `${smartNumber(c.totalBaseSize, 4)}/${baseDisplay}` : "-"}</td>
+          <td class="num" title="${c.valid ? `${smartNumber(c.totalBaseSize, 4)}${baseDisplay}` : "-"}">${c.valid ? `${smartNumber(c.totalBaseSize, 4)}${baseDisplay}` : "-"}</td>
           <td class="num ${isBest ? "unit-price-best" : ""}" title="${c.valid ? `${smartNumber(c.unitPrice, 3)}/${baseDisplay}` : "-"}">${c.valid ? `${smartNumber(c.unitPrice, 3)}/${baseDisplay}` : "-"}</td>
           <td>${chipHtml(history)}</td>
           <td class="actions-cell">
@@ -2981,7 +2994,7 @@
             </div>
             <div class="metric-pill">
               <div class="metric-label">${t("totalSize")}</div>
-              <div class="metric-value">${c.valid ? `${smartNumber(c.totalBaseSize, 4)}/${baseDisplay}` : "-"}</div>
+              <div class="metric-value">${c.valid ? `${smartNumber(c.totalBaseSize, 4)}${baseDisplay}` : "-"}</div>
             </div>
           </div>
           <div class="mobile-edit-grid">
