@@ -4,13 +4,13 @@
   "settings": {
     "lang": "zh",
     "language": "zh",
-    "activeGroupId": "group_1778246168663_d24215f198b6e"
+    "activeGroupId": "group_1778680544317_27462cdbe879e"
   },
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T13:55:08.192Z",
-    "lastSavedAt": "2026-05-13T13:55:40.179Z"
+    "lastSavedAt": "2026-05-13T13:55:45.229Z"
   },
   "units": [
     {
@@ -219,7 +219,7 @@
     },
     {
       "id": "group_1778670149375_13bf168a8eb7c8",
-      "name": "奶粉(3duan)",
+      "name": "奶粉(3段)",
       "productNames": [
         {
           "id": "productName_1778670149375_253002c7faaf28",
@@ -284,9 +284,20 @@
           "createdAt": 1778678989035
         }
       ]
+    },
+    {
+      "id": "group_1778680544317_27462cdbe879e",
+      "name": "新商品",
+      "items": [],
+      "productNames": [
+        {
+          "id": "pname_1778680544317_5a9630cbe17d28",
+          "name": "新商品"
+        }
+      ]
     }
   ],
-  "activeGroupId": "group_1778246168663_d24215f198b6e",
+  "activeGroupId": "group_1778680544317_27462cdbe879e",
   "configs": {
     "stores": [
       {
