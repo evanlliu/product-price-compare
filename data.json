@@ -4,13 +4,13 @@
   "settings": {
     "lang": "zh",
     "language": "zh",
-    "activeGroupId": "group_1778670149375_13bf168a8eb7c8"
+    "activeGroupId": "group_1778246168663_d24215f198b6e"
   },
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T13:20:35.581Z",
-    "lastSavedAt": "2026-05-13T13:20:53.547Z"
+    "lastSavedAt": "2026-05-13T13:21:19.969Z"
   },
   "units": [
     {
@@ -244,7 +244,7 @@
       ]
     }
   ],
-  "activeGroupId": "group_1778670149375_13bf168a8eb7c8",
+  "activeGroupId": "group_1778246168663_d24215f198b6e",
   "configs": {
     "stores": [
       {
