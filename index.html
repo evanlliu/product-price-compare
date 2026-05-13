@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>商品比价器 Price Compare v1.0.47</title>
+  <title>商品比价器 Price Compare v1.0.48</title>
   <meta name="theme-color" content="#2563eb" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -41,6 +41,7 @@
 
     html {
       -webkit-text-size-adjust: 100%;
+      overflow-x: hidden;
     }
 
     body {
@@ -55,6 +56,7 @@
         var(--bg);
       -webkit-tap-highlight-color: transparent;
       overscroll-behavior-y: none;
+      overflow-x: hidden;
     }
 
 
@@ -1535,6 +1537,17 @@
       border-top: 1px solid var(--line);
     }
 
+    #recordEditOverlay .config-page,
+    #recordEditOverlay .config-body,
+    #recordEditOverlay .record-edit-form {
+      overflow-x: hidden;
+      overscroll-behavior-x: none;
+    }
+
+    #recordEditOverlay .record-edit-page {
+      max-width: calc(100vw - 24px);
+    }
+
 
     @media (min-width: 1200px) {
       .app {
@@ -1989,6 +2002,93 @@
       .mobile-card-actions .small-btn:first-child {
         border-left: 1px solid var(--line);
       }
+
+      #recordEditOverlay {
+        padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        touch-action: none;
+      }
+
+      #recordEditOverlay .record-edit-page {
+        width: calc(100vw - 20px);
+        max-width: calc(100vw - 20px);
+        height: min(84dvh, calc(100dvh - 20px));
+        max-height: calc(100dvh - 20px);
+        overflow: hidden;
+      }
+
+      #recordEditOverlay .config-body {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        padding: 10px 10px 0;
+      }
+
+      #recordEditForm {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        touch-action: pan-y;
+        padding-right: 1px;
+      }
+
+      #recordEditOverlay .record-edit-form {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      #recordEditOverlay .record-edit-form > div,
+      #recordEditOverlay .record-edit-form label,
+      #recordEditOverlay .record-edit-form input,
+      #recordEditOverlay .record-edit-form select {
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      #recordEditOverlay .record-edit-form input,
+      #recordEditOverlay .record-edit-form select {
+        width: 100%;
+        height: 38px;
+        min-height: 38px;
+        font-size: 16px;
+      }
+
+      #recordEditOverlay input[type="date"] {
+        display: block;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        -webkit-appearance: none;
+        appearance: none;
+        text-align: left;
+      }
+
+      #recordEditOverlay .record-edit-actions {
+        position: sticky;
+        bottom: 0;
+        z-index: 5;
+        flex: 0 0 auto;
+        margin: 8px -10px 0;
+        padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-top: 1px solid var(--line);
+      }
+
+      #recordEditOverlay .record-edit-actions button {
+        min-height: 40px;
+        flex: 1 1 0;
+      }
     }
 
   </style>
@@ -1997,7 +2097,7 @@
   <div class="boot-screen" id="bootScreen" role="status" aria-live="polite">
     <div class="boot-card">
       <div class="boot-logo">¥</div>
-      <div class="boot-title">加载中...</div>
+      <div class="boot-title">正在加载 data.json...</div>
       <div class="boot-hint">正在优先读取云端最新数据，加载完成后再显示页面，避免先看到本机缓存旧数据。</div>
       <div class="boot-dots" aria-hidden="true"><span></span><span></span><span></span></div>
     </div>
@@ -2008,7 +2108,7 @@
       <div class="brand">
         <div class="logo">¥</div>
         <div>
-          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.47</span><span id="mobileHeaderSync" class="mobile-header-sync"><span class="sync-dot"></span><span id="mobileHeaderSyncText"></span></span></h1>
+          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.48</span><span id="mobileHeaderSync" class="mobile-header-sync"><span class="sync-dot"></span><span id="mobileHeaderSyncText"></span></span></h1>
         </div>
       </div>
       <div class="top-actions">
@@ -2191,7 +2291,7 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.47";
+    const APP_VERSION = "v1.0.48";
     const STORAGE_KEY = "productPriceCompare.v1";
     const LOCAL_SYNC_KEY = "productPriceCompare.localSync.v1";
 
@@ -2257,10 +2357,10 @@
         syncConfigHint: "Worker 地址和访问密码会保存到 data.json，同时也会保存一份到本机浏览器配置，方便本地 debug 时直接同步云端 data.json。每次打开或刷新页面都会重新加载 data.json。",
         syncSecurityNote: "注意：如果 GitHub 仓库或 GitHub Pages 是公开的，data.json 里的 Worker 地址和访问密码也可能被看到。当前版本按你的需求保存，后续可以改成只本机保存密码。",
         syncStatusLocal: "本地模式",
-        syncStatusLoading: "加载中...",
-        syncStatusLoaded: "已加载：{time}",
-        syncStatusSaving: "保存中...",
-        syncStatusSaved: "已保存：{time}",
+        syncStatusLoading: "正在加载 data.json...",
+        syncStatusLoaded: "已加载云端 data.json：{time}",
+        syncStatusSaving: "正在保存到 GitHub data.json...",
+        syncStatusSaved: "已保存到 GitHub data.json：{time}",
         syncStatusFailed: "云端同步失败：{message}",
         syncConfigSaved: "同步配置已保存。",
         syncConfigRequired: "请填写 Cloudflare Worker 地址和访问密码，不能保存空配置。",
@@ -2421,10 +2521,10 @@
         syncConfigHint: "The Worker URL and access password will be saved to data.json and also to this browser for local debugging, so the app can sync cloud data.json when opened locally. The app reloads data.json every time it opens or refreshes.",
         syncSecurityNote: "Note: if your GitHub repo or GitHub Pages is public, the Worker URL and access password in data.json may be visible. This version saves them as requested; later we can keep the password local only.",
         syncStatusLocal: "Local mode",
-        syncStatusLoading: "Loading...",
-        syncStatusLoaded: "Loaded: {time}",
-        syncStatusSaving: "Saving...",
-        syncStatusSaved: "Saved: {time}",
+        syncStatusLoading: "Loading data.json...",
+        syncStatusLoaded: "Loaded cloud data.json: {time}",
+        syncStatusSaving: "Saving to GitHub data.json...",
+        syncStatusSaved: "Saved to GitHub data.json: {time}",
         syncStatusFailed: "Cloud sync failed: {message}",
         syncConfigSaved: "Sync settings saved.",
         syncNotConfigured: "Please enter the Cloudflare Worker URL and access password first.",
@@ -3363,10 +3463,7 @@
     }
 
     function nowText() {
-      const d = new Date();
-      return [d.getHours(), d.getMinutes(), d.getSeconds()]
-        .map(n => String(n).padStart(2, "0"))
-        .join(":");
+      return new Date().toLocaleString(state.lang === "zh" ? "zh-CN" : "en-US", { hour12: false });
     }
 
     function mergeRemoteState(remoteInput, options = {}) {
