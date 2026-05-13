@@ -1,5 +1,5 @@
 {
-  "version": "v1.0.16",
+  "version": "v1.0.17",
   "lang": "zh",
   "settings": {
     "lang": "zh",
@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T10:29:57.924Z",
-    "lastSavedAt": "2026-05-13T10:30:01.701Z"
+    "lastLoadedAt": "2026-05-13T10:46:54.117Z",
+    "lastSavedAt": "2026-05-13T10:49:33.624Z"
   },
   "units": [
     {
@@ -98,7 +98,7 @@
   "stores": [
     {
       "id": "store_a",
-      "name": "抖音/Douyin"
+      "name": "抖音/DY"
     },
     {
       "id": "store_b",
@@ -126,6 +126,8 @@
           "quantity": 1,
           "size": 360,
           "sizeCode": "",
+          "priceDate": "2026-05-13",
+          "status": "current",
           "unit": "g",
           "createdAt": 1715150000000
         },
@@ -137,6 +139,8 @@
           "quantity": 1,
           "size": 400,
           "sizeCode": "",
+          "priceDate": "2026-05-13",
+          "status": "current",
           "unit": "g",
           "createdAt": 1715150001000
         }
@@ -154,6 +158,8 @@
           "quantity": 2,
           "size": 34,
           "sizeCode": "XL",
+          "priceDate": "2026-05-13",
+          "status": "current",
           "unit": "sheet",
           "createdAt": 1778253591752
         },
@@ -165,6 +171,8 @@
           "quantity": 1,
           "size": 92,
           "sizeCode": "XL",
+          "priceDate": "2026-05-13",
+          "status": "current",
           "unit": "sheet",
           "createdAt": 1778666801934
         }
@@ -176,7 +184,7 @@
     "stores": [
       {
         "id": "store_a",
-        "name": "抖音/Douyin"
+        "name": "抖音/DY"
       },
       {
         "id": "store_b",
