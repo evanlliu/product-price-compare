@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T14:34:52.506Z",
-    "lastSavedAt": "2026-05-13T14:35:36.704Z"
+    "lastSavedAt": "2026-05-13T14:35:39.500Z"
   },
   "units": [
     {
@@ -177,7 +177,7 @@
       "name": "奶粉(3段)",
       "label": {
         "zh": "奶粉(3段)",
-        "en": "ormula"
+        "en": "Formula()"
       },
       "productNames": [
         {
