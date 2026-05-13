@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T11:01:32.288Z",
-    "lastSavedAt": "2026-05-13T11:01:44.779Z"
+    "lastSavedAt": "2026-05-13T11:02:05.459Z"
   },
   "units": [
     {
@@ -81,7 +81,7 @@
       "base": "sheet",
       "factor": 1,
       "label": {
-        "zh": "片 / 抽",
+        "zh": "片",
         "en": "sheet"
       }
     },
@@ -284,7 +284,7 @@
         "base": "sheet",
         "factor": 1,
         "label": {
-          "zh": "片 / 抽",
+          "zh": "片",
           "en": "sheet"
         }
       },
