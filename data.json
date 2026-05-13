@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T14:34:52.506Z",
-    "lastSavedAt": "2026-05-13T14:36:20.938Z"
+    "lastSavedAt": "2026-05-13T14:37:08.980Z"
   },
   "units": [
     {
@@ -246,9 +246,9 @@
     },
     {
       "id": "group_1778246168663_d24215f198b6e",
-      "name": "尿不湿(L)",
+      "name": "尿片(L)",
       "label": {
-        "zh": "尿不湿(L)",
+        "zh": "尿片(L)",
         "en": "Diaper(L)"
       },
       "productNames": [
