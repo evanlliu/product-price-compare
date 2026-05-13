@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>商品比价器 Price Compare v1.0.29</title>
+  <title>商品比价器 Price Compare v1.0.30</title>
   <meta name="theme-color" content="#2563eb" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1136,6 +1136,19 @@
       font-size: 12px;
     }
 
+    .unit-config-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+    }
+
+    .unit-config-actions button {
+      min-width: 92px;
+    }
+
     .config-panel {
       display: none;
     }
@@ -1420,7 +1433,7 @@
       <div class="brand">
         <div class="logo">¥</div>
         <div>
-          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.29</span></h1>
+          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.30</span></h1>
         </div>
       </div>
       <div class="top-actions">
@@ -1525,6 +1538,10 @@
             <button type="button" id="btnConfigAddUnit" class="btn-primary" data-i18n="addUnit">新增单位</button>
           </div>
           <div class="config-list unit-config-list" id="unitConfigList"></div>
+          <div class="unit-config-actions">
+            <button type="button" id="btnCancelUnitConfig" class="btn-ghost" data-i18n="close">关闭</button>
+            <button type="button" id="btnSaveUnitConfig" class="btn-primary" data-i18n="save">保存</button>
+          </div>
         </div>
 
         <div class="config-panel" id="storeConfigPanel">
@@ -1588,7 +1605,7 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.29";
+    const APP_VERSION = "v1.0.30";
     const STORAGE_KEY = "productPriceCompare.v1";
     const LOCAL_SYNC_KEY = "productPriceCompare.localSync.v1";
 
@@ -1646,6 +1663,7 @@
         storeConfigHint: "在这里维护商家 / 渠道，价格记录中只能从下拉列表选择。",
         unitConfigHint: "维护单位下拉数据。基础单位相同的单位可以互相比较，例如 kg 和 g。",
         addUnit: "新增单位",
+        duplicateUnitCode: "单位编码不能重复。",
         unitCode: "编码",
         unitZh: "中文",
         unitEn: "英文",
@@ -1798,6 +1816,7 @@
         storeConfigHint: "Manage stores / platforms here. Price records can only choose from the dropdown list.",
         unitConfigHint: "Manage unit dropdown data. Units with the same base unit can be compared, such as kg and g.",
         addUnit: "Add Unit",
+        duplicateUnitCode: "Unit codes cannot be duplicated.",
         unitCode: "Code",
         unitZh: "Chinese",
         unitEn: "English",
@@ -1948,6 +1967,7 @@
     let pendingFocusItemId = null;
     let editingItemId = null;
     let activeProductNameGroupId = "";
+    let unitConfigDraft = null;
     let cloudSaveTimer = null;
     let isApplyingRemote = false;
     let syncStatus = { type: "local", textKey: "syncStatusLocal", params: {} };
@@ -3280,6 +3300,7 @@
       const isUnit = type === "unit";
       const isSync = type === "sync";
       if (isProductName && !activeProductNameGroupId) activeProductNameGroupId = state.activeGroupId;
+      if (isUnit) resetUnitConfigDraft();
       const title = isProduct ? t("productGroupConfig") : isProductName ? t("productNameConfig") : isStore ? t("storeConfig") : isUnit ? t("unitConfig") : t("cloudSyncConfig");
       $("#configTitle").text(title);
       $("#productConfigPanel").toggleClass("active", isProduct);
@@ -3296,6 +3317,7 @@
     }
 
     function closeConfig() {
+      unitConfigDraft = null;
       $("#configOverlay").removeClass("show unit-config-open").attr("aria-hidden", "true");
     }
 
@@ -3333,15 +3355,24 @@
       $("#productNameConfigList").html(html);
     }
 
+    function resetUnitConfigDraft() {
+      unitConfigDraft = normalizeUnits(state.units).map(unit => ({ ...cloneUnit(unit), _originalCode: unit.code }));
+    }
+
+    function getUnitConfigDraft() {
+      if (!unitConfigDraft) resetUnitConfigDraft();
+      return unitConfigDraft;
+    }
+
     function renderUnitConfig() {
-      const rows = appUnits().map(unit => `
+      const rows = getUnitConfigDraft().map((unit, index) => `
         <div class="unit-config-grid unit-config-row">
-          <input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="code" type="text" value="${escapeAttr(unit.code)}" placeholder="${escapeAttr(t("unitCode"))}" />
-          <input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="zh" type="text" value="${escapeAttr(unit.label && unit.label.zh ? unit.label.zh : "")}" placeholder="${escapeAttr(t("unitZh"))}" />
-          <input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="en" type="text" value="${escapeAttr(unit.label && unit.label.en ? unit.label.en : "")}" placeholder="${escapeAttr(t("unitEn"))}" />
-          <input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="base" type="text" value="${escapeAttr(unit.base)}" placeholder="${escapeAttr(t("baseUnit"))}" />
-          <input class="js-config-unit" data-code="${escapeAttr(unit.code)}" data-field="factor" type="number" min="0.000001" step="0.000001" value="${escapeAttr(unit.factor)}" placeholder="${escapeAttr(t("unitFactor"))}" />
-          <button type="button" class="small-btn btn-danger btn-config-delete-unit" data-code="${escapeAttr(unit.code)}">${t("delete")}</button>
+          <input class="js-config-unit" data-index="${index}" data-field="code" type="text" value="${escapeAttr(unit.code)}" placeholder="${escapeAttr(t("unitCode"))}" />
+          <input class="js-config-unit" data-index="${index}" data-field="zh" type="text" value="${escapeAttr(unit.label && unit.label.zh ? unit.label.zh : "")}" placeholder="${escapeAttr(t("unitZh"))}" />
+          <input class="js-config-unit" data-index="${index}" data-field="en" type="text" value="${escapeAttr(unit.label && unit.label.en ? unit.label.en : "")}" placeholder="${escapeAttr(t("unitEn"))}" />
+          <input class="js-config-unit" data-index="${index}" data-field="base" type="text" value="${escapeAttr(unit.base)}" placeholder="${escapeAttr(t("baseUnit"))}" />
+          <input class="js-config-unit" data-index="${index}" data-field="factor" type="number" min="0.000001" step="0.000001" value="${escapeAttr(unit.factor)}" placeholder="${escapeAttr(t("unitFactor"))}" />
+          <button type="button" class="small-btn btn-danger btn-config-delete-unit" data-index="${index}">${t("delete")}</button>
         </div>`).join("");
       const header = `
         <div class="unit-config-grid unit-config-head">
@@ -3418,14 +3449,13 @@
     }
 
     function addUnitFromConfig() {
-      const codeBase = uniqueName("unit", appUnits(), unit => unit.code).replace(/\s+/g, "_").toLowerCase();
-      const unit = { code: codeBase, base: codeBase, factor: 1, label: { zh: t("newUnitDefault"), en: "New Unit" } };
-      state.units.push(unit);
-      saveState();
-      renderAll();
-      renderConfig();
+      const draft = getUnitConfigDraft();
+      const codeBase = uniqueName("unit", draft, unit => unit.code).replace(/\s+/g, "_").toLowerCase();
+      const unit = { code: codeBase, base: codeBase, factor: 1, label: { zh: t("newUnitDefault"), en: "New Unit" }, _originalCode: "" };
+      draft.push(unit);
+      renderUnitConfig();
       setTimeout(() => {
-        const input = $(`.js-config-unit[data-code="${unit.code}"][data-field="code"]`).get(0);
+        const input = $(`.js-config-unit[data-index="${draft.length - 1}"][data-field="code"]`).get(0);
         if (input) {
           input.focus();
           input.select();
@@ -3507,6 +3537,8 @@
     });
 
     $("#btnCloseConfig").on("click", closeConfig);
+    $("#btnCancelUnitConfig").on("click", closeConfig);
+    $("#btnSaveUnitConfig").on("click", saveUnitConfig);
 
     $("#configOverlay").on("click", function (e) {
       if (e.target === this) closeConfig();
@@ -3562,42 +3594,73 @@
     });
 
     $(document).on("input change", ".js-config-unit", function () {
-      const originalCode = String($(this).data("code") || "");
+      const index = Number($(this).data("index"));
       const field = $(this).data("field");
-      const unit = state.units.find(u => u.code === originalCode);
+      const draft = getUnitConfigDraft();
+      const unit = draft[index];
       if (!unit) return;
       if (field === "code") {
+        const oldCode = unit.code;
         const newCode = String($(this).val() || "").trim().replace(/\s+/g, "_");
-        if (!newCode) return;
-        if (newCode !== originalCode && state.units.some(u => u.code === newCode)) return;
-        state.groups.forEach(group => group.items.forEach(item => { if (item.unit === originalCode) item.unit = newCode; }));
         unit.code = newCode;
-        if (unit.base === originalCode) unit.base = newCode;
+        if (!unit.base || unit.base === oldCode) unit.base = newCode;
       } else if (field === "zh") {
         unit.label = unit.label || {};
-        unit.label.zh = String($(this).val() || "").trim() || unit.code;
+        unit.label.zh = String($(this).val() || "").trim();
       } else if (field === "en") {
         unit.label = unit.label || {};
-        unit.label.en = String($(this).val() || "").trim() || unit.code;
+        unit.label.en = String($(this).val() || "").trim();
       } else if (field === "base") {
-        unit.base = String($(this).val() || "").trim() || unit.code;
+        unit.base = String($(this).val() || "").trim();
       } else if (field === "factor") {
         unit.factor = Math.max(0.000001, numberOrZero($(this).val()) || 1);
       }
-      saveState();
-      renderAll();
     });
 
     $(document).on("click", ".btn-config-delete-unit", function () {
-      const code = String($(this).data("code") || "");
-      if (state.units.length <= 1) return alert(t("cannotDeleteLastUnit"));
-      const used = state.groups.some(group => group.items.some(item => item.unit === code));
+      const index = Number($(this).data("index"));
+      const draft = getUnitConfigDraft();
+      const unit = draft[index];
+      if (!unit) return;
+      if (draft.length <= 1) return alert(t("cannotDeleteLastUnit"));
+      const originalCode = String(unit._originalCode || unit.code || "");
+      const used = originalCode && state.groups.some(group => group.items.some(item => item.unit === originalCode));
       if (used) return alert(t("unitInUse"));
       if (!confirm(t("confirmDeleteUnit"))) return;
-      state.units = state.units.filter(unit => unit.code !== code);
-      saveState();
-      renderAll();
+      draft.splice(index, 1);
+      renderUnitConfig();
     });
+
+    function saveUnitConfig() {
+      const draft = getUnitConfigDraft().map(unit => ({
+        _originalCode: unit._originalCode || "",
+        code: String(unit.code || "").trim().replace(/\s+/g, "_"),
+        base: String(unit.base || unit.code || "").trim().replace(/\s+/g, "_"),
+        factor: Math.max(0.000001, numberOrZero(unit.factor) || 1),
+        label: {
+          zh: String(unit.label && unit.label.zh ? unit.label.zh : unit.code || "").trim(),
+          en: String(unit.label && unit.label.en ? unit.label.en : unit.code || "").trim()
+        }
+      })).filter(unit => unit.code);
+      if (!draft.length) return alert(t("cannotDeleteLastUnit"));
+      const seen = new Set();
+      for (const unit of draft) {
+        if (seen.has(unit.code)) return alert(t("duplicateUnitCode"));
+        seen.add(unit.code);
+      }
+      draft.forEach(unit => {
+        if (unit._originalCode && unit._originalCode !== unit.code) {
+          state.groups.forEach(group => group.items.forEach(item => {
+            if (item.unit === unit._originalCode) item.unit = unit.code;
+          }));
+        }
+      });
+      state.units = draft.map(unit => cloneUnit(unit));
+      unitConfigDraft = null;
+      saveState();
+      closeConfig();
+      renderAll();
+    }
 
     $(document).on("input", ".js-config-store-name", function () {
       const id = $(this).data("id");
