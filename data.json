@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T14:19:24.281Z",
-    "lastSavedAt": "2026-05-13T14:23:48.265Z"
+    "lastSavedAt": "2026-05-13T14:23:58.316Z"
   },
   "units": [
     {
@@ -118,7 +118,7 @@
       "name": "淘宝",
       "label": {
         "zh": "淘宝",
-        "en": "TA"
+        "en": "Taobao"
       }
     },
     {
@@ -126,7 +126,7 @@
       "name": "拼多多/PDD",
       "label": {
         "zh": "拼多多/PDD",
-        "en": "拼多多/PDD"
+        "en": "PDD"
       }
     },
     {
@@ -339,7 +339,7 @@
         "name": "淘宝",
         "label": {
           "zh": "淘宝",
-          "en": "TA"
+          "en": "Taobao"
         }
       },
       {
@@ -347,7 +347,7 @@
         "name": "拼多多/PDD",
         "label": {
           "zh": "拼多多/PDD",
-          "en": "拼多多/PDD"
+          "en": "PDD"
         }
       },
       {
