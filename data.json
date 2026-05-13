@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T12:25:43.665Z",
-    "lastSavedAt": "2026-05-13T12:25:53.420Z"
+    "lastSavedAt": "2026-05-13T12:25:57.373Z"
   },
   "units": [
     {
@@ -99,7 +99,7 @@
       "base": "unit",
       "factor": 1,
       "label": {
-        "zh": "新单位",
+        "zh": "g",
         "en": "New Unit"
       }
     }
@@ -336,7 +336,7 @@
         "base": "unit",
         "factor": 1,
         "label": {
-          "zh": "新单位",
+          "zh": "g",
           "en": "New Unit"
         }
       }
