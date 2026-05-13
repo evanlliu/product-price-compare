@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T15:17:01.399Z",
-    "lastSavedAt": "2026-05-13T15:18:38.652Z"
+    "lastSavedAt": "2026-05-13T15:18:54.512Z"
   },
   "units": [
     {
@@ -305,7 +305,7 @@
           "id": "item_1778685517745_2570b15c3c082",
           "productNameId": "productName_1778670092288_9292fbb9d15c5",
           "storeId": "store_1778246138226_757f331a4c69f",
-          "price": 209.99,
+          "price": 219.99,
           "cashback": 0,
           "quantity": 4,
           "size": 52,
