@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T13:57:42.546Z",
-    "lastSavedAt": "2026-05-13T13:58:06.666Z"
+    "lastSavedAt": "2026-05-13T14:06:24.556Z"
   },
   "units": [
     {
@@ -155,7 +155,7 @@
       "productNames": [
         {
           "id": "productName_1778670092288_9292fbb9d15c5",
-          "name": "帮舒宝"
+          "name": "帮宝适"
         }
       ],
       "items": [
