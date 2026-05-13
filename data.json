@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T12:25:43.665Z",
-    "lastSavedAt": "2026-05-13T12:25:57.373Z"
+    "lastSavedAt": "2026-05-13T12:26:00.807Z"
   },
   "units": [
     {
@@ -92,15 +92,6 @@
       "label": {
         "zh": "卷",
         "en": "roll"
-      }
-    },
-    {
-      "code": "unit",
-      "base": "unit",
-      "factor": 1,
-      "label": {
-        "zh": "g",
-        "en": "New Unit"
       }
     }
   ],
@@ -329,15 +320,6 @@
         "label": {
           "zh": "卷",
           "en": "roll"
-        }
-      },
-      {
-        "code": "unit",
-        "base": "unit",
-        "factor": 1,
-        "label": {
-          "zh": "g",
-          "en": "New Unit"
         }
       }
     ]
