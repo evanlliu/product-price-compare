@@ -1,5 +1,5 @@
 {
-  "version": "v1.0.18",
+  "version": "v1.0.22",
   "lang": "zh",
   "settings": {
     "lang": "zh",
@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T11:25:56.349Z",
-    "lastSavedAt": "2026-05-13T11:26:03.653Z"
+    "lastLoadedAt": "2026-05-13T11:26:42.264Z",
+    "lastSavedAt": "2026-05-13T11:27:20.191Z"
   },
   "units": [
     {
@@ -161,6 +161,10 @@
         {
           "id": "productName_1778670092288_9292fbb9d15c5",
           "name": "帮舒宝"
+        },
+        {
+          "id": "pname_1778671639289_27987f96934598",
+          "name": "新商品名称"
         }
       ],
       "items": [
