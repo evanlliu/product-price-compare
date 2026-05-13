@@ -4,13 +4,13 @@
   "settings": {
     "lang": "zh",
     "language": "zh",
-    "activeGroupId": "group_1778246168663_d24215f198b6e"
+    "activeGroupId": "group_1778670149375_13bf168a8eb7c8"
   },
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T11:01:32.288Z",
-    "lastSavedAt": "2026-05-13T11:02:07.886Z"
+    "lastSavedAt": "2026-05-13T11:02:30.278Z"
   },
   "units": [
     {
@@ -193,9 +193,20 @@
           "createdAt": 1778666801934
         }
       ]
+    },
+    {
+      "id": "group_1778670149375_13bf168a8eb7c8",
+      "name": "新商品",
+      "items": [],
+      "productNames": [
+        {
+          "id": "productName_1778670149375_253002c7faaf28",
+          "name": "新商品"
+        }
+      ]
     }
   ],
-  "activeGroupId": "group_1778246168663_d24215f198b6e",
+  "activeGroupId": "group_1778670149375_13bf168a8eb7c8",
   "configs": {
     "stores": [
       {
