@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T14:30:35.801Z",
-    "lastSavedAt": "2026-05-13T14:33:08.342Z"
+    "lastSavedAt": "2026-05-13T14:33:32.018Z"
   },
   "units": [
     {
@@ -313,9 +313,9 @@
       "productNames": [
         {
           "id": "pname_1778680544317_5a9630cbe17d28",
-          "name": "新商品",
+          "name": "帮宝适",
           "label": {
-            "zh": "新商品",
+            "zh": "帮宝适",
             "en": "新商品"
           }
         }
