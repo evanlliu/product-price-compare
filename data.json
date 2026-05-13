@@ -1,5 +1,5 @@
 {
-  "version": "v1.0.37",
+  "version": "v1.0.39",
   "lang": "zh",
   "settings": {
     "lang": "zh",
@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T13:57:42.546Z",
-    "lastSavedAt": "2026-05-13T14:07:31.062Z"
+    "lastLoadedAt": "2026-05-13T14:08:05.990Z",
+    "lastSavedAt": "2026-05-13T14:08:31.494Z"
   },
   "units": [
     {
@@ -141,65 +141,10 @@
           "cashback": 22.45,
           "quantity": 1,
           "size": 360,
-          "sizeCode": "默认规格",
           "priceDate": "2026-05-07",
           "status": "purchased",
           "unit": "g",
           "createdAt": 1715150000000
-        }
-      ]
-    },
-    {
-      "id": "group_1778246168663_d24215f198b6e",
-      "name": "尿不湿(L)",
-      "productNames": [
-        {
-          "id": "productName_1778670092288_9292fbb9d15c5",
-          "name": "帮宝适"
-        }
-      ],
-      "items": [
-        {
-          "id": "item_1778253591752_312aff5e69c1b8",
-          "productNameId": "productName_1778670092288_9292fbb9d15c5",
-          "storeId": "store_1778246138226_757f331a4c69f",
-          "price": 91.9,
-          "cashback": 0,
-          "quantity": 1,
-          "size": 84,
-          "sizeCode": "L",
-          "priceDate": "2026-01-20",
-          "status": "purchased",
-          "unit": "sheet",
-          "createdAt": 1778253591752
-        },
-        {
-          "id": "item_1778666801934_94ec269b20a248",
-          "productNameId": "productName_1778670092288_9292fbb9d15c5",
-          "storeId": "store_1778246138226_757f331a4c69f",
-          "price": 109,
-          "cashback": 0,
-          "quantity": 1,
-          "size": 82,
-          "sizeCode": "L",
-          "priceDate": "2026-04-30",
-          "status": "purchased",
-          "unit": "sheet",
-          "createdAt": 1778666801934
-        },
-        {
-          "id": "item_1778671456389_19e5cde1173468",
-          "productNameId": "productName_1778670092288_9292fbb9d15c5",
-          "storeId": "store_1778246138226_757f331a4c69f",
-          "price": 100,
-          "cashback": 0,
-          "quantity": 2,
-          "size": 34,
-          "sizeCode": "XL",
-          "priceDate": "2026-04-29",
-          "status": "purchased",
-          "unit": "sheet",
-          "createdAt": 1778671456389
         }
       ]
     },
@@ -221,7 +166,6 @@
           "cashback": 0,
           "quantity": 2,
           "size": 1,
-          "sizeCode": "3段",
           "priceDate": "2026-01-06",
           "status": "purchased",
           "unit": "can",
@@ -235,7 +179,6 @@
           "cashback": 0,
           "quantity": 2,
           "size": 1,
-          "sizeCode": "3段",
           "priceDate": "2026-01-19",
           "status": "purchased",
           "unit": "can",
@@ -249,7 +192,6 @@
           "cashback": 0,
           "quantity": 2,
           "size": 1,
-          "sizeCode": "3段",
           "priceDate": "2026-04-29",
           "status": "purchased",
           "unit": "can",
@@ -263,11 +205,61 @@
           "cashback": 0,
           "quantity": 1,
           "size": 1,
-          "sizeCode": "3段",
           "priceDate": "2025-12-22",
           "status": "purchased",
           "unit": "can",
           "createdAt": 1778678989035
+        }
+      ]
+    },
+    {
+      "id": "group_1778246168663_d24215f198b6e",
+      "name": "尿不湿(L)",
+      "productNames": [
+        {
+          "id": "productName_1778670092288_9292fbb9d15c5",
+          "name": "帮宝适"
+        }
+      ],
+      "items": [
+        {
+          "id": "item_1778253591752_312aff5e69c1b8",
+          "productNameId": "productName_1778670092288_9292fbb9d15c5",
+          "storeId": "store_1778246138226_757f331a4c69f",
+          "price": 91.9,
+          "cashback": 0,
+          "quantity": 1,
+          "size": 84,
+          "priceDate": "2026-01-20",
+          "status": "purchased",
+          "unit": "sheet",
+          "createdAt": 1778253591752
+        },
+        {
+          "id": "item_1778666801934_94ec269b20a248",
+          "productNameId": "productName_1778670092288_9292fbb9d15c5",
+          "storeId": "store_1778246138226_757f331a4c69f",
+          "price": 109,
+          "cashback": 0,
+          "quantity": 1,
+          "size": 82,
+          "priceDate": "2026-04-30",
+          "status": "purchased",
+          "unit": "sheet",
+          "createdAt": 1778666801934
+        },
+        {
+          "id": "item_1778671456389_19e5cde1173468",
+          "productNameId": "productName_1778670092288_9292fbb9d15c5",
+          "storeId": "store_1778246138226_757f331a4c69f",
+          "price": 100,
+          "cashback": 0,
+          "quantity": 2,
+          "size": 34,
+          "priceDate": "2026-04-29",
+          "status": "purchased",
+          "unit": "sheet",
+          "createdAt": 1778671456389
         }
       ]
     },
