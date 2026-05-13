@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T12:29:08.423Z",
-    "lastSavedAt": "2026-05-13T12:29:38.981Z"
+    "lastLoadedAt": "2026-05-13T12:29:43.032Z",
+    "lastSavedAt": "2026-05-13T12:29:48.568Z"
   },
   "units": [
     {
