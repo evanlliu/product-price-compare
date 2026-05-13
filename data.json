@@ -4,13 +4,13 @@
   "settings": {
     "lang": "zh",
     "language": "zh",
-    "activeGroupId": "group_1778246168663_d24215f198b6e"
+    "activeGroupId": "group_1778680544317_27462cdbe879e"
   },
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T14:38:59.242Z",
-    "lastSavedAt": "2026-05-13T14:39:21.175Z"
+    "lastSavedAt": "2026-05-13T14:39:26.755Z"
   },
   "units": [
     {
@@ -287,19 +287,6 @@
           "status": "purchased",
           "unit": "sheet",
           "createdAt": 1778666801934
-        },
-        {
-          "id": "item_1778671456389_19e5cde1173468",
-          "productNameId": "productName_1778670092288_9292fbb9d15c5",
-          "storeId": "store_1778246138226_757f331a4c69f",
-          "price": 100,
-          "cashback": 0,
-          "quantity": 2,
-          "size": 34,
-          "priceDate": "2026-04-29",
-          "status": "purchased",
-          "unit": "sheet",
-          "createdAt": 1778671456389
         }
       ]
     },
@@ -320,10 +307,24 @@
           }
         }
       ],
-      "items": []
+      "items": [
+        {
+          "id": "item_1778671456389_19e5cde1173468",
+          "productNameId": "pname_1778680544317_5a9630cbe17d28",
+          "storeId": "store_1778246138226_757f331a4c69f",
+          "price": 100,
+          "cashback": 0,
+          "quantity": 2,
+          "size": 34,
+          "priceDate": "2026-04-29",
+          "status": "purchased",
+          "unit": "sheet",
+          "createdAt": 1778671456389
+        }
+      ]
     }
   ],
-  "activeGroupId": "group_1778246168663_d24215f198b6e",
+  "activeGroupId": "group_1778680544317_27462cdbe879e",
   "configs": {
     "stores": [
       {
