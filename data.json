@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T13:48:38.160Z",
-    "lastSavedAt": "2026-05-13T13:49:24.370Z"
+    "lastSavedAt": "2026-05-13T13:49:30.558Z"
   },
   "units": [
     {
@@ -228,13 +228,13 @@
         {
           "id": "item_1778680138534_2f1305ca3cad18",
           "productNameId": "productName_1778670092288_9292fbb9d15c5",
-          "variantId": "variant_1778680118160_5b763c93dbf97",
+          "variantId": "variant_1778680118160_1ce966d0396638",
           "storeId": "store_a",
           "price": 130,
           "cashback": 0,
           "quantity": 1,
           "size": 82,
-          "sizeCode": "默认规格",
+          "sizeCode": "XL",
           "priceDate": "2026-05-13",
           "status": "current",
           "unit": "sheet",
