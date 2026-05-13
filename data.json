@@ -1,16 +1,16 @@
 {
-  "version": "v1.0.17",
-  "lang": "zh",
+  "version": "v1.0.18",
+  "lang": "en",
   "settings": {
-    "lang": "zh",
-    "language": "zh",
+    "lang": "en",
+    "language": "en",
     "activeGroupId": "group_1778246168663_d24215f198b6e"
   },
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T10:52:38.424Z",
-    "lastSavedAt": "2026-05-13T10:57:37.271Z"
+    "lastLoadedAt": "2026-05-13T11:01:32.288Z",
+    "lastSavedAt": "2026-05-13T11:01:40.205Z"
   },
   "units": [
     {
@@ -117,9 +117,16 @@
     {
       "id": "group_face_wash",
       "name": "洗面奶",
+      "productNames": [
+        {
+          "id": "productName_1778670092288_40a6322d0e94d",
+          "name": "洗面奶"
+        }
+      ],
       "items": [
         {
           "id": "item_001",
+          "productNameId": "productName_1778670092288_40a6322d0e94d",
           "storeId": "store_a",
           "price": 88,
           "cashback": 22.45,
@@ -133,6 +140,7 @@
         },
         {
           "id": "item_002",
+          "productNameId": "productName_1778670092288_40a6322d0e94d",
           "storeId": "store_a",
           "price": 82,
           "cashback": 1.47,
@@ -149,9 +157,16 @@
     {
       "id": "group_1778246168663_d24215f198b6e",
       "name": "尿不湿",
+      "productNames": [
+        {
+          "id": "productName_1778670092288_9292fbb9d15c5",
+          "name": "尿不湿"
+        }
+      ],
       "items": [
         {
           "id": "item_1778253591752_312aff5e69c1b8",
+          "productNameId": "productName_1778670092288_9292fbb9d15c5",
           "storeId": "store_1778246138226_757f331a4c69f",
           "price": 91.9,
           "cashback": 0,
@@ -165,6 +180,7 @@
         },
         {
           "id": "item_1778666801934_94ec269b20a248",
+          "productNameId": "productName_1778670092288_9292fbb9d15c5",
           "storeId": "store_1778246138226_757f331a4c69f",
           "price": 109,
           "cashback": 0,
