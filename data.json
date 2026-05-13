@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T14:19:24.281Z",
-    "lastSavedAt": "2026-05-13T14:23:41.753Z"
+    "lastSavedAt": "2026-05-13T14:23:43.309Z"
   },
   "units": [
     {
@@ -110,7 +110,7 @@
       "name": "抖音",
       "label": {
         "zh": "抖音",
-        "en": "抖音/DY"
+        "en": "DY"
       }
     },
     {
@@ -331,7 +331,7 @@
         "name": "抖音",
         "label": {
           "zh": "抖音",
-          "en": "抖音/DY"
+          "en": "DY"
         }
       },
       {
