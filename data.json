@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T13:25:13.949Z",
-    "lastSavedAt": "2026-05-13T13:25:15.976Z"
+    "lastLoadedAt": "2026-05-13T13:25:44.359Z",
+    "lastSavedAt": "2026-05-13T13:26:12.993Z"
   },
   "units": [
     {
@@ -254,6 +254,20 @@
           "status": "purchased",
           "unit": "can",
           "createdAt": 1778678498704
+        },
+        {
+          "id": "item_1778678772088_6b72059ae40f1",
+          "productNameId": "productName_1778670149375_253002c7faaf28",
+          "storeId": "store_1778246138226_757f331a4c69f",
+          "price": 251,
+          "cashback": 0,
+          "quantity": 2,
+          "size": 1,
+          "sizeCode": "3段",
+          "priceDate": "2026-05-13",
+          "status": "current",
+          "unit": "can",
+          "createdAt": 1778678772089
         }
       ]
     }
