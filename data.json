@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T13:57:42.546Z",
-    "lastSavedAt": "2026-05-13T14:07:24.400Z"
+    "lastSavedAt": "2026-05-13T14:07:31.062Z"
   },
   "units": [
     {
@@ -200,20 +200,6 @@
           "status": "purchased",
           "unit": "sheet",
           "createdAt": 1778671456389
-        },
-        {
-          "id": "item_1778680138534_2f1305ca3cad18",
-          "productNameId": "productName_1778670092288_9292fbb9d15c5",
-          "storeId": "store_a",
-          "price": 100,
-          "cashback": 0,
-          "quantity": 2,
-          "size": 35,
-          "sizeCode": "XL",
-          "priceDate": "2026-05-13",
-          "status": "current",
-          "unit": "sheet",
-          "createdAt": 1778680138534
         }
       ]
     },
