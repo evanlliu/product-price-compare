@@ -1,16 +1,16 @@
 {
-  "version": "v1.0.29",
+  "version": "v1.0.28",
   "lang": "zh",
   "settings": {
     "lang": "zh",
     "language": "zh",
-    "activeGroupId": "group_face_wash"
+    "activeGroupId": "group_1778246168663_d24215f198b6e"
   },
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T12:26:40.667Z",
-    "lastSavedAt": "2026-05-13T12:26:43.701Z"
+    "lastLoadedAt": "2026-05-13T12:29:08.423Z",
+    "lastSavedAt": "2026-05-13T12:29:38.981Z"
   },
   "units": [
     {
@@ -220,7 +220,7 @@
       "items": []
     }
   ],
-  "activeGroupId": "group_face_wash",
+  "activeGroupId": "group_1778246168663_d24215f198b6e",
   "configs": {
     "stores": [
       {
