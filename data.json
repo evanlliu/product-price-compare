@@ -1,5 +1,5 @@
 {
-  "version": "v1.0.13",
+  "version": "v1.0.16",
   "lang": "zh",
   "settings": {
     "lang": "zh",
@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T10:06:14.624Z",
-    "lastSavedAt": "2026-05-13T10:08:22.621Z"
+    "lastLoadedAt": "2026-05-13T10:29:50.139Z",
+    "lastSavedAt": "2026-05-13T10:29:54.293Z"
   },
   "units": [
     {
@@ -125,6 +125,7 @@
           "cashback": 22.45,
           "quantity": 1,
           "size": 360,
+          "sizeCode": "",
           "unit": "g",
           "createdAt": 1715150000000
         },
@@ -135,6 +136,7 @@
           "cashback": 1.47,
           "quantity": 1,
           "size": 400,
+          "sizeCode": "",
           "unit": "g",
           "createdAt": 1715150001000
         }
@@ -151,6 +153,7 @@
           "cashback": 0,
           "quantity": 2,
           "size": 34,
+          "sizeCode": "XL",
           "unit": "sheet",
           "createdAt": 1778253591752
         },
@@ -161,6 +164,7 @@
           "cashback": 0,
           "quantity": 1,
           "size": 92,
+          "sizeCode": "",
           "unit": "sheet",
           "createdAt": 1778666801934
         }
