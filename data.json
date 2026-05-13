@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T14:19:24.281Z",
-    "lastSavedAt": "2026-05-13T14:24:02.842Z"
+    "lastSavedAt": "2026-05-13T14:24:06.717Z"
   },
   "units": [
     {
@@ -134,7 +134,7 @@
       "name": "京东/JD",
       "label": {
         "zh": "京东/JD",
-        "en": "京东/JD"
+        "en": "JD"
       }
     }
   ],
@@ -355,7 +355,7 @@
         "name": "京东/JD",
         "label": {
           "zh": "京东/JD",
-          "en": "京东/JD"
+          "en": "JD"
         }
       }
     ],
