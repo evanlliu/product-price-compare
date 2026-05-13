@@ -1,5 +1,5 @@
 {
-  "version": "v1.0.42",
+  "version": "v1.0.43",
   "lang": "zh",
   "settings": {
     "lang": "zh",
@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T14:27:40.559Z",
-    "lastSavedAt": "2026-05-13T14:28:05.418Z"
+    "lastLoadedAt": "2026-05-13T14:30:35.801Z",
+    "lastSavedAt": "2026-05-13T14:32:14.983Z"
   },
   "units": [
     {
@@ -257,7 +257,7 @@
           "name": "帮宝适",
           "label": {
             "zh": "帮宝适",
-            "en": "帮宝适"
+            "en": "Pampers"
           }
         }
       ],
