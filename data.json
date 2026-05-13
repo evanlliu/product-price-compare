@@ -1,5 +1,5 @@
 {
-  "version": "v1.0.32",
+  "version": "v1.0.33",
   "lang": "zh",
   "settings": {
     "lang": "zh",
@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-13T13:10:52.849Z",
-    "lastSavedAt": "2026-05-13T13:13:02.343Z"
+    "lastLoadedAt": "2026-05-13T13:20:07.196Z",
+    "lastSavedAt": "2026-05-13T13:20:26.967Z"
   },
   "units": [
     {
@@ -92,6 +92,15 @@
       "label": {
         "zh": "卷",
         "en": "roll"
+      }
+    },
+    {
+      "code": "can",
+      "base": "can",
+      "factor": 1,
+      "label": {
+        "zh": "罐",
+        "en": "can"
       }
     }
   ],
@@ -335,6 +344,15 @@
         "label": {
           "zh": "卷",
           "en": "roll"
+        }
+      },
+      {
+        "code": "can",
+        "base": "can",
+        "factor": 1,
+        "label": {
+          "zh": "罐",
+          "en": "can"
         }
       }
     ]
