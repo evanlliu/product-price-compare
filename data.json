@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-13T13:10:52.849Z",
-    "lastSavedAt": "2026-05-13T13:12:16.729Z"
+    "lastSavedAt": "2026-05-13T13:12:25.505Z"
   },
   "units": [
     {
@@ -226,7 +226,7 @@
           "cashback": 0,
           "quantity": 2,
           "size": 1,
-          "sizeCode": "",
+          "sizeCode": "3duan",
           "priceDate": "2026-01-06",
           "status": "current",
           "unit": "g",
