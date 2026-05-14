@@ -10,7 +10,7 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.59";
+    const APP_VERSION = "v1.0.60";
     const FLOATING_POS_KEY = "price_compare_floating_actions_position";
     const STORAGE_KEY = "productPriceCompare.v1";
     const LOCAL_SYNC_KEY = "productPriceCompare.localSync.v1";
@@ -78,9 +78,9 @@
         syncSecurityNote: "注意：如果 GitHub 仓库或 GitHub Pages 是公开的，data.json 里的 Worker 地址和访问密码也可能被看到。当前版本按你的需求保存，后续可以改成只本机保存密码。",
         syncStatusLocal: "本地模式",
         syncStatusLoading: "正在加载 data.json...",
-        syncStatusLoaded: "已加载云端 data.json：{time}",
+        syncStatusLoaded: "已加载：{time}",
         syncStatusSaving: "正在保存到 GitHub data.json...",
-        syncStatusSaved: "已保存到 GitHub data.json：{time}",
+        syncStatusSaved: "已保存：{time}",
         syncStatusFailed: "云端同步失败：{message}",
         syncConfigSaved: "同步配置已保存。",
         syncConfigRequired: "请填写 Cloudflare Worker 地址和访问密码，不能保存空配置。",
@@ -248,9 +248,9 @@
         syncSecurityNote: "Note: if your GitHub repo or GitHub Pages is public, the Worker URL and access password in data.json may be visible. This version saves them as requested; later we can keep the password local only.",
         syncStatusLocal: "Local mode",
         syncStatusLoading: "Loading data.json...",
-        syncStatusLoaded: "Loaded cloud data.json: {time}",
+        syncStatusLoaded: "Loaded: {time}",
         syncStatusSaving: "Saving to GitHub data.json...",
-        syncStatusSaved: "Saved to GitHub data.json: {time}",
+        syncStatusSaved: "Saved: {time}",
         syncStatusFailed: "Cloud sync failed: {message}",
         syncConfigSaved: "Sync settings saved.",
         syncNotConfigured: "Please enter the Cloudflare Worker URL and access password first.",
@@ -1225,7 +1225,11 @@
     }
 
     function nowText() {
-      return new Date().toLocaleString(state.lang === "zh" ? "zh-CN" : "en-US", { hour12: false });
+      const d = new Date();
+      const hh = String(d.getHours()).padStart(2, "0");
+      const mm = String(d.getMinutes()).padStart(2, "0");
+      const ss = String(d.getSeconds()).padStart(2, "0");
+      return `${hh}:${mm}:${ss}`;
     }
 
     function mergeRemoteState(remoteInput, options = {}) {
@@ -2715,7 +2719,24 @@
       el.style.bottom = "auto";
     }
 
+    function isFloatingDraggableViewport() {
+      return window.matchMedia && window.matchMedia("(max-width: 520px)").matches;
+    }
+
+    function resetFloatingPositionForDesktop() {
+      const el = document.querySelector(".floating-actions");
+      if (!el) return;
+      el.style.left = "";
+      el.style.top = "";
+      el.style.right = "";
+      el.style.bottom = "";
+    }
+
     function loadFloatingPosition() {
+      if (!isFloatingDraggableViewport()) {
+        resetFloatingPositionForDesktop();
+        return;
+      }
       const pos = safeJsonParse(localStorage.getItem(FLOATING_POS_KEY), null);
       applyFloatingPosition(pos);
     }
@@ -2737,6 +2758,7 @@
       loadFloatingPosition();
 
       el.addEventListener("pointerdown", function (e) {
+        if (!isFloatingDraggableViewport()) return;
         if (e.pointerType === "mouse" && e.button !== 0) return;
         const rect = el.getBoundingClientRect();
         startX = e.clientX;
@@ -2748,6 +2770,7 @@
       });
 
       el.addEventListener("pointermove", function (e) {
+        if (!isFloatingDraggableViewport()) return;
         if (!el.hasPointerCapture || !el.hasPointerCapture(e.pointerId)) return;
         const dx = e.clientX - startX;
         const dy = e.clientY - startY;
@@ -2764,7 +2787,7 @@
         if (el.hasPointerCapture && el.hasPointerCapture(e.pointerId)) {
           el.releasePointerCapture(e.pointerId);
         }
-        if (dragging) {
+        if (dragging && isFloatingDraggableViewport()) {
           const rect = el.getBoundingClientRect();
           const pos = clampFloatingPosition(rect.left, rect.top);
           applyFloatingPosition(pos);
@@ -2784,6 +2807,10 @@
       }, true);
 
       window.addEventListener("resize", function () {
+        if (!isFloatingDraggableViewport()) {
+          resetFloatingPositionForDesktop();
+          return;
+        }
         const pos = safeJsonParse(localStorage.getItem(FLOATING_POS_KEY), null);
         if (!pos) return;
         const fixedPos = clampFloatingPosition(pos.left, pos.top);
