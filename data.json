@@ -1,5 +1,5 @@
 {
-  "version": "v1.0.49",
+  "version": "v1.0.48",
   "lang": "zh",
   "settings": {
     "lang": "zh",
@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-14T05:37:25.775Z",
-    "lastSavedAt": "2026-05-14T05:40:43.456Z"
+    "lastLoadedAt": "2026-05-14T04:41:21.150Z",
+    "lastSavedAt": "2026-05-14T04:57:03.584Z"
   },
   "units": [
     {
@@ -168,8 +168,6 @@
           "priceDate": "2026-05-07",
           "status": "purchased",
           "unit": "g",
-          "sourceUrl": "",
-          "sourceTitle": "",
           "createdAt": 1715150000000
         }
       ]
@@ -203,8 +201,6 @@
           "priceDate": "2026-01-06",
           "status": "purchased",
           "unit": "can",
-          "sourceUrl": "",
-          "sourceTitle": "",
           "createdAt": 1778677866292
         },
         {
@@ -218,8 +214,6 @@
           "priceDate": "2026-01-19",
           "status": "purchased",
           "unit": "can",
-          "sourceUrl": "",
-          "sourceTitle": "",
           "createdAt": 1778678498704
         },
         {
@@ -233,8 +227,6 @@
           "priceDate": "2026-04-29",
           "status": "purchased",
           "unit": "can",
-          "sourceUrl": "",
-          "sourceTitle": "",
           "createdAt": 1778678772089
         },
         {
@@ -248,8 +240,6 @@
           "priceDate": "2025-12-22",
           "status": "purchased",
           "unit": "can",
-          "sourceUrl": "",
-          "sourceTitle": "",
           "createdAt": 1778678989035
         }
       ]
@@ -283,8 +273,6 @@
           "priceDate": "2026-01-20",
           "status": "purchased",
           "unit": "sheet",
-          "sourceUrl": "",
-          "sourceTitle": "",
           "createdAt": 1778253591752
         },
         {
@@ -298,8 +286,6 @@
           "priceDate": "2026-04-30",
           "status": "purchased",
           "unit": "sheet",
-          "sourceUrl": "",
-          "sourceTitle": "",
           "createdAt": 1778666801934
         },
         {
@@ -313,8 +299,6 @@
           "priceDate": "2026-05-13",
           "status": "purchased",
           "unit": "sheet",
-          "sourceUrl": "",
-          "sourceTitle": "",
           "createdAt": 1778683409772
         }
       ]
@@ -348,8 +332,6 @@
           "priceDate": "2026-04-29",
           "status": "purchased",
           "unit": "sheet",
-          "sourceUrl": "",
-          "sourceTitle": "",
           "createdAt": 1778671456389
         },
         {
@@ -363,8 +345,6 @@
           "priceDate": "2026-05-13",
           "status": "current",
           "unit": "sheet",
-          "sourceUrl": "",
-          "sourceTitle": "",
           "createdAt": 1778683494489
         }
       ]
