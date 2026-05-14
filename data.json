@@ -1,5 +1,5 @@
 {
-  "version": "v1.0.48",
+  "version": "v1.0.49",
   "lang": "zh",
   "settings": {
     "lang": "zh",
@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-14T04:41:21.150Z",
-    "lastSavedAt": "2026-05-14T04:57:03.584Z"
+    "lastLoadedAt": "2026-05-14T05:37:25.775Z",
+    "lastSavedAt": "2026-05-14T05:37:55.537Z"
   },
   "units": [
     {
@@ -168,6 +168,8 @@
           "priceDate": "2026-05-07",
           "status": "purchased",
           "unit": "g",
+          "sourceUrl": "",
+          "sourceTitle": "",
           "createdAt": 1715150000000
         }
       ]
@@ -201,6 +203,8 @@
           "priceDate": "2026-01-06",
           "status": "purchased",
           "unit": "can",
+          "sourceUrl": "",
+          "sourceTitle": "",
           "createdAt": 1778677866292
         },
         {
@@ -214,6 +218,8 @@
           "priceDate": "2026-01-19",
           "status": "purchased",
           "unit": "can",
+          "sourceUrl": "",
+          "sourceTitle": "",
           "createdAt": 1778678498704
         },
         {
@@ -227,6 +233,8 @@
           "priceDate": "2026-04-29",
           "status": "purchased",
           "unit": "can",
+          "sourceUrl": "",
+          "sourceTitle": "",
           "createdAt": 1778678772089
         },
         {
@@ -240,6 +248,8 @@
           "priceDate": "2025-12-22",
           "status": "purchased",
           "unit": "can",
+          "sourceUrl": "",
+          "sourceTitle": "",
           "createdAt": 1778678989035
         }
       ]
@@ -263,6 +273,21 @@
       ],
       "items": [
         {
+          "id": "item_1778737071414_222e36a196a7f",
+          "productNameId": "productName_1778670092288_9292fbb9d15c5",
+          "storeId": "store_b",
+          "price": 0,
+          "cashback": 0,
+          "quantity": 1,
+          "size": 0,
+          "priceDate": "2026-05-14",
+          "status": "current",
+          "unit": "g",
+          "sourceUrl": "https://e.tb.cn/h.R0EL7KTWfk1X0td?tk=QGzy5JmBaxW",
+          "sourceTitle": "MD进进原创夏季气质法式时尚印花百搭薄款系带优雅上衣",
+          "createdAt": 1778737071414
+        },
+        {
           "id": "item_1778253591752_312aff5e69c1b8",
           "productNameId": "productName_1778670092288_9292fbb9d15c5",
           "storeId": "store_1778246138226_757f331a4c69f",
@@ -273,6 +298,8 @@
           "priceDate": "2026-01-20",
           "status": "purchased",
           "unit": "sheet",
+          "sourceUrl": "",
+          "sourceTitle": "",
           "createdAt": 1778253591752
         },
         {
@@ -286,6 +313,8 @@
           "priceDate": "2026-04-30",
           "status": "purchased",
           "unit": "sheet",
+          "sourceUrl": "",
+          "sourceTitle": "",
           "createdAt": 1778666801934
         },
         {
@@ -299,6 +328,8 @@
           "priceDate": "2026-05-13",
           "status": "purchased",
           "unit": "sheet",
+          "sourceUrl": "",
+          "sourceTitle": "",
           "createdAt": 1778683409772
         }
       ]
@@ -332,6 +363,8 @@
           "priceDate": "2026-04-29",
           "status": "purchased",
           "unit": "sheet",
+          "sourceUrl": "",
+          "sourceTitle": "",
           "createdAt": 1778671456389
         },
         {
@@ -345,6 +378,8 @@
           "priceDate": "2026-05-13",
           "status": "current",
           "unit": "sheet",
+          "sourceUrl": "",
+          "sourceTitle": "",
           "createdAt": 1778683494489
         }
       ]
