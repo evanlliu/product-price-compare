@@ -10,7 +10,8 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.57";
+    const APP_VERSION = "v1.0.59";
+    const FLOATING_POS_KEY = "price_compare_floating_actions_position";
     const STORAGE_KEY = "productPriceCompare.v1";
     const LOCAL_SYNC_KEY = "productPriceCompare.localSync.v1";
 
@@ -2680,6 +2681,118 @@
       e.preventDefault();
       selectGroupById($(this).data("id"));
     });
+
+    function safeJsonParse(text, fallback) {
+      try {
+        return JSON.parse(text);
+      } catch (err) {
+        return fallback;
+      }
+    }
+
+    function clampFloatingPosition(left, top) {
+      const el = document.querySelector(".floating-actions");
+      if (!el) return { left: 0, top: 0 };
+      const rect = el.getBoundingClientRect();
+      const margin = 8;
+      const width = rect.width || 48;
+      const height = rect.height || 48;
+      const maxLeft = Math.max(margin, window.innerWidth - width - margin);
+      const maxTop = Math.max(margin, window.innerHeight - height - margin);
+      return {
+        left: Math.min(Math.max(left, margin), maxLeft),
+        top: Math.min(Math.max(top, margin), maxTop)
+      };
+    }
+
+    function applyFloatingPosition(pos) {
+      const el = document.querySelector(".floating-actions");
+      if (!el || !pos || !Number.isFinite(pos.left) || !Number.isFinite(pos.top)) return;
+      const fixedPos = clampFloatingPosition(pos.left, pos.top);
+      el.style.left = `${fixedPos.left}px`;
+      el.style.top = `${fixedPos.top}px`;
+      el.style.right = "auto";
+      el.style.bottom = "auto";
+    }
+
+    function loadFloatingPosition() {
+      const pos = safeJsonParse(localStorage.getItem(FLOATING_POS_KEY), null);
+      applyFloatingPosition(pos);
+    }
+
+    function saveFloatingPosition(pos) {
+      localStorage.setItem(FLOATING_POS_KEY, JSON.stringify(pos));
+    }
+
+    function setupDraggableFloatingActions() {
+      const el = document.querySelector(".floating-actions");
+      if (!el) return;
+      let startX = 0;
+      let startY = 0;
+      let startLeft = 0;
+      let startTop = 0;
+      let dragging = false;
+      let suppressNextClick = false;
+
+      loadFloatingPosition();
+
+      el.addEventListener("pointerdown", function (e) {
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        const rect = el.getBoundingClientRect();
+        startX = e.clientX;
+        startY = e.clientY;
+        startLeft = rect.left;
+        startTop = rect.top;
+        dragging = false;
+        if (el.setPointerCapture) el.setPointerCapture(e.pointerId);
+      });
+
+      el.addEventListener("pointermove", function (e) {
+        if (!el.hasPointerCapture || !el.hasPointerCapture(e.pointerId)) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        if (!dragging && Math.hypot(dx, dy) < 6) return;
+        dragging = true;
+        suppressNextClick = true;
+        el.classList.add("dragging");
+        const nextPos = clampFloatingPosition(startLeft + dx, startTop + dy);
+        applyFloatingPosition(nextPos);
+        e.preventDefault();
+      });
+
+      function finishDrag(e) {
+        if (el.hasPointerCapture && el.hasPointerCapture(e.pointerId)) {
+          el.releasePointerCapture(e.pointerId);
+        }
+        if (dragging) {
+          const rect = el.getBoundingClientRect();
+          const pos = clampFloatingPosition(rect.left, rect.top);
+          applyFloatingPosition(pos);
+          saveFloatingPosition(pos);
+          setTimeout(() => { suppressNextClick = false; }, 120);
+        }
+        dragging = false;
+        el.classList.remove("dragging");
+      }
+
+      el.addEventListener("pointerup", finishDrag);
+      el.addEventListener("pointercancel", finishDrag);
+      el.addEventListener("click", function (e) {
+        if (!suppressNextClick) return;
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      }, true);
+
+      window.addEventListener("resize", function () {
+        const pos = safeJsonParse(localStorage.getItem(FLOATING_POS_KEY), null);
+        if (!pos) return;
+        const fixedPos = clampFloatingPosition(pos.left, pos.top);
+        applyFloatingPosition(fixedPos);
+        saveFloatingPosition(fixedPos);
+      });
+    }
+
+    setupDraggableFloatingActions();
 
     $("#btnAddGroup").on("click", function () {
       const name = prompt(t("groupNamePrompt"));
