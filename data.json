@@ -1,5 +1,5 @@
 {
-  "version": "v1.0.65",
+  "version": "v1.0.66",
   "lang": "zh",
   "settings": {
     "lang": "zh",
@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-14T15:16:37.007Z",
-    "lastSavedAt": "2026-05-14T15:17:16.687Z"
+    "lastLoadedAt": "2026-05-14T15:30:47.547Z",
+    "lastSavedAt": "2026-05-14T15:30:59.779Z"
   },
   "units": [
     {
@@ -305,7 +305,7 @@
           "id": "item_1778771704293_ed21d6948dc1a",
           "productNameId": "productName_1778670092288_9292fbb9d15c5",
           "storeId": "store_1778246138226_757f331a4c69f",
-          "price": 210,
+          "price": 220,
           "cashback": 0,
           "quantity": 4,
           "size": 52,
