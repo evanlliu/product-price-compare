@@ -1,16 +1,16 @@
 {
-  "version": "v1.0.48",
+  "version": "v1.0.53",
   "lang": "zh",
   "settings": {
     "lang": "zh",
     "language": "zh",
-    "activeGroupId": "group_1778246168663_d24215f198b6e"
+    "activeGroupId": "group_1778767034641_1e758ac4c48648"
   },
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-14T13:38:31.256Z",
-    "lastSavedAt": "2026-05-14T13:39:27.821Z"
+    "lastLoadedAt": "",
+    "lastSavedAt": "2026-05-14T13:57:55.661Z"
   },
   "units": [
     {
@@ -81,7 +81,7 @@
       "base": "sheet",
       "factor": 1,
       "label": {
-        "zh": "片",
+        "zh": "片 / 抽",
         "en": "sheet"
       }
     },
@@ -93,296 +93,43 @@
         "zh": "卷",
         "en": "roll"
       }
-    },
-    {
-      "code": "can",
-      "base": "can",
-      "factor": 1,
-      "label": {
-        "zh": "罐",
-        "en": "can"
-      }
     }
   ],
+  "activeGroupId": "group_1778767034641_1e758ac4c48648",
   "stores": [
     {
-      "id": "store_a",
-      "name": "抖音",
+      "id": "store_1778767034641_6c916150b441e8",
+      "name": "店铺A",
       "label": {
-        "zh": "抖音",
-        "en": "Douyin"
+        "zh": "店铺A",
+        "en": "Store A"
       }
     },
     {
-      "id": "store_b",
-      "name": "淘宝",
+      "id": "store_1778767034641_2fb3d9348543f8",
+      "name": "店铺B",
       "label": {
-        "zh": "淘宝",
-        "en": "Taobao"
-      }
-    },
-    {
-      "id": "store_1778246138226_757f331a4c69f",
-      "name": "拼多多/PDD",
-      "label": {
-        "zh": "拼多多/PDD",
-        "en": "PDD"
-      }
-    },
-    {
-      "id": "store_1778246141400_3f8d9088d1eef",
-      "name": "京东/JD",
-      "label": {
-        "zh": "京东/JD",
-        "en": "JD"
+        "zh": "店铺B",
+        "en": "Store B"
       }
     }
   ],
-  "groups": [
-    {
-      "id": "group_face_wash",
-      "name": "洗面奶",
-      "label": {
-        "zh": "洗面奶",
-        "en": "Cleanser"
-      },
-      "productNames": [
-        {
-          "id": "productName_1778670092288_40a6322d0e94d",
-          "name": "娇润泉",
-          "label": {
-            "zh": "娇润泉",
-            "en": "JOYRUQO"
-          }
-        }
-      ],
-      "items": [
-        {
-          "id": "item_001",
-          "productNameId": "productName_1778670092288_40a6322d0e94d",
-          "storeId": "store_a",
-          "price": 88,
-          "cashback": 22.45,
-          "quantity": 1,
-          "size": 360,
-          "priceDate": "2026-05-07",
-          "status": "purchased",
-          "unit": "g",
-          "createdAt": 1715150000000
-        }
-      ]
-    },
-    {
-      "id": "group_1778670149375_13bf168a8eb7c8",
-      "name": "奶粉(3段)",
-      "label": {
-        "zh": "奶粉(3段)",
-        "en": "Formula(stage 3)"
-      },
-      "productNames": [
-        {
-          "id": "productName_1778670149375_253002c7faaf28",
-          "name": "爱他美",
-          "label": {
-            "zh": "爱他美",
-            "en": "Aptamil"
-          }
-        }
-      ],
-      "items": [
-        {
-          "id": "item_1778677866292_9f610fde7e33b",
-          "productNameId": "productName_1778670149375_253002c7faaf28",
-          "storeId": "store_1778246138226_757f331a4c69f",
-          "price": 259.8,
-          "cashback": 0,
-          "quantity": 2,
-          "size": 1,
-          "priceDate": "2026-01-06",
-          "status": "purchased",
-          "unit": "can",
-          "createdAt": 1778677866292
-        },
-        {
-          "id": "item_1778678498704_bc7cdcf523046",
-          "productNameId": "productName_1778670149375_253002c7faaf28",
-          "storeId": "store_1778246138226_757f331a4c69f",
-          "price": 251,
-          "cashback": 0,
-          "quantity": 2,
-          "size": 1,
-          "priceDate": "2026-01-19",
-          "status": "purchased",
-          "unit": "can",
-          "createdAt": 1778678498704
-        },
-        {
-          "id": "item_1778678772088_6b72059ae40f1",
-          "productNameId": "productName_1778670149375_253002c7faaf28",
-          "storeId": "store_1778246138226_757f331a4c69f",
-          "price": 267.9,
-          "cashback": 0,
-          "quantity": 2,
-          "size": 1,
-          "priceDate": "2026-04-29",
-          "status": "purchased",
-          "unit": "can",
-          "createdAt": 1778678772089
-        },
-        {
-          "id": "item_1778678989034_b4b497415a19d",
-          "productNameId": "productName_1778670149375_253002c7faaf28",
-          "storeId": "store_b",
-          "price": 128,
-          "cashback": 0,
-          "quantity": 1,
-          "size": 1,
-          "priceDate": "2025-12-22",
-          "status": "purchased",
-          "unit": "can",
-          "createdAt": 1778678989035
-        }
-      ]
-    },
-    {
-      "id": "group_1778246168663_d24215f198b6e",
-      "name": "尿片(L)",
-      "label": {
-        "zh": "尿片(L)",
-        "en": "Diaper(L)"
-      },
-      "productNames": [
-        {
-          "id": "productName_1778670092288_9292fbb9d15c5",
-          "name": "帮宝适",
-          "label": {
-            "zh": "帮宝适",
-            "en": "Pampers"
-          }
-        }
-      ],
-      "items": [
-        {
-          "id": "item_1778253591752_312aff5e69c1b8",
-          "productNameId": "productName_1778670092288_9292fbb9d15c5",
-          "storeId": "store_1778246138226_757f331a4c69f",
-          "price": 91.9,
-          "cashback": 0,
-          "quantity": 1,
-          "size": 84,
-          "priceDate": "2026-01-20",
-          "status": "purchased",
-          "unit": "sheet",
-          "createdAt": 1778253591752
-        },
-        {
-          "id": "item_1778666801934_94ec269b20a248",
-          "productNameId": "productName_1778670092288_9292fbb9d15c5",
-          "storeId": "store_1778246138226_757f331a4c69f",
-          "price": 109,
-          "cashback": 0,
-          "quantity": 1,
-          "size": 82,
-          "priceDate": "2026-04-30",
-          "status": "purchased",
-          "unit": "sheet",
-          "createdAt": 1778666801934
-        },
-        {
-          "id": "item_1778683409772_8d584cbd7c0628",
-          "productNameId": "productName_1778670092288_9292fbb9d15c5",
-          "storeId": "store_1778246138226_757f331a4c69f",
-          "price": 209.99,
-          "cashback": 0,
-          "quantity": 4,
-          "size": 52,
-          "priceDate": "2026-05-13",
-          "status": "current",
-          "unit": "sheet",
-          "createdAt": 1778683409772
-        }
-      ]
-    },
-    {
-      "id": "group_1778680544317_27462cdbe879e",
-      "name": "尿片(XL)",
-      "label": {
-        "zh": "尿片(XL)",
-        "en": "Diaper(XL)"
-      },
-      "productNames": [
-        {
-          "id": "pname_1778680544317_5a9630cbe17d28",
-          "name": "帮宝适",
-          "label": {
-            "zh": "帮宝适",
-            "en": "Pampers"
-          }
-        }
-      ],
-      "items": [
-        {
-          "id": "item_1778671456389_19e5cde1173468",
-          "productNameId": "pname_1778680544317_5a9630cbe17d28",
-          "storeId": "store_1778246138226_757f331a4c69f",
-          "price": 100,
-          "cashback": 0,
-          "quantity": 2,
-          "size": 34,
-          "priceDate": "2026-04-29",
-          "status": "purchased",
-          "unit": "sheet",
-          "createdAt": 1778671456389
-        },
-        {
-          "id": "item_1778683494489_f06c1cd075bcd",
-          "productNameId": "pname_1778680544317_5a9630cbe17d28",
-          "storeId": "store_1778246138226_757f331a4c69f",
-          "price": 209.99,
-          "cashback": 0,
-          "quantity": 4,
-          "size": 42,
-          "priceDate": "2026-05-13",
-          "status": "current",
-          "unit": "sheet",
-          "createdAt": 1778683494489
-        }
-      ]
-    }
-  ],
-  "activeGroupId": "group_1778246168663_d24215f198b6e",
   "configs": {
     "stores": [
       {
-        "id": "store_a",
-        "name": "抖音",
+        "id": "store_1778767034641_6c916150b441e8",
+        "name": "店铺A",
         "label": {
-          "zh": "抖音",
-          "en": "Douyin"
+          "zh": "店铺A",
+          "en": "Store A"
         }
       },
       {
-        "id": "store_b",
-        "name": "淘宝",
+        "id": "store_1778767034641_2fb3d9348543f8",
+        "name": "店铺B",
         "label": {
-          "zh": "淘宝",
-          "en": "Taobao"
-        }
-      },
-      {
-        "id": "store_1778246138226_757f331a4c69f",
-        "name": "拼多多/PDD",
-        "label": {
-          "zh": "拼多多/PDD",
-          "en": "PDD"
-        }
-      },
-      {
-        "id": "store_1778246141400_3f8d9088d1eef",
-        "name": "京东/JD",
-        "label": {
-          "zh": "京东/JD",
-          "en": "JD"
+          "zh": "店铺B",
+          "en": "Store B"
         }
       }
     ],
@@ -455,7 +202,7 @@
         "base": "sheet",
         "factor": 1,
         "label": {
-          "zh": "片",
+          "zh": "片 / 抽",
           "en": "sheet"
         }
       },
@@ -467,16 +214,53 @@
           "zh": "卷",
           "en": "roll"
         }
-      },
-      {
-        "code": "can",
-        "base": "can",
-        "factor": 1,
-        "label": {
-          "zh": "罐",
-          "en": "can"
-        }
       }
     ]
-  }
+  },
+  "groups": [
+    {
+      "id": "group_1778767034641_1e758ac4c48648",
+      "name": "洗面奶",
+      "label": {
+        "zh": "洗面奶",
+        "en": "Face Wash"
+      },
+      "productNames": [
+        {
+          "id": "pname_1778767034641_52a06515e50b4",
+          "name": "洗面奶",
+          "label": {
+            "zh": "洗面奶",
+            "en": "Face Wash"
+          }
+        }
+      ],
+      "items": [
+        {
+          "id": "item_1778767034641_a8eb87b5bd22b8",
+          "productNameId": "pname_1778767034641_52a06515e50b4",
+          "storeId": "store_1778767034641_6c916150b441e8",
+          "price": 88,
+          "cashback": 22.45,
+          "quantity": 1,
+          "size": 360,
+          "unit": "g",
+          "priceDate": "2026-05-14",
+          "status": "current"
+        },
+        {
+          "id": "item_1778767034641_e808f6beaf0c5",
+          "productNameId": "pname_1778767034641_52a06515e50b4",
+          "storeId": "store_1778767034641_2fb3d9348543f8",
+          "price": 82,
+          "cashback": 1.47,
+          "quantity": 1,
+          "size": 400,
+          "unit": "g",
+          "priceDate": "2026-05-14",
+          "status": "current"
+        }
+      ]
+    }
+  ]
 }
