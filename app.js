@@ -10,7 +10,7 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.60";
+    const APP_VERSION = "v1.0.66";
     const FLOATING_POS_KEY = "price_compare_floating_actions_position";
     const STORAGE_KEY = "productPriceCompare.v1";
     const LOCAL_SYNC_KEY = "productPriceCompare.localSync.v1";
@@ -159,19 +159,25 @@
         cheaperThanLast: "比上次便宜 {amount}/{unit}",
         higherThanLast: "比上次贵 {amount}/{unit}",
         sameAsLast: "接近上次",
+        sameAsHistoryLow: "接近历史最低",
+        sameAsLastAndMin: "接近上次/历史最低",
         lowerThanHistoryLow: "比历史最低便宜 {amount}/{unit}",
         buyAdviceCurrentBest: "当前最便宜：{store} · {price} / {unit}",
         compareLastText: "比上次{direction} {amount}/{unit}",
         compareAverageText: "比历史平均{direction} {amount}/{unit}",
         compareMinText: "比历史最低{direction} {amount}/{unit}",
+        compareLastAndMinText: "比上次/历史最低{direction} {amount}/{unit}",
         directionCheaper: "便宜",
         directionHigher: "贵",
         totalDiffCheaper: "总价便宜 {amount}",
         totalDiffHigher: "总价贵 {amount}",
+        totalDiffClose: "总价接近",
         totalDiffLastCheaper: "上次总价便宜 {amount}",
         totalDiffLastHigher: "上次总价贵 {amount}",
+        totalDiffLastClose: "上次总价接近",
         totalDiffMinCheaper: "历史最低总价便宜 {amount}",
         totalDiffMinHigher: "历史最低总价贵 {amount}",
+        totalDiffMinClose: "历史最低总价接近",
         adviceNoHistory: "暂无历史价格，先比较当前商家",
         adviceHistoricalLow: "历史低价，可以买",
         adviceGoodBuy: "比上次便宜，可以买",
@@ -328,19 +334,25 @@
         cheaperThanLast: "{amount}/{unit} cheaper than last",
         higherThanLast: "{amount}/{unit} higher than last",
         sameAsLast: "Close to last",
+        sameAsHistoryLow: "Close to history low",
+        sameAsLastAndMin: "Close to last/history low",
         lowerThanHistoryLow: "{amount}/{unit} below history low",
         buyAdviceCurrentBest: "Current best: {store} · {price} / {unit}",
         compareLastText: "{amount}/{unit} {direction} than last",
         compareAverageText: "{amount}/{unit} {direction} than average",
         compareMinText: "{amount}/{unit} {direction} than history low",
+        compareLastAndMinText: "{amount}/{unit} {direction} than last/history low",
         directionCheaper: "cheaper",
         directionHigher: "higher",
         totalDiffCheaper: "total lower {amount}",
         totalDiffHigher: "total higher {amount}",
+        totalDiffClose: "total close",
         totalDiffLastCheaper: "last total lower {amount}",
         totalDiffLastHigher: "last total higher {amount}",
+        totalDiffLastClose: "last total close",
         totalDiffMinCheaper: "history-low total lower {amount}",
         totalDiffMinHigher: "history-low total higher {amount}",
+        totalDiffMinClose: "history-low total close",
         adviceNoHistory: "No history yet. Compare current stores first",
         adviceHistoricalLow: "Historical low. Good to buy",
         adviceGoodBuy: "Cheaper than last time. Good to buy",
@@ -1061,6 +1073,12 @@
       return smartNumber(Math.abs(diff), 3);
     }
 
+    const CLOSE_UNIT_DIFF = 0.0005;
+
+    function isCloseUnitDiff(diff) {
+      return Math.abs(diff) < CLOSE_UNIT_DIFF;
+    }
+
     function formatTotalDiffAmount(diff, totalBaseSize) {
       const totalDiff = Math.abs(diff * numberOrZero(totalBaseSize));
       return smartNumber(totalDiff, 2);
@@ -1080,7 +1098,9 @@
       return `${text} · ${totalText}`;
     }
 
-    function totalDiffChipHtml(diff, totalBaseSize, cheaperKey, higherKey) {
+    function totalDiffChipHtml(diff, totalBaseSize, cheaperKey, higherKey, closeKey) {
+      if (!totalBaseSize) return "";
+      if (isCloseUnitDiff(diff)) return escapeHtml(t(closeKey || "totalDiffClose"));
       const totalText = totalDiffText(diff, totalBaseSize);
       if (!totalText) return "";
       const totalDiffValue = formatTotalDiffAmount(diff, totalBaseSize);
@@ -1091,7 +1111,7 @@
     function compareText(currentPrice, referencePrice, mode, unit, totalBaseSize) {
       const diff = priceDiffAmount(currentPrice, referencePrice);
       const abs = Math.abs(diff);
-      if (abs < 0.0005) return mode === "last" ? t("sameAsLast") : t("sameAsLast");
+      if (isCloseUnitDiff(diff)) return mode === "min" ? t("sameAsHistoryLow") : t("sameAsLast");
       const key = mode === "min" ? "compareMinText" : mode === "average" ? "compareAverageText" : "compareLastText";
       const unitText = t(key, {
         direction: diff < 0 ? t("directionCheaper") : t("directionHigher"),
@@ -1199,6 +1219,10 @@
         .text("＋")
         .attr("title", t("addRow"))
         .attr("aria-label", t("addRow"));
+      $("#btnQuickToggle")
+        .text("⚡")
+        .attr("title", state.lang === "zh" ? "快捷操作" : "Quick actions")
+        .attr("aria-label", state.lang === "zh" ? "快捷操作" : "Quick actions");
     }
 
 
@@ -1481,7 +1505,6 @@
       if (!baseKeys.length) {
         if (analysis.historyRows.length) {
           const html = `
-            <span class="best-icon">💡</span>
             <span class="best-strip-body">
               <div class="best-main">${escapeHtml(t("noValidBest"))}</div>
               <div class="best-sub">${escapeHtml(t("adviceNoHistory"))}</div>
@@ -1501,19 +1524,52 @@
       const advice = purchaseAdvice(best.minPrice, stats);
       const metricChips = [];
 
+      function metricChip(text, isTotal) {
+        return `<span class="best-metric-chip${isTotal ? " total-diff" : ""}">${text}</span>`;
+      }
+
+      function comparisonUnitText(diff, mode) {
+        if (isCloseUnitDiff(diff)) return mode === "min" ? t("sameAsHistoryLow") : t("sameAsLast");
+        return t(mode === "min" ? "compareMinText" : "compareLastText", {
+          direction: diff < 0 ? t("directionCheaper") : t("directionHigher"),
+          amount: formatPriceDiffAmount(diff),
+          unit
+        });
+      }
+
+      function pushComparisonChips(diff, mode) {
+        metricChips.push(metricChip(escapeHtml(comparisonUnitText(diff, mode)), false));
+        const totalChipHtml = totalDiffChipHtml(
+          diff,
+          currentBestSize,
+          mode === "min" ? "totalDiffMinCheaper" : "totalDiffLastCheaper",
+          mode === "min" ? "totalDiffMinHigher" : "totalDiffLastHigher",
+          mode === "min" ? "totalDiffMinClose" : "totalDiffLastClose"
+        );
+        if (totalChipHtml) metricChips.push(metricChip(totalChipHtml, true));
+      }
+
       const currentBestSize = best.bestRows[0] && best.bestRows[0].calc ? best.bestRows[0].calc.totalBaseSize : 0;
       if (stats && stats.lastRow) {
         const diffLast = priceDiffAmount(best.minPrice, stats.lastRow.calc.unitPrice);
         const diffMin = priceDiffAmount(best.minPrice, stats.minPrice);
-        metricChips.push(`<span class="best-metric-chip">${escapeHtml(compareText(best.minPrice, stats.lastRow.calc.unitPrice, "last", unit, 0))}</span>`);
-        const lastTotalChipHtml = totalDiffChipHtml(diffLast, currentBestSize, "totalDiffLastCheaper", "totalDiffLastHigher");
-        if (lastTotalChipHtml) {
-          metricChips.push(`<span class="best-metric-chip total-diff last-total">${lastTotalChipHtml}</span>`);
-        }
-        metricChips.push(`<span class="best-metric-chip">${escapeHtml(compareText(best.minPrice, stats.minPrice, "min", unit, 0))}</span>`);
-        const minTotalChipHtml = totalDiffChipHtml(diffMin, currentBestSize, "totalDiffMinCheaper", "totalDiffMinHigher");
-        if (minTotalChipHtml) {
-          metricChips.push(`<span class="best-metric-chip total-diff min-total">${minTotalChipHtml}</span>`);
+        const lastIsHistoryLow = stats.minRow && Math.abs(stats.lastRow.calc.unitPrice - stats.minPrice) < 0.000000001;
+        if (lastIsHistoryLow) {
+          if (isCloseUnitDiff(diffLast)) {
+            metricChips.push(metricChip(escapeHtml(t("sameAsLastAndMin")), false));
+          } else {
+            const combinedText = t("compareLastAndMinText", {
+              direction: diffLast < 0 ? t("directionCheaper") : t("directionHigher"),
+              amount: formatPriceDiffAmount(diffLast),
+              unit
+            });
+            metricChips.push(metricChip(escapeHtml(combinedText), false));
+          }
+          const totalChipHtml = totalDiffChipHtml(diffLast, currentBestSize, "totalDiffCheaper", "totalDiffHigher", "totalDiffClose");
+          if (totalChipHtml) metricChips.push(metricChip(totalChipHtml, true));
+        } else {
+          pushComparisonChips(diffLast, "last");
+          pushComparisonChips(diffMin, "min");
         }
       } else {
         metricChips.push(`<span class="best-metric-chip">${escapeHtml(t("adviceNoHistory"))}</span>`);
@@ -1531,7 +1587,6 @@
       const mainLineText = `${t("buyAdviceCurrentBest", { store: bestNames, price: smartNumber(best.minPrice, 3), unit })} · ${advice.text}`;
 
       const html = `
-        <span class="best-icon">${advice.type === "bad" ? "⚠️" : advice.type === "warn" ? "⏳" : "🏆"}</span>
         <span class="best-strip-body">
           <div class="best-main">${escapeHtml(mainLineText)}</div>
           ${metricsHtml}
@@ -2073,6 +2128,16 @@
       $("#moreMenu").removeClass("open");
     }
 
+
+    function closeQuickActions() {
+      $(".quick-actions").removeClass("open");
+      $("#btnQuickToggle").attr("aria-expanded", "false");
+    }
+
+    function isQuickActionsCollapsedViewport() {
+      return window.matchMedia && window.matchMedia("(max-width: 520px)").matches;
+    }
+
     function openConfig(type) {
       closeMoreMenu();
       const isProduct = type === "product";
@@ -2397,8 +2462,20 @@
 
 
 
+    $("#btnQuickToggle").on("click", function (e) {
+      e.stopPropagation();
+      closeMoreMenu();
+      if (!isQuickActionsCollapsedViewport()) return;
+      preservePageScroll(() => {
+        const nextOpen = !$(".quick-actions").hasClass("open");
+        $(".quick-actions").toggleClass("open", nextOpen);
+        $(this).attr("aria-expanded", nextOpen ? "true" : "false");
+      });
+    });
+
     $("#btnMore").on("click", function (e) {
       e.stopPropagation();
+      closeQuickActions();
       preservePageScroll(() => {
         $("#moreMenu").toggleClass("open");
       });
@@ -2406,6 +2483,11 @@
 
     $(document).on("click", function (e) {
       if (!$(e.target).closest(".more-wrap").length) closeMoreMenu();
+      if (!$(e.target).closest(".quick-actions").length) closeQuickActions();
+    });
+
+    $(window).on("resize", function () {
+      if (!isQuickActionsCollapsedViewport()) closeQuickActions();
     });
 
     $("#btnOpenProductConfig").on("click", function () {
@@ -2627,6 +2709,7 @@
     });
 
     $(document).on("click", "#btnAddRow, #btnMobileAdd", function () {
+      closeQuickActions();
       addRow();
     });
 
@@ -2851,10 +2934,12 @@
     });
 
     $("#btnFloatingSync").on("click", async function () {
+      closeQuickActions();
       await reloadDataJson(true);
     });
 
     $("#btnLang").on("click", function () {
+      closeQuickActions();
       state.lang = state.lang === "zh" ? "en" : "zh";
       saveState();
       renderAll();
