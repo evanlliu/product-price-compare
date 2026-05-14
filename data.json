@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-14T05:37:25.775Z",
-    "lastSavedAt": "2026-05-14T05:38:58.590Z"
+    "lastSavedAt": "2026-05-14T05:40:21.735Z"
   },
   "units": [
     {
@@ -272,6 +272,21 @@
         }
       ],
       "items": [
+        {
+          "id": "item_1778737220318_da6e4448a7c788",
+          "productNameId": "productName_1778670092288_9292fbb9d15c5",
+          "storeId": "store_a",
+          "price": 0,
+          "cashback": 0,
+          "quantity": 1,
+          "size": 0,
+          "priceDate": "2026-05-14",
+          "status": "current",
+          "unit": "g",
+          "sourceUrl": "https://v.douyin.com/AiG6n2fuq78/",
+          "sourceTitle": "虎牙兄弟休闲裤男款2026夏户外运动纯色商务通勤百搭直筒裤L8018",
+          "createdAt": 1778737220318
+        },
         {
           "id": "item_1778253591752_312aff5e69c1b8",
           "productNameId": "productName_1778670092288_9292fbb9d15c5",
