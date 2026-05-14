@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-14T15:30:47.547Z",
-    "lastSavedAt": "2026-05-14T15:32:19.453Z"
+    "lastLoadedAt": "2026-05-14T15:32:25.138Z",
+    "lastSavedAt": "2026-05-14T15:32:43.348Z"
   },
   "units": [
     {
@@ -297,7 +297,7 @@
           "quantity": 4,
           "size": 52,
           "priceDate": "2026-05-13",
-          "status": "purchased",
+          "status": "current",
           "unit": "sheet",
           "createdAt": 1778683409772
         }
