@@ -1,5 +1,5 @@
 {
-  "version": "v1.0.60",
+  "version": "v1.0.64",
   "lang": "zh",
   "settings": {
     "lang": "zh",
@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-05-14T15:04:43.053Z",
-    "lastSavedAt": "2026-05-14T15:07:49.041Z"
+    "lastLoadedAt": "2026-05-14T15:13:36.759Z",
+    "lastSavedAt": "2026-05-14T15:14:50.951Z"
   },
   "units": [
     {
@@ -297,7 +297,7 @@
           "quantity": 4,
           "size": 52,
           "priceDate": "2026-05-13",
-          "status": "current",
+          "status": "purchased",
           "unit": "sheet",
           "createdAt": 1778683409772
         },
