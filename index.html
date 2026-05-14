@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>商品比价器 Price Compare v1.0.48</title>
+  <title>商品比价器 Price Compare v1.0.50</title>
   <meta name="theme-color" content="#2563eb" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -348,7 +348,7 @@
 
     .record-top-line {
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: 1fr auto auto;
       gap: 8px;
       align-items: center;
     }
@@ -1549,6 +1549,98 @@
     }
 
 
+    .smart-paste-page {
+      width: min(820px, 100%);
+    }
+
+    .smart-paste-form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .smart-paste-form label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .smart-paste-textarea {
+      width: 100%;
+      min-height: 142px;
+      resize: vertical;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.9);
+      padding: 12px;
+      font: inherit;
+      color: var(--text);
+      outline: none;
+    }
+
+    .smart-paste-textarea:focus {
+      border-color: rgba(37, 99, 235, 0.55);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
+
+    .smart-paste-preview {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(248,250,252,0.72);
+    }
+
+    .smart-paste-item {
+      min-width: 0;
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(226,232,240,0.85);
+    }
+
+    .smart-paste-item .k {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 2px;
+    }
+
+    .smart-paste-item .v {
+      font-size: 14px;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .smart-paste-item.full {
+      grid-column: 1 / -1;
+    }
+
+    .smart-paste-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+    }
+
+    .smart-paste-tip {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(219,234,254,0.45);
+      border: 1px solid rgba(191,219,254,0.75);
+    }
+
+
     @media (min-width: 1200px) {
       .app {
         width: min(1800px, calc(100vw - 48px));
@@ -1611,7 +1703,7 @@
       }
 
       .record-top-line {
-        grid-template-columns: 1fr auto;
+        grid-template-columns: 1fr auto auto;
       }
 
       .best-strip .best-main,
@@ -1919,7 +2011,8 @@
         font-weight: 900 !important;
       }
 
-      #btnAddRow {
+      #btnAddRow,
+      #btnSmartPasteDesktop {
         display: none;
       }
 
@@ -2089,6 +2182,36 @@
         min-height: 40px;
         flex: 1 1 0;
       }
+
+
+      .smart-paste-page {
+        width: min(100%, calc(100vw - 20px));
+        max-height: min(720px, calc(100dvh - 26px));
+      }
+
+      .smart-paste-preview {
+        grid-template-columns: 1fr;
+      }
+
+      .smart-paste-textarea {
+        min-height: 120px;
+        font-size: 16px;
+      }
+
+      .smart-paste-actions {
+        position: sticky;
+        bottom: 0;
+        margin: 4px -10px -10px;
+        padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+        background: rgba(255,255,255,0.96);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+
+      .smart-paste-actions button {
+        flex: 1 1 0;
+        min-height: 40px;
+      }
     }
 
   </style>
@@ -2108,7 +2231,7 @@
       <div class="brand">
         <div class="logo">¥</div>
         <div>
-          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.48</span><span id="mobileHeaderSync" class="mobile-header-sync"><span class="sync-dot"></span><span id="mobileHeaderSyncText"></span></span></h1>
+          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.50</span><span id="mobileHeaderSync" class="mobile-header-sync"><span class="sync-dot"></span><span id="mobileHeaderSyncText"></span></span></h1>
         </div>
       </div>
       <div class="top-actions">
@@ -2146,6 +2269,7 @@
         <div class="card-inner" style="padding-bottom: 0;">
           <div class="record-top-line">
             <h2 class="section-title">📊 <span data-i18n="records">价格记录</span></h2>
+            <button type="button" id="btnSmartPasteDesktop" class="btn-ghost" data-i18n="smartPaste">智能粘贴</button>
             <button type="button" id="btnAddRow" class="btn-primary" data-i18n="addRow">新增</button>
           </div>
           <div class="best-strip" id="bestStrip"></div>
@@ -2185,6 +2309,7 @@
       </div>
     </section>
     <div class="floating-actions" aria-label="Quick actions">
+      <button type="button" id="btnSmartPaste" class="floating-btn floating-smart" aria-label="Smart Paste" title="Smart Paste">🔗</button>
       <button type="button" id="btnMobileAdd" class="floating-btn floating-add" aria-label="Add" title="Add">＋</button>
       <button type="button" id="btnFloatingSync" class="floating-btn floating-sync" aria-label="Cloud Sync" title="Cloud Sync">☁️</button>
       <button type="button" id="btnLang" class="floating-btn floating-lang" aria-label="Language" title="Language">🌐</button>
@@ -2278,6 +2403,30 @@
     </section>
   </div>
 
+  <div class="config-overlay" id="smartPasteOverlay" aria-hidden="true">
+    <section class="config-page smart-paste-page card" role="dialog" aria-modal="true" aria-labelledby="smartPasteTitle">
+      <div class="config-header">
+        <h2 class="config-title" id="smartPasteTitle" data-i18n="smartPasteTitle">智能粘贴识别</h2>
+        <button type="button" id="btnCloseSmartPaste" class="btn-ghost" data-i18n="close">关闭</button>
+      </div>
+      <div class="config-body">
+        <div class="smart-paste-form">
+          <div class="smart-paste-tip" data-i18n="smartPasteTip">粘贴淘宝 / 抖音 / 拼多多 / 京东分享文案或链接，系统会优先识别平台、商品标题、链接、金额、规格和单位。只有纯链接时，通常只能识别平台和链接，价格规格仍需要手动补充。</div>
+          <div>
+            <label for="smartPasteText" data-i18n="smartPasteInputLabel">商品链接或分享文案</label>
+            <textarea id="smartPasteText" class="smart-paste-textarea" data-placeholder-key="smartPastePlaceholder"></textarea>
+          </div>
+          <div class="smart-paste-preview" id="smartPastePreview"></div>
+          <div class="smart-paste-actions">
+            <button type="button" id="btnReadClipboard" class="btn-ghost" data-i18n="readClipboard">读取剪贴板</button>
+            <button type="button" id="btnAnalyzeSmartPaste" class="btn-ghost" data-i18n="recognize">识别</button>
+            <button type="button" id="btnCreateSmartRecord" class="btn-primary" data-i18n="createRecord">生成价格记录</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
 
   <script>
     function initAppleWebAppMode() {
@@ -2291,7 +2440,7 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.48";
+    const APP_VERSION = "v1.0.50";
     const STORAGE_KEY = "productPriceCompare.v1";
     const LOCAL_SYNC_KEY = "productPriceCompare.localSync.v1";
 
@@ -2353,14 +2502,40 @@
         loadCloudData: "重新加载云端",
         saveCloudNow: "立即保存云端",
         cloudSyncNow: "云端同步",
+        smartPaste: "智能粘贴",
+        smartPasteTitle: "智能粘贴识别",
+        smartPasteInputLabel: "商品链接或分享文案",
+        smartPastePlaceholder: "例如：粘贴淘宝 / 抖音 / 拼多多 / 京东的分享文案或链接...",
+        smartPasteTip: "粘贴淘宝 / 抖音 / 拼多多 / 京东分享文案或链接。分享文案里的标题、价格、规格会直接从文字中识别；纯链接会通过 Cloudflare Worker 尝试解析跳转后的页面信息，但价格不一定能拿到。",
+        smartPasteParseNote: "识别说明",
+        smartPasteRecognizing: "正在识别链接...",
+        smartPasteWorkerUsed: "已尝试通过 Worker 解析链接。纯链接如果平台页面不公开价格，仍需要手动补充金额和规格。",
+        smartPasteNoWorker: "当前没有可用的 Worker 配置，只能识别粘贴文本里的信息；纯链接通常只能识别平台和链接。",
+        smartPasteLinkOnly: "这是纯链接，平台通常不会直接在链接里放商品名称和价格。已尽量识别平台、链接和商品ID，价格请手动确认。",
+        readClipboard: "读取剪贴板",
+        recognize: "识别",
+        createRecord: "生成价格记录",
+        sourceLink: "商品链接",
+        sourceTitle: "识别标题",
+        smartPasteNoText: "请先粘贴商品链接或分享文案。",
+        smartPasteCreated: "已生成价格记录，请检查金额、规格和单位。",
+        smartPasteClipboardDenied: "无法读取剪贴板，请手动粘贴。",
+        recognizedPlatform: "识别平台",
+        recognizedTitle: "识别标题",
+        recognizedPrice: "识别金额",
+        recognizedSpec: "识别规格",
+        recognizedUnit: "识别单位",
+        recognizedLink: "识别链接",
+        recognizedProductId: "商品ID",
+        notRecognized: "未识别",
         switchLanguage: "切换语言",
         syncConfigHint: "Worker 地址和访问密码会保存到 data.json，同时也会保存一份到本机浏览器配置，方便本地 debug 时直接同步云端 data.json。每次打开或刷新页面都会重新加载 data.json。",
         syncSecurityNote: "注意：如果 GitHub 仓库或 GitHub Pages 是公开的，data.json 里的 Worker 地址和访问密码也可能被看到。当前版本按你的需求保存，后续可以改成只本机保存密码。",
         syncStatusLocal: "本地模式",
         syncStatusLoading: "正在加载 data.json...",
-        syncStatusLoaded: "已加载云端 data.json：{time}",
-        syncStatusSaving: "正在保存到 GitHub data.json...",
-        syncStatusSaved: "已保存到 GitHub data.json：{time}",
+        syncStatusLoaded: "已加载：{time}",
+        syncStatusSaving: "正在保存...",
+        syncStatusSaved: "已保存：{time}",
         syncStatusFailed: "云端同步失败：{message}",
         syncConfigSaved: "同步配置已保存。",
         syncConfigRequired: "请填写 Cloudflare Worker 地址和访问密码，不能保存空配置。",
@@ -2517,14 +2692,40 @@
         loadCloudData: "Reload Cloud Data",
         saveCloudNow: "Save to Cloud Now",
         cloudSyncNow: "Cloud Sync",
+        smartPaste: "Smart Paste",
+        smartPasteTitle: "Smart Paste Recognition",
+        smartPasteInputLabel: "Product link or share text",
+        smartPastePlaceholder: "Paste Taobao / Douyin / PDD / JD share text or link...",
+        smartPasteTip: "Paste Taobao / Douyin / PDD / JD share text or link. Titles, prices and specs in share text are parsed locally; pure links are sent to Cloudflare Worker to try resolving page metadata, but prices may not be available.",
+        smartPasteParseNote: "Recognition note",
+        smartPasteRecognizing: "Recognizing link...",
+        smartPasteWorkerUsed: "Worker parsing was attempted. If the platform page does not expose price publicly, price and size still need manual confirmation.",
+        smartPasteNoWorker: "No usable Worker config. Only text content can be parsed; pure links usually only identify platform and link.",
+        smartPasteLinkOnly: "This is a pure link. Platforms usually do not put title and price inside the URL. Platform, link and product ID are detected when possible; please confirm price manually.",
+        readClipboard: "Read Clipboard",
+        recognize: "Recognize",
+        createRecord: "Create Record",
+        sourceLink: "Product Link",
+        sourceTitle: "Detected Title",
+        smartPasteNoText: "Paste product share text or link first.",
+        smartPasteCreated: "Price record created. Please check price, size and unit.",
+        smartPasteClipboardDenied: "Cannot read clipboard. Please paste manually.",
+        recognizedPlatform: "Platform",
+        recognizedTitle: "Title",
+        recognizedPrice: "Price",
+        recognizedSpec: "Size",
+        recognizedUnit: "Unit",
+        recognizedLink: "Link",
+        recognizedProductId: "Product ID",
+        notRecognized: "Not detected",
         switchLanguage: "Switch Language",
         syncConfigHint: "The Worker URL and access password will be saved to data.json and also to this browser for local debugging, so the app can sync cloud data.json when opened locally. The app reloads data.json every time it opens or refreshes.",
         syncSecurityNote: "Note: if your GitHub repo or GitHub Pages is public, the Worker URL and access password in data.json may be visible. This version saves them as requested; later we can keep the password local only.",
         syncStatusLocal: "Local mode",
         syncStatusLoading: "Loading data.json...",
-        syncStatusLoaded: "Loaded cloud data.json: {time}",
-        syncStatusSaving: "Saving to GitHub data.json...",
-        syncStatusSaved: "Saved to GitHub data.json: {time}",
+        syncStatusLoaded: "Loaded: {time}",
+        syncStatusSaving: "Saving...",
+        syncStatusSaved: "Saved: {time}",
         syncStatusFailed: "Cloud sync failed: {message}",
         syncConfigSaved: "Sync settings saved.",
         syncNotConfigured: "Please enter the Cloudflare Worker URL and access password first.",
@@ -3009,6 +3210,8 @@
             priceDate: normalizeDate(item.priceDate || item.purchaseDate || item.date) || todayDate(),
             status: normalizeItemStatus(item.status || item.recordStatus),
             unit: unitList.some(u => u.code === item.unit) ? item.unit : (unitList[0] ? unitList[0].code : "g"),
+            sourceUrl: String(item.sourceUrl || item.url || item.link || ""),
+            sourceTitle: String(item.sourceTitle || item.title || ""),
             createdAt: item.createdAt || Date.now()
           };
         });
@@ -3437,6 +3640,13 @@
         .text("＋")
         .attr("title", t("addRow"))
         .attr("aria-label", t("addRow"));
+      $("#btnSmartPaste")
+        .text("🔗")
+        .attr("title", t("smartPaste"))
+        .attr("aria-label", t("smartPaste"));
+      $("#btnSmartPasteDesktop")
+        .attr("title", t("smartPaste"))
+        .attr("aria-label", t("smartPaste"));
     }
 
 
@@ -3463,7 +3673,7 @@
     }
 
     function nowText() {
-      return new Date().toLocaleString(state.lang === "zh" ? "zh-CN" : "en-US", { hour12: false });
+      return new Date().toLocaleTimeString(state.lang === "zh" ? "zh-CN" : "en-US", { hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" });
     }
 
     function mergeRemoteState(remoteInput, options = {}) {
@@ -3922,6 +4132,278 @@
       return `<span class="chip ${cls}">${escapeHtml(result.text)}</span>`;
     }
 
+
+    let smartPasteResult = null;
+
+    function detectPlatform(text, url) {
+      const source = `${text || ""} ${url || ""}`.toLowerCase();
+      if (/yangkeduo|pinduoduo|pdd|拼多多/.test(source)) return { key: "pdd", zh: "拼多多/PDD", en: "PDD" };
+      if (/douyin|iesdouyin|jinritemai|抖音/.test(source)) return { key: "douyin", zh: "抖音", en: "Douyin" };
+      if (/taobao|tmall|e\.tb|m\.tb|淘宝|天猫/.test(source)) return { key: "taobao", zh: "淘宝", en: "Taobao" };
+      if (/jd\.com|3\.cn|京东/.test(source)) return { key: "jd", zh: "京东/JD", en: "JD" };
+      return { key: "unknown", zh: "", en: "" };
+    }
+
+    function extractFirstUrl(text) {
+      const match = String(text || "").match(/https?:\/\/[^\s，。；、]+/i);
+      return match ? match[0].replace(/[，。,.;；）)】]+$/g, "") : "";
+    }
+
+    function extractQuotedTitle(text) {
+      const source = String(text || "");
+      const quoted = source.match(/「([^」]{2,120})」/) || source.match(/“([^”]{2,120})”/) || source.match(/"([^"]{2,120})"/);
+      if (quoted) return quoted[1].trim();
+      const douyin = source.match(/【抖音商城】\s*https?:\/\/\S+\s*([^\n]{4,120})/i);
+      if (douyin) return douyin[1].replace(/长按复制.*$/g, "").trim();
+      const afterUrl = source.match(/https?:\/\/\S+\s+([^\n]{4,120})/i);
+      if (afterUrl && !/点击|打开|复制|搜索|查看|详情/.test(afterUrl[1])) return afterUrl[1].trim();
+      return "";
+    }
+
+    function extractPrice(text) {
+      const source = String(text || "").replace(/,/g, "");
+      const patterns = [
+        /(?:到手价|券后价|大促价|价格|金额|¥|￥)\s*[:：]?\s*(\d+(?:\.\d+)?)/i,
+        /(\d+(?:\.\d+)?)\s*元/,
+        /(^|\s)(\d{1,5}(?:\.\d{1,2})?)\s*(?:包邮|起|到手)/
+      ];
+      for (const p of patterns) {
+        const m = source.match(p);
+        if (m) return numberOrZero(m[m.length - 1]);
+      }
+      return 0;
+    }
+
+    function unitAliases(unit) {
+      const zh = unit.label && unit.label.zh ? unit.label.zh : "";
+      const en = unit.label && unit.label.en ? unit.label.en : "";
+      const code = unit.code || "";
+      const aliases = [code, zh, en];
+      if (code === "g") aliases.push("克");
+      if (code === "kg") aliases.push("千克", "公斤");
+      if (code === "ml") aliases.push("毫升");
+      if (code === "l") aliases.push("升", "L");
+      if (code === "pcs") aliases.push("个", "件");
+      if (code === "bottle") aliases.push("瓶");
+      if (code === "pack") aliases.push("包", "袋");
+      if (code === "sheet") aliases.push("片", "抽");
+      if (code === "roll") aliases.push("卷");
+      return [...new Set(aliases.filter(Boolean).map(x => String(x).trim()))];
+    }
+
+    function extractSpec(text) {
+      const source = String(text || "").replace(/\s+/g, " ");
+      const units = appUnits().slice().sort((a, b) => Math.max(...unitAliases(b).map(x => x.length)) - Math.max(...unitAliases(a).map(x => x.length)));
+      for (const unit of units) {
+        for (const alias of unitAliases(unit)) {
+          const esc = alias.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+          const re = new RegExp(`(\\d+(?:\\.\\d+)?)\\s*${esc}(?![A-Za-z0-9])`, "i");
+          const m = source.match(re);
+          if (m) return { size: numberOrZero(m[1]), unit: unit.code, unitText: displayUnitLabel(unit) };
+        }
+      }
+      return { size: 0, unit: appUnits()[0] ? appUnits()[0].code : "g", unitText: "" };
+    }
+
+    function findOrCreateStoreForPlatform(platform) {
+      if (!platform || !platform.key || platform.key === "unknown") return state.stores[0] ? state.stores[0].id : "";
+      const targets = [platform.zh, platform.en, platform.key].map(x => String(x || "").toLowerCase());
+      const existing = state.stores.find(store => {
+        const text = `${store.name || ""} ${labelValue(store, "zh", "")} ${labelValue(store, "en", "")}`.toLowerCase();
+        return targets.some(target => target && text.includes(target.toLowerCase().replace("/pdd", ""))) || (platform.key === "pdd" && /拼多多|pdd/.test(text)) || (platform.key === "jd" && /京东|jd/.test(text));
+      });
+      if (existing) return existing.id;
+      const store = normalizeNamedEntity({ name: platform.zh, label: { zh: platform.zh, en: platform.en } }, platform.zh, "store");
+      state.stores.push(store);
+      return store.id;
+    }
+
+    function productNameForSmartTitle(group, title) {
+      const names = productNamesForGroup(group);
+      if (!names.length) return "";
+      const cleanTitle = String(title || "").toLowerCase();
+      const matched = names.find(p => {
+        const zh = labelValue(p, "zh", p.name).toLowerCase();
+        const en = labelValue(p, "en", p.name).toLowerCase();
+        return (zh && cleanTitle.includes(zh)) || (en && cleanTitle.includes(en));
+      });
+      return (matched || names[0]).id;
+    }
+
+    function parseSmartPasteText(text) {
+      const raw = String(text || "").trim();
+      const url = extractFirstUrl(raw);
+      const platform = detectPlatform(raw, url);
+      const title = extractQuotedTitle(raw);
+      const price = extractPrice(raw);
+      const spec = extractSpec(raw);
+      return {
+        raw,
+        url,
+        finalUrl: "",
+        platform,
+        title,
+        price,
+        size: spec.size,
+        unit: spec.unit,
+        unitText: spec.unitText,
+        productId: "",
+        noteKey: url && raw.replace(url, "").trim().length < 4 ? "smartPasteLinkOnly" : ""
+      };
+    }
+
+    function unitCodeFromText(unitText, fallback = "") {
+      const clean = String(unitText || "").trim().toLowerCase();
+      if (!clean) return fallback;
+      const matched = appUnits().find(unit => unitAliases(unit).some(alias => String(alias || "").trim().toLowerCase() === clean));
+      if (matched) return matched.code;
+      return fallback;
+    }
+
+    function mergeSmartPasteResult(localResult, remoteResult) {
+      const local = localResult || parseSmartPasteText("");
+      const remote = remoteResult || {};
+      const remotePlatform = remote.platform ? detectPlatform(remote.platform.zh || remote.platform.en || remote.platform.key || "", remote.finalUrl || remote.url || "") : null;
+      const platform = local.platform && local.platform.key !== "unknown" ? local.platform : (remotePlatform && remotePlatform.key !== "unknown" ? remotePlatform : local.platform);
+      const remoteUnit = unitCodeFromText(remote.unitText || remote.unit || "", local.unit);
+      const merged = {
+        ...local,
+        url: local.url || remote.url || "",
+        finalUrl: remote.finalUrl || local.finalUrl || "",
+        platform,
+        title: local.title || remote.title || remote.pageTitle || "",
+        price: local.price || numberOrZero(remote.price),
+        size: local.size || numberOrZero(remote.size),
+        unit: local.size ? local.unit : (remoteUnit || local.unit),
+        unitText: local.unitText || remote.unitText || "",
+        productId: remote.productId || local.productId || "",
+        noteKey: remote.workerUsed ? "smartPasteWorkerUsed" : (local.noteKey || "smartPasteNoWorker")
+      };
+      return merged;
+    }
+
+    async function parseProductLinkByWorker(localResult) {
+      if (!cloudConfigured() || !localResult || !localResult.url) return null;
+      const sync = normalizeSync(state.sync);
+      const url = `${sync.workerUrl.replace(/\/+$/, "")}?action=parseProductLink`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-App-Password": sync.appPassword
+        },
+        body: JSON.stringify({ text: localResult.raw || "", url: localResult.url })
+      });
+      let body = null;
+      try {
+        body = await response.json();
+      } catch (error) {
+        body = null;
+      }
+      if (!response.ok || (body && body.ok === false)) {
+        const message = body && body.error ? body.error : `HTTP ${response.status}`;
+        throw new Error(message);
+      }
+      const data = body && body.data ? body.data : body;
+      return { ...(data || {}), workerUsed: true };
+    }
+
+    function smartPreviewItem(labelKey, value, full = false) {
+      return `<div class="smart-paste-item ${full ? "full" : ""}"><div class="k">${escapeHtml(t(labelKey))}</div><div class="v" title="${escapeAttr(value || t("notRecognized"))}">${escapeHtml(value || t("notRecognized"))}</div></div>`;
+    }
+
+    function renderSmartPastePreview(result) {
+      const r = result || smartPasteResult;
+      if (!r) {
+        $("#smartPastePreview").html(smartPreviewItem("recognizedPlatform", "") + smartPreviewItem("recognizedLink", "", true));
+        return;
+      }
+      const unit = r.unit ? displayUnitLabel(appUnits().find(u => u.code === r.unit)) : "";
+      const linkText = r.finalUrl && r.finalUrl !== r.url ? `${r.url} → ${r.finalUrl}` : r.url;
+      $("#smartPastePreview").html([
+        smartPreviewItem("recognizedPlatform", state.lang === "en" ? r.platform.en : r.platform.zh),
+        smartPreviewItem("recognizedPrice", r.price ? money(r.price) : ""),
+        smartPreviewItem("recognizedSpec", r.size ? `${smartNumber(r.size, 4)} ${unit}` : ""),
+        smartPreviewItem("recognizedUnit", unit),
+        smartPreviewItem("recognizedProductId", r.productId || ""),
+        smartPreviewItem("recognizedTitle", r.title, true),
+        smartPreviewItem("recognizedLink", linkText, true),
+        smartPreviewItem("smartPasteParseNote", r.noteKey ? t(r.noteKey) : "", true)
+      ].join(""));
+    }
+
+    function openSmartPaste() {
+      smartPasteResult = null;
+      $("#smartPasteText").val("");
+      renderSmartPastePreview(null);
+      lockPageScroll();
+      $("#smartPasteOverlay").addClass("show").attr("aria-hidden", "false");
+      setTimeout(() => $("#smartPasteText").trigger("focus"), 60);
+    }
+
+    function closeSmartPaste() {
+      const wasOpen = $("#smartPasteOverlay").hasClass("show");
+      $("#smartPasteOverlay").removeClass("show").attr("aria-hidden", "true");
+      smartPasteResult = null;
+      if (wasOpen) unlockPageScroll();
+    }
+
+    async function analyzeSmartPaste() {
+      const text = String($("#smartPasteText").val() || "").trim();
+      if (!text) {
+        alert(t("smartPasteNoText"));
+        return null;
+      }
+      const localResult = parseSmartPasteText(text);
+      smartPasteResult = localResult;
+      renderSmartPastePreview(smartPasteResult);
+      if (localResult.url && cloudConfigured()) {
+        const oldText = $("#btnAnalyzeSmartPaste").text();
+        $("#btnAnalyzeSmartPaste").prop("disabled", true).text(t("smartPasteRecognizing"));
+        try {
+          const remoteResult = await parseProductLinkByWorker(localResult);
+          smartPasteResult = mergeSmartPasteResult(localResult, remoteResult);
+          renderSmartPastePreview(smartPasteResult);
+        } catch (error) {
+          smartPasteResult = { ...localResult, noteKey: "smartPasteNoWorker" };
+          renderSmartPastePreview(smartPasteResult);
+          console.warn("Smart paste worker parse failed", error);
+        } finally {
+          $("#btnAnalyzeSmartPaste").prop("disabled", false).text(oldText || t("recognize"));
+        }
+      } else if (localResult.url) {
+        smartPasteResult = { ...localResult, noteKey: "smartPasteNoWorker" };
+        renderSmartPastePreview(smartPasteResult);
+      }
+      return smartPasteResult;
+    }
+
+    async function createRecordFromSmartPaste() {
+      const result = await analyzeSmartPaste();
+      if (!result) return;
+      const group = currentGroup();
+      const storeId = findOrCreateStoreForPlatform(result.platform);
+      const item = createBlankItem();
+      item.productNameId = productNameForSmartTitle(group, result.title);
+      item.storeId = storeId;
+      item.price = result.price || 0;
+      item.cashback = 0;
+      item.quantity = 1;
+      item.size = result.size || 0;
+      item.unit = appUnits().some(u => u.code === result.unit) ? result.unit : (appUnits()[0] ? appUnits()[0].code : "g");
+      item.sourceUrl = result.url || "";
+      item.sourceTitle = result.title || "";
+      item.priceDate = todayDate();
+      item.status = "current";
+      group.items.unshift(item);
+      pendingFocusItemId = item.id;
+      saveState();
+      closeSmartPaste();
+      renderAll();
+      openRecordEdit(item.id);
+      setTimeout(() => alert(t("smartPasteCreated")), 80);
+    }
+
     function createBlankItem() {
       return {
         id: uid("item"),
@@ -3934,6 +4416,8 @@
         priceDate: todayDate(),
         status: "current",
         unit: appUnits()[0] ? appUnits()[0].code : "g",
+        sourceUrl: "",
+        sourceTitle: "",
         createdAt: Date.now()
       };
     }
@@ -4036,6 +4520,14 @@
         <div>
           <label>${t("unit")}</label>
           <select id="editUnit">${unitOptionsHtml(item.unit)}</select>
+        </div>
+        <div class="field-full">
+          <label>${t("sourceLink")}</label>
+          <input id="editSourceUrl" type="url" value="${escapeAttr(item.sourceUrl || "")}" placeholder="https://..." />
+        </div>
+        <div class="field-full">
+          <label>${t("sourceTitle")}</label>
+          <input id="editSourceTitle" type="text" value="${escapeAttr(item.sourceTitle || "")}" />
         </div>`;
     }
 
@@ -4065,6 +4557,8 @@
       item.quantity = numberOrZero($("#editQuantity").val());
       item.size = numberOrZero($("#editSize").val());
       item.unit = units.some(u => u.code === unit) ? unit : (units[0] ? units[0].code : "g");
+      item.sourceUrl = String($("#editSourceUrl").val() || "").trim();
+      item.sourceTitle = String($("#editSourceTitle").val() || "").trim();
       delete item.sizeCode;
       delete item.codeSize;
       delete item.code;
@@ -4548,6 +5042,10 @@
         closeRecordEdit();
         return;
       }
+      if (e.key === "Escape" && $("#smartPasteOverlay").hasClass("show")) {
+        closeSmartPaste();
+        return;
+      }
       if (e.key === "Escape" && $("#configOverlay").hasClass("show")) {
         closeConfig();
       }
@@ -4881,6 +5379,39 @@
       state.lang = state.lang === "zh" ? "en" : "zh";
       saveState();
       renderAll();
+    });
+
+
+    $(document).on("click", "#btnSmartPaste, #btnSmartPasteDesktop", function () {
+      openSmartPaste();
+    });
+
+    $("#btnCloseSmartPaste").on("click", closeSmartPaste);
+    $("#smartPasteOverlay").on("click", function (e) {
+      if (e.target === this) closeSmartPaste();
+    });
+
+    $("#btnAnalyzeSmartPaste").on("click", function () { analyzeSmartPaste(); });
+    $("#btnCreateSmartRecord").on("click", function () { createRecordFromSmartPaste(); });
+    $("#smartPasteText").on("input", function () {
+      const text = String($(this).val() || "").trim();
+      if (text) {
+        smartPasteResult = parseSmartPasteText(text);
+        renderSmartPastePreview(smartPasteResult);
+      } else {
+        smartPasteResult = null;
+        renderSmartPastePreview(null);
+      }
+    });
+
+    $("#btnReadClipboard").on("click", async function () {
+      try {
+        if (!navigator.clipboard || !navigator.clipboard.readText) throw new Error("clipboard");
+        const text = await navigator.clipboard.readText();
+        $("#smartPasteText").val(text || "").trigger("input");
+      } catch (error) {
+        alert(t("smartPasteClipboardDenied"));
+      }
     });
 
 
