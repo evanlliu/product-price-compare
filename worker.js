@@ -131,11 +131,9 @@ function extractShareTitle(text) {
   const source = String(text || "");
   const quoted = source.match(/「([^」]{2,160})」/) || source.match(/“([^”]{2,160})”/) || source.match(/"([^"]{2,160})"/);
   if (quoted) return quoted[1].trim();
-  const douyin = source.match(/【抖音商城】\s*https?:\/\/\S+\s*([^
-]{4,160})/i);
+  const douyin = source.match(/【抖音商城】\s*https?:\/\/\S+\s*([^\r\n]{4,160})/i);
   if (douyin) return douyin[1].replace(/长按复制.*$/g, "").trim();
-  const afterUrl = source.match(/https?:\/\/\S+\s+([^
-]{4,160})/i);
+  const afterUrl = source.match(/https?:\/\/\S+\s+([^\r\n]{4,160})/i);
   if (afterUrl && !/点击|打开|复制|搜索|查看|详情/.test(afterUrl[1])) return afterUrl[1].trim();
   return "";
 }
