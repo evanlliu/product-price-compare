@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-05-14T05:37:25.775Z",
-    "lastSavedAt": "2026-05-14T05:37:55.537Z"
+    "lastSavedAt": "2026-05-14T05:38:28.400Z"
   },
   "units": [
     {
@@ -272,21 +272,6 @@
         }
       ],
       "items": [
-        {
-          "id": "item_1778737071414_222e36a196a7f",
-          "productNameId": "productName_1778670092288_9292fbb9d15c5",
-          "storeId": "store_b",
-          "price": 0,
-          "cashback": 0,
-          "quantity": 1,
-          "size": 0,
-          "priceDate": "2026-05-14",
-          "status": "current",
-          "unit": "g",
-          "sourceUrl": "https://e.tb.cn/h.R0EL7KTWfk1X0td?tk=QGzy5JmBaxW",
-          "sourceTitle": "MD进进原创夏季气质法式时尚印花百搭薄款系带优雅上衣",
-          "createdAt": 1778737071414
-        },
         {
           "id": "item_1778253591752_312aff5e69c1b8",
           "productNameId": "productName_1778670092288_9292fbb9d15c5",
