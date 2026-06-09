@@ -10,7 +10,7 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.66";
+    const APP_VERSION = "v1.0.67";
     const FLOATING_POS_KEY = "price_compare_floating_actions_position";
     const STORAGE_KEY = "productPriceCompare.v1";
     const LOCAL_SYNC_KEY = "productPriceCompare.localSync.v1";
@@ -123,6 +123,8 @@
         productNameEn: "商品名称英文",
         storeZh: "商家中文",
         storeEn: "商家英文",
+        storeBgColor: "背景色",
+        storeBgColorPlaceholder: "例如：#F1F5F9",
         baseUnit: "基础单位",
         unitFactor: "换算系数",
         newUnitDefault: "新单位",
@@ -298,6 +300,8 @@
         productNameEn: "Product Name English",
         storeZh: "Store Chinese",
         storeEn: "Store English",
+        storeBgColor: "Background",
+        storeBgColorPlaceholder: "e.g. #F1F5F9",
         baseUnit: "Base Unit",
         unitFactor: "Factor",
         newUnitDefault: "New Unit",
@@ -456,11 +460,13 @@
       const source = entity && typeof entity === "object" ? entity : { name: entity };
       const label = entityLabelObject(source, fallback);
       const name = label.zh || label.en || String(fallback || "");
-      return {
+      const normalized = {
         id: source.id || uid(prefix || "cfg"),
         name,
         label
       };
+      if ((prefix || "") === "store") withStoreColor(Object.assign(normalized, { backgroundColor: source.backgroundColor || source.bgColor || source.color }));
+      return normalized;
     }
 
     function displayName(entity, fallback) {
@@ -480,6 +486,49 @@
       entity.label = entity.label && typeof entity.label === "object" ? entity.label : entityLabelObject(entity, fallback);
       entity.label[lang] = String(value || "").trim() || String(fallback || "");
       entity.name = entity.label.zh || entity.label.en || String(fallback || "");
+    }
+
+    function normalizeStoreColor(value) {
+      const text = String(value || "").trim();
+      if (!text) return "";
+      const shortHex = text.match(/^#([0-9a-fA-F]{3})$/);
+      if (shortHex) {
+        return `#${shortHex[1].split("").map(ch => ch + ch).join("").toUpperCase()}`;
+      }
+      const fullHex = text.match(/^#([0-9a-fA-F]{6})$/);
+      if (fullHex) return `#${fullHex[1].toUpperCase()}`;
+      return "";
+    }
+
+    function withStoreColor(entity) {
+      const color = normalizeStoreColor(entity && (entity.backgroundColor || entity.bgColor || entity.color));
+      if (color) entity.backgroundColor = color;
+      else if (entity) delete entity.backgroundColor;
+      return entity;
+    }
+
+    function hexToRgba(color, alpha) {
+      const normalized = normalizeStoreColor(color);
+      if (!normalized) return "";
+      const r = parseInt(normalized.slice(1, 3), 16);
+      const g = parseInt(normalized.slice(3, 5), 16);
+      const b = parseInt(normalized.slice(5, 7), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    function storeById(storeId) {
+      return (state.stores || []).find(store => store.id === storeId) || null;
+    }
+
+    function storeBackgroundColor(storeId) {
+      const store = storeById(storeId);
+      return normalizeStoreColor(store && store.backgroundColor);
+    }
+
+    function storeColorVarsStyle(storeId) {
+      const color = storeBackgroundColor(storeId);
+      if (!color) return "";
+      return `--store-bg-color: ${color}; --store-bg-color-soft: ${hexToRgba(color, 0.18)}; --store-bg-color-hover: ${hexToRgba(color, 0.28)}; --store-bg-color-card: ${hexToRgba(color, 0.16)}; --store-bg-color-border: ${hexToRgba(color, 0.42)};`;
     }
 
     function normalizeUnits(inputUnits) {
@@ -642,13 +691,13 @@
         units: defaultUnitOptions(),
         activeGroupId: groupId,
         stores: [
-          { id: storeAId, name: "店铺A", label: { zh: "店铺A", en: "Store A" } },
-          { id: storeBId, name: "店铺B", label: { zh: "店铺B", en: "Store B" } }
+          { id: storeAId, name: "店铺A", label: { zh: "店铺A", en: "Store A" }, backgroundColor: "#DBEAFE" },
+          { id: storeBId, name: "店铺B", label: { zh: "店铺B", en: "Store B" }, backgroundColor: "#FCE7F3" }
         ],
         configs: {
           stores: [
-            { id: storeAId, name: "店铺A", label: { zh: "店铺A", en: "Store A" } },
-            { id: storeBId, name: "店铺B", label: { zh: "店铺B", en: "Store B" } }
+            { id: storeAId, name: "店铺A", label: { zh: "店铺A", en: "Store A" }, backgroundColor: "#DBEAFE" },
+            { id: storeBId, name: "店铺B", label: { zh: "店铺B", en: "Store B" }, backgroundColor: "#FCE7F3" }
           ],
           units: defaultUnitOptions()
         },
@@ -685,17 +734,22 @@
       const unitList = normalizeUnits(configsInput.units || input.units);
       const stores = [];
 
-      function addStore(name, id, labelInput) {
-        const normalized = normalizeNamedEntity({ id, name, label: labelInput }, name || (state && state.lang === "en" ? "Store" : "商家"), "store");
+      function addStore(name, id, labelInput, backgroundColor) {
+        const normalized = normalizeNamedEntity({ id, name, label: labelInput, backgroundColor }, name || (state && state.lang === "en" ? "Store" : "商家"), "store");
         if (!normalized.name) return "";
         const existingById = normalized.id ? stores.find(store => store.id === normalized.id) : null;
         if (existingById) {
           existingById.name = normalized.name;
           existingById.label = normalized.label;
+          if (normalized.backgroundColor) existingById.backgroundColor = normalized.backgroundColor;
+          else delete existingById.backgroundColor;
           return existingById.id;
         }
         const existingByName = stores.find(store => displayName(store) === displayName(normalized) || store.name === normalized.name);
-        if (existingByName) return existingByName.id;
+        if (existingByName) {
+          if (normalized.backgroundColor) existingByName.backgroundColor = normalized.backgroundColor;
+          return existingByName.id;
+        }
         stores.push(normalized);
         return normalized.id;
       }
@@ -705,7 +759,7 @@
         if (typeof store === "string") {
           addStore(store);
         } else {
-          addStore(store && store.name, store && store.id, store && store.label);
+          addStore(store && store.name, store && store.id, store && store.label, store && (store.backgroundColor || store.bgColor || store.color));
         }
       });
 
@@ -839,7 +893,12 @@
       }) : [];
       target.configs = {
         ...(target.configs || {}),
-        stores: target.stores.map(store => ({ id: store.id, name: store.name, label: { ...(store.label || {}) } })),
+        stores: target.stores.map(store => ({
+          id: store.id,
+          name: store.name,
+          label: { ...(store.label || {}) },
+          ...(store.backgroundColor ? { backgroundColor: store.backgroundColor } : {})
+        })),
         units: target.units.map(unit => cloneUnit(unit))
       };
       return target;
@@ -1717,9 +1776,11 @@
       const baseDisplay = baseUnitLabel(c.base);
       const locked = isPurchased(item);
       const lockedAttr = locked ? ' disabled aria-disabled="true"' : '';
+      const storeStyle = storeColorVarsStyle(item.storeId);
+      const storeColorClass = storeStyle ? "store-colored-row" : "";
 
       return `
-        <tr class="${isBest ? "best-row" : ""} ${isPurchased(item) ? "purchased-row" : ""}">
+        <tr class="${isBest ? "best-row" : ""} ${isPurchased(item) ? "purchased-row" : ""} ${storeColorClass}" style="${escapeAttr(storeStyle)}">
           <td>${chipHtml(result)}</td>
           <td class="cell-editable">
             <input class="cell-input cell-date js-inline-edit" data-id="${item.id}" data-field="priceDate" type="date" value="${escapeAttr(item.priceDate || todayDate())}"${lockedAttr} />
@@ -1731,7 +1792,7 @@
             <select class="cell-select cell-product-name js-inline-edit" data-id="${item.id}" data-field="productNameId"${lockedAttr}>${productNameOptionsHtml(group, item.productNameId)}</select>
           </td>
           <td class="cell-editable">
-            <select class="cell-select cell-store js-inline-edit" data-id="${item.id}" data-field="storeId"${lockedAttr}>${storeOptionsHtml(item.storeId)}</select>
+            <select class="cell-select cell-store js-inline-edit ${storeStyle ? "store-colored-field" : ""}" data-id="${item.id}" data-field="storeId" style="${escapeAttr(storeStyle)}"${lockedAttr}>${storeOptionsHtml(item.storeId)}</select>
           </td>
           <td class="cell-editable">
             <input class="cell-input cell-number js-inline-edit" data-id="${item.id}" data-field="price" type="number" min="0" step="0.01" inputmode="decimal" value="${escapeAttr(item.price)}" style="${inputWidthStyle(item.price, 6, 12)}"${lockedAttr} />
@@ -1775,9 +1836,11 @@
       const totalSizeText = c.valid ? `${smartNumber(c.totalBaseSize, 4)}${baseDisplay}` : "-";
       const statusText = isPurchased(item) ? t("purchasedStatus") : t("currentStatus");
       const dateText = item.priceDate || todayDate();
+      const storeStyle = storeColorVarsStyle(item.storeId);
+      const storeColorClass = storeStyle ? "store-colored-card" : "";
 
       return `
-        <article class="item-card is-tappable ${isBest ? "best-card" : ""}" data-id="${escapeAttr(item.id)}">
+        <article class="item-card is-tappable ${isBest ? "best-card" : ""} ${storeColorClass}" data-id="${escapeAttr(item.id)}" style="${escapeAttr(storeStyle)}">
           <div class="mobile-card-actions" aria-label="Row actions">
             ${isCurrent(item) ? `<button type="button" class="small-btn btn-buy btn-confirm-purchase" data-id="${item.id}">${t("confirmPurchase")}</button>` : ""}
             <button type="button" class="small-btn btn-ghost btn-edit-record" data-id="${item.id}">${t("edit")}</button>
@@ -2246,16 +2309,25 @@
     }
 
     function renderStoreConfig() {
-      const rows = state.stores.map(store => `
-        <div class="named-config-grid named-config-row store-row">
+      const rows = state.stores.map(store => {
+        const bgColor = normalizeStoreColor(store.backgroundColor);
+        const rowStyle = bgColor ? `--store-bg-color: ${bgColor}; --store-bg-color-soft: ${hexToRgba(bgColor, 0.18)}; --store-bg-color-border: ${hexToRgba(bgColor, 0.42)};` : "";
+        return `
+        <div class="named-config-grid named-config-row store-config-grid store-row ${bgColor ? "store-colored-config-row" : ""}" style="${escapeAttr(rowStyle)}">
           <input class="js-config-store-label" data-id="${escapeAttr(store.id)}" data-field="zh" type="text" value="${escapeAttr(labelValue(store, "zh", store.name))}" placeholder="${escapeAttr(t("storeZh"))}" />
           <input class="js-config-store-label" data-id="${escapeAttr(store.id)}" data-field="en" type="text" value="${escapeAttr(labelValue(store, "en", store.name))}" placeholder="${escapeAttr(t("storeEn"))}" />
+          <div class="store-color-editor">
+            <input class="js-config-store-color store-color-picker" data-id="${escapeAttr(store.id)}" type="color" value="${escapeAttr(bgColor || "#FFFFFF")}" aria-label="${escapeAttr(t("storeBgColor"))}" />
+            <input class="js-config-store-color store-color-text" data-id="${escapeAttr(store.id)}" type="text" value="${escapeAttr(bgColor)}" placeholder="${escapeAttr(t("storeBgColorPlaceholder"))}" />
+          </div>
           <button type="button" class="small-btn btn-danger btn-config-delete-store" data-id="${escapeAttr(store.id)}">${t("delete")}</button>
-        </div>`).join("");
+        </div>`;
+      }).join("");
       const header = `
-        <div class="named-config-grid named-config-head">
+        <div class="named-config-grid named-config-head store-config-grid">
           <span>${t("storeZh")}</span>
           <span>${t("storeEn")}</span>
+          <span>${t("storeBgColor")}</span>
           <span></span>
         </div>`;
       $("#storeConfigList").html(`<div class="named-config-table">${header}${rows}</div>`);
@@ -2283,7 +2355,7 @@
     function addStoreFromConfig() {
       const zhName = uniqueName(t("newStoreDefault"), state.stores, store => labelValue(store, "zh", store.name));
       const enName = uniqueName("New Store", state.stores, store => labelValue(store, "en", store.name));
-      const store = { id: uid("store"), name: zhName, label: { zh: zhName, en: enName } };
+      const store = { id: uid("store"), name: zhName, label: { zh: zhName, en: enName }, backgroundColor: "#EFF6FF" };
       state.stores.push(store);
       saveState();
       renderAll();
@@ -2652,6 +2724,27 @@
       saveState();
       renderSummary();
       renderRecords();
+    });
+
+    $(document).on("input change", ".js-config-store-color", function () {
+      const id = $(this).data("id");
+      const store = state.stores.find(s => s.id === id);
+      if (!store) return;
+      const rawValue = String($(this).val() || "").trim();
+      const isTextInput = $(this).hasClass("store-color-text");
+      if (isTextInput && rawValue && !normalizeStoreColor(rawValue)) return;
+      const color = normalizeStoreColor(rawValue);
+      if (color) store.backgroundColor = color;
+      else delete store.backgroundColor;
+      saveState();
+      renderSummary();
+      renderRecords();
+
+      const row = $(this).closest(".store-row");
+      const rowStyle = color ? `--store-bg-color: ${color}; --store-bg-color-soft: ${hexToRgba(color, 0.18)}; --store-bg-color-border: ${hexToRgba(color, 0.42)};` : "";
+      row.toggleClass("store-colored-config-row", !!color).attr("style", rowStyle);
+      row.find(".store-color-picker").val(color || "#FFFFFF");
+      row.find(".store-color-text").val(color);
     });
 
     $(document).on("click", ".btn-config-current-group", function () {
