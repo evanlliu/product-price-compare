@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-06-09T01:39:06.921Z",
-    "lastSavedAt": "2026-06-09T01:39:41.290Z"
+    "lastSavedAt": "2026-06-09T01:40:18.925Z"
   },
   "units": [
     {
@@ -327,7 +327,7 @@
           "quantity": 7,
           "size": 4,
           "priceDate": "2026-06-08",
-          "status": "current",
+          "status": "purchased",
           "unit": "sheet",
           "createdAt": 1780969155181
         }
