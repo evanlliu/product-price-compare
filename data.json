@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-06-09T01:33:32.408Z",
-    "lastSavedAt": "2026-06-09T01:37:11.405Z"
+    "lastSavedAt": "2026-06-09T01:37:18.406Z"
   },
   "units": [
     {
@@ -121,7 +121,7 @@
         "zh": "淘宝",
         "en": "Taobao"
       },
-      "backgroundColor": "#FFF3E6"
+      "backgroundColor": "#FED7AA"
     },
     {
       "id": "store_1778246138226_757f331a4c69f",
@@ -425,7 +425,7 @@
           "zh": "淘宝",
           "en": "Taobao"
         },
-        "backgroundColor": "#FFF3E6"
+        "backgroundColor": "#FED7AA"
       },
       {
         "id": "store_1778246138226_757f331a4c69f",
