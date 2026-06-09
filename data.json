@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-06-09T01:33:32.408Z",
-    "lastSavedAt": "2026-06-09T01:37:23.403Z"
+    "lastSavedAt": "2026-06-09T01:37:27.371Z"
   },
   "units": [
     {
@@ -139,7 +139,7 @@
         "zh": "京东/JD",
         "en": "JD"
       },
-      "backgroundColor": "#FEEFEE"
+      "backgroundColor": "#FECACA"
     }
   ],
   "groups": [
@@ -443,7 +443,7 @@
           "zh": "京东/JD",
           "en": "JD"
         },
-        "backgroundColor": "#FEEFEE"
+        "backgroundColor": "#FECACA"
       }
     ],
     "units": [
