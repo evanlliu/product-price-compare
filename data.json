@@ -9,8 +9,8 @@
   "sync": {
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
-    "lastLoadedAt": "2026-06-09T01:05:48.210Z",
-    "lastSavedAt": "2026-06-09T01:06:32.126Z"
+    "lastLoadedAt": "2026-06-09T01:25:14.868Z",
+    "lastSavedAt": "2026-06-09T01:26:08.447Z"
   },
   "units": [
     {
@@ -111,7 +111,8 @@
       "label": {
         "zh": "抖音",
         "en": "Douyin"
-      }
+      },
+      "backgroundColor": "#EEF4FF"
     },
     {
       "id": "store_b",
@@ -411,7 +412,8 @@
         "label": {
           "zh": "抖音",
           "en": "Douyin"
-        }
+        },
+        "backgroundColor": "#EEF4FF"
       },
       {
         "id": "store_b",
