@@ -10,7 +10,7 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.68";
+    const APP_VERSION = "v1.0.69";
     const FLOATING_POS_KEY = "price_compare_floating_actions_position";
     const STORAGE_KEY = "productPriceCompare.v1";
     const LOCAL_SYNC_KEY = "productPriceCompare.localSync.v1";
@@ -1822,10 +1822,9 @@
       const locked = isPurchased(item);
       const lockedAttr = locked ? ' disabled aria-disabled="true"' : '';
       const storeStyle = storeColorVarsStyle(item.storeId);
-      const storeColorClass = storeStyle ? "store-colored-row" : "";
 
       return `
-        <tr class="${isBest ? "best-row" : ""} ${isPurchased(item) ? "purchased-row" : ""} ${storeColorClass}" style="${escapeAttr(storeStyle)}">
+        <tr class="${isBest ? "best-row" : ""} ${isPurchased(item) ? "purchased-row" : ""}">
           <td>${chipHtml(result)}</td>
           <td class="cell-editable">
             <input class="cell-input cell-date js-inline-edit" data-id="${item.id}" data-field="priceDate" type="date" value="${escapeAttr(item.priceDate || todayDate())}"${lockedAttr} />
@@ -1882,10 +1881,13 @@
       const statusText = isPurchased(item) ? t("purchasedStatus") : t("currentStatus");
       const dateText = item.priceDate || todayDate();
       const storeStyle = storeColorVarsStyle(item.storeId);
-      const storeColorClass = storeStyle ? "store-colored-card" : "";
+      const storeLabel = storeName(item.storeId) || "-";
+      const storeLabelHtml = storeStyle
+        ? `<span class="store-name-badge" style="${escapeAttr(storeStyle)}">${escapeHtml(storeLabel)}</span>`
+        : `<span class="store-name-plain">${escapeHtml(storeLabel)}</span>`;
 
       return `
-        <article class="item-card is-tappable ${isBest ? "best-card" : ""} ${storeColorClass}" data-id="${escapeAttr(item.id)}" style="${escapeAttr(storeStyle)}">
+        <article class="item-card is-tappable ${isBest ? "best-card" : ""}" data-id="${escapeAttr(item.id)}">
           <div class="mobile-card-actions" aria-label="Row actions">
             ${isCurrent(item) ? `<button type="button" class="small-btn btn-buy btn-confirm-purchase" data-id="${item.id}">${t("confirmPurchase")}</button>` : ""}
             <button type="button" class="small-btn btn-ghost btn-edit-record" data-id="${item.id}">${t("edit")}</button>
@@ -1895,7 +1897,7 @@
           <div class="mobile-card-inner">
             <div class="item-head">
               <div>
-                <div class="item-title">${escapeHtml(productNameText(item, group))} · ${escapeHtml(storeName(item.storeId) || "-")}</div>
+                <div class="item-title">${escapeHtml(productNameText(item, group))} · ${storeLabelHtml}</div>
                 <div class="item-subtitle">${escapeHtml(displayName(group))} · ${escapeHtml(dateText)} · ${escapeHtml(statusText)}</div>
               </div>
               ${chipHtml(result)}

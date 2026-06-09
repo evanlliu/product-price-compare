@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>商品比价器 Price Compare v1.0.68</title>
+  <title>商品比价器 Price Compare v1.0.69</title>
   <meta name="theme-color" content="#2563eb" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1110,6 +1110,18 @@
       word-break: break-word;
       font-size: 15px;
       color: var(--text);
+    }
+
+    .item-title .store-name-badge {
+      display: inline-flex;
+      align-items: center;
+      max-width: 100%;
+      padding: 1px 7px;
+      border-radius: 999px;
+      border: 1px solid var(--store-bg-color-border);
+      background: var(--store-bg-color-card);
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+      vertical-align: 1px;
     }
 
     .item-subtitle {
@@ -2425,7 +2437,7 @@
       <div class="brand">
         <div class="logo">¥</div>
         <div>
-          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.68</span><span id="mobileHeaderSync" class="mobile-header-sync"><span class="sync-dot"></span><span id="mobileHeaderSyncText"></span></span></h1>
+          <h1><span data-i18n="appTitle">商品比价器</span><span class="title-version">v1.0.69</span><span id="mobileHeaderSync" class="mobile-header-sync"><span class="sync-dot"></span><span id="mobileHeaderSyncText"></span></span></h1>
         </div>
       </div>
       <div class="top-actions">
@@ -2607,7 +2619,7 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.68";
+    const APP_VERSION = "v1.0.69";
     const FLOATING_POS_KEY = "price_compare_floating_actions_position";
     const STORAGE_KEY = "productPriceCompare.v1";
     const LOCAL_SYNC_KEY = "productPriceCompare.localSync.v1";
@@ -4419,10 +4431,9 @@
       const locked = isPurchased(item);
       const lockedAttr = locked ? ' disabled aria-disabled="true"' : '';
       const storeStyle = storeColorVarsStyle(item.storeId);
-      const storeColorClass = storeStyle ? "store-colored-row" : "";
 
       return `
-        <tr class="${isBest ? "best-row" : ""} ${isPurchased(item) ? "purchased-row" : ""} ${storeColorClass}" style="${escapeAttr(storeStyle)}">
+        <tr class="${isBest ? "best-row" : ""} ${isPurchased(item) ? "purchased-row" : ""}">
           <td>${chipHtml(result)}</td>
           <td class="cell-editable">
             <input class="cell-input cell-date js-inline-edit" data-id="${item.id}" data-field="priceDate" type="date" value="${escapeAttr(item.priceDate || todayDate())}"${lockedAttr} />
@@ -4479,10 +4490,13 @@
       const statusText = isPurchased(item) ? t("purchasedStatus") : t("currentStatus");
       const dateText = item.priceDate || todayDate();
       const storeStyle = storeColorVarsStyle(item.storeId);
-      const storeColorClass = storeStyle ? "store-colored-card" : "";
+      const storeLabel = storeName(item.storeId) || "-";
+      const storeLabelHtml = storeStyle
+        ? `<span class="store-name-badge" style="${escapeAttr(storeStyle)}">${escapeHtml(storeLabel)}</span>`
+        : `<span class="store-name-plain">${escapeHtml(storeLabel)}</span>`;
 
       return `
-        <article class="item-card is-tappable ${isBest ? "best-card" : ""} ${storeColorClass}" data-id="${escapeAttr(item.id)}" style="${escapeAttr(storeStyle)}">
+        <article class="item-card is-tappable ${isBest ? "best-card" : ""}" data-id="${escapeAttr(item.id)}">
           <div class="mobile-card-actions" aria-label="Row actions">
             ${isCurrent(item) ? `<button type="button" class="small-btn btn-buy btn-confirm-purchase" data-id="${item.id}">${t("confirmPurchase")}</button>` : ""}
             <button type="button" class="small-btn btn-ghost btn-edit-record" data-id="${item.id}">${t("edit")}</button>
@@ -4492,7 +4506,7 @@
           <div class="mobile-card-inner">
             <div class="item-head">
               <div>
-                <div class="item-title">${escapeHtml(productNameText(item, group))} · ${escapeHtml(storeName(item.storeId) || "-")}</div>
+                <div class="item-title">${escapeHtml(productNameText(item, group))} · ${storeLabelHtml}</div>
                 <div class="item-subtitle">${escapeHtml(displayName(group))} · ${escapeHtml(dateText)} · ${escapeHtml(statusText)}</div>
               </div>
               ${chipHtml(result)}
