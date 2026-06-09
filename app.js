@@ -10,7 +10,7 @@
     initAppleWebAppMode();
     window.addEventListener("pageshow", initAppleWebAppMode);
 
-    const APP_VERSION = "v1.0.67";
+    const APP_VERSION = "v1.0.68";
     const FLOATING_POS_KEY = "price_compare_floating_actions_position";
     const STORAGE_KEY = "productPriceCompare.v1";
     const LOCAL_SYNC_KEY = "productPriceCompare.localSync.v1";
@@ -507,13 +507,60 @@
       return entity;
     }
 
+    function hexToRgb(color) {
+      const normalized = normalizeStoreColor(color);
+      if (!normalized) return null;
+      return {
+        r: parseInt(normalized.slice(1, 3), 16),
+        g: parseInt(normalized.slice(3, 5), 16),
+        b: parseInt(normalized.slice(5, 7), 16)
+      };
+    }
+
     function hexToRgba(color, alpha) {
+      const rgb = hexToRgb(color);
+      if (!rgb) return "";
+      return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
+    }
+
+    function rgbToHex(r, g, b) {
+      const toHex = value => Math.max(0, Math.min(255, Math.round(value))).toString(16).padStart(2, "0").toUpperCase();
+      return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+    }
+
+    function mixHexWithWhite(color, whiteWeight) {
+      const rgb = hexToRgb(color);
+      if (!rgb) return "";
+      const weight = Math.max(0, Math.min(1, Number(whiteWeight) || 0));
+      return rgbToHex(
+        rgb.r * (1 - weight) + 255 * weight,
+        rgb.g * (1 - weight) + 255 * weight,
+        rgb.b * (1 - weight) + 255 * weight
+      );
+    }
+
+    function colorLuminance(color) {
+      const rgb = hexToRgb(color);
+      if (!rgb) return 255;
+      return (0.299 * rgb.r) + (0.587 * rgb.g) + (0.114 * rgb.b);
+    }
+
+    function storeBackgroundTint(color) {
       const normalized = normalizeStoreColor(color);
       if (!normalized) return "";
-      const r = parseInt(normalized.slice(1, 3), 16);
-      const g = parseInt(normalized.slice(3, 5), 16);
-      const b = parseInt(normalized.slice(5, 7), 16);
-      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      const luminance = colorLuminance(normalized);
+      if (luminance >= 235) return normalized;
+      if (luminance >= 205) return mixHexWithWhite(normalized, 0.28);
+      if (luminance >= 155) return mixHexWithWhite(normalized, 0.62);
+      return mixHexWithWhite(normalized, 0.80);
+    }
+
+    function storeColorVarsForColor(colorValue) {
+      const color = normalizeStoreColor(colorValue);
+      if (!color) return "";
+      const tint = storeBackgroundTint(color);
+      const hoverTint = colorLuminance(color) >= 235 ? color : mixHexWithWhite(color, 0.70);
+      return `--store-bg-color: ${color}; --store-bg-color-soft: ${tint}; --store-bg-color-hover: ${hoverTint}; --store-bg-color-card: ${tint}; --store-bg-color-border: ${hexToRgba(color, 0.42)};`;
     }
 
     function storeById(storeId) {
@@ -526,9 +573,7 @@
     }
 
     function storeColorVarsStyle(storeId) {
-      const color = storeBackgroundColor(storeId);
-      if (!color) return "";
-      return `--store-bg-color: ${color}; --store-bg-color-soft: ${hexToRgba(color, 0.18)}; --store-bg-color-hover: ${hexToRgba(color, 0.28)}; --store-bg-color-card: ${hexToRgba(color, 0.16)}; --store-bg-color-border: ${hexToRgba(color, 0.42)};`;
+      return storeColorVarsForColor(storeBackgroundColor(storeId));
     }
 
     function normalizeUnits(inputUnits) {
@@ -2311,7 +2356,7 @@
     function renderStoreConfig() {
       const rows = state.stores.map(store => {
         const bgColor = normalizeStoreColor(store.backgroundColor);
-        const rowStyle = bgColor ? `--store-bg-color: ${bgColor}; --store-bg-color-soft: ${hexToRgba(bgColor, 0.18)}; --store-bg-color-border: ${hexToRgba(bgColor, 0.42)};` : "";
+        const rowStyle = bgColor ? storeColorVarsForColor(bgColor) : "";
         return `
         <div class="named-config-grid named-config-row store-config-grid store-row ${bgColor ? "store-colored-config-row" : ""}" style="${escapeAttr(rowStyle)}">
           <input class="js-config-store-label" data-id="${escapeAttr(store.id)}" data-field="zh" type="text" value="${escapeAttr(labelValue(store, "zh", store.name))}" placeholder="${escapeAttr(t("storeZh"))}" />
@@ -2741,7 +2786,7 @@
       renderRecords();
 
       const row = $(this).closest(".store-row");
-      const rowStyle = color ? `--store-bg-color: ${color}; --store-bg-color-soft: ${hexToRgba(color, 0.18)}; --store-bg-color-border: ${hexToRgba(color, 0.42)};` : "";
+      const rowStyle = color ? storeColorVarsForColor(color) : "";
       row.toggleClass("store-colored-config-row", !!color).attr("style", rowStyle);
       row.find(".store-color-picker").val(color || "#FFFFFF");
       row.find(".store-color-text").val(color);
