@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-06-09T01:33:32.408Z",
-    "lastSavedAt": "2026-06-09T01:37:18.406Z"
+    "lastSavedAt": "2026-06-09T01:37:23.403Z"
   },
   "units": [
     {
@@ -130,7 +130,7 @@
         "zh": "拼多多/PDD",
         "en": "PDD"
       },
-      "backgroundColor": "#FFF1F2"
+      "backgroundColor": "#FBCFE8"
     },
     {
       "id": "store_1778246141400_3f8d9088d1eef",
@@ -434,7 +434,7 @@
           "zh": "拼多多/PDD",
           "en": "PDD"
         },
-        "backgroundColor": "#FFF1F2"
+        "backgroundColor": "#FBCFE8"
       },
       {
         "id": "store_1778246141400_3f8d9088d1eef",
