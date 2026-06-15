@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-06-15T01:21:36.590Z",
-    "lastSavedAt": "2026-06-15T01:26:11.977Z"
+    "lastSavedAt": "2026-06-15T01:26:25.933Z"
   },
   "units": [
     {
@@ -181,7 +181,7 @@
           "price": 88,
           "cashback": 22.45,
           "quantity": 1,
-          "size": 360,
+          "size": 440,
           "priceDate": "2026-06-14",
           "status": "current",
           "unit": "g",
