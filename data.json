@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-06-15T01:21:36.590Z",
-    "lastSavedAt": "2026-06-15T01:26:40.892Z"
+    "lastSavedAt": "2026-06-15T01:31:40.872Z"
   },
   "units": [
     {
@@ -179,7 +179,7 @@
           "productNameId": "productName_1778670092288_40a6322d0e94d",
           "storeId": "store_a",
           "price": 99,
-          "cashback": 8.85,
+          "cashback": 22.45,
           "quantity": 1,
           "size": 440,
           "priceDate": "2026-06-14",
