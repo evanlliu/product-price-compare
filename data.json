@@ -10,7 +10,7 @@
     "workerUrl": "https://product-price-compare-data-worker.287418456.workers.dev",
     "appPassword": "1123",
     "lastLoadedAt": "2026-07-10T13:27:36.681Z",
-    "lastSavedAt": "2026-07-10T13:28:11.886Z"
+    "lastSavedAt": "2026-07-10T13:30:41.126Z"
   },
   "units": [
     {
@@ -374,10 +374,10 @@
           "id": "item_1783016906442_40780a87c69518",
           "productNameId": "productName_1778670092288_9292fbb9d15c5",
           "storeId": "store_1778246138226_757f331a4c69f",
-          "price": 41.09,
+          "price": 31.2,
           "cashback": 0,
           "quantity": 1,
-          "size": 28,
+          "size": 20,
           "priceDate": "2026-07-02",
           "status": "current",
           "unit": "sheet",
